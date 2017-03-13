@@ -1,0 +1,1 @@
+javadoc -sourcepath .\src -d doc\javadoc -version -author terrainGenerator
