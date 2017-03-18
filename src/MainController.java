@@ -33,7 +33,8 @@ public class MainController implements Initializable {
         canvas.setHeight(data.getMapHeight());
 
         GraphicsContext context = canvas.getGraphicsContext2D();
-        context.setFill(Color.RED);
+
+        context.setFill(Color.GRAY);
         context.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
     }
 

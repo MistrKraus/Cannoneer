@@ -3,8 +3,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,14 +19,22 @@ public class Cannoneer extends Application {
     static double aspectRatio;
 
     public static void main(String[] args) throws IOException {
-        data = new Data("terrain257x257.ter");
+        loadData(args);
+
         //aspectRatio = Math.data.getMapWidth(), data.getMapHeight();
 
         if (!data.dataConsistent())
-            System.out.println("Data nejsou konzistentní!");
+            System.out.println("Načtená data jsou chybná.");
         else
             launch(args);
+    }
 
+    private static void loadData(String[] args) {
+        if (args.length == 0)
+            data = new Data("terrain257x257.ter");
+
+        if (args.length == 1)
+            data = new Data(args[0]);
     }
 
 //    public static void gameloop(Data data) {
@@ -57,8 +65,8 @@ public class Cannoneer extends Application {
         });
         Parent parent = loader.load();
 
-        double width = data.getMapWidth();
-        double height = data.getMapHeight();
+        double width = data.getMapWidth() + 20;
+        double height = data.getMapHeight() + 40;
 
         Scene scene = new Scene(parent, width, height);
 
@@ -66,5 +74,13 @@ public class Cannoneer extends Application {
         primaryStage.setMinWidth(scene.getWidth() + 20);
         primaryStage.setMinHeight(scene.getHeight() + 40);
         primaryStage.show();
+    }
+
+    public void paint(GraphicsContext g) {
+        g.setFill(Color.GRAY);
+
+
+
+
     }
 }

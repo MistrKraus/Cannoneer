@@ -1,3 +1,5 @@
+import com.sun.deploy.util.StringUtils;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,16 +11,14 @@ public class Data {
 
     private int mapWidth;
     private int mapHeight;
-    private int deltaXm;
-    private int deltaYm;
-    /** sloupec*/
+    private double deltaXm;
+    private double deltaYm;
     private int shooterX;
-    /** radek*/
     private int shooterY;
     private int targetX;
     private int targetY;
 
-    private int[][] terrainZ;
+    private double[][] terrainZm;
 
     public Data(String fileName) {
         try (DataInputStream in = new DataInputStream(new FileInputStream(fileName))) {
@@ -31,17 +31,27 @@ public class Data {
             this.targetX = in.readInt();
             this.targetY = in.readInt();
 
-            terrainZ = new int[mapWidth][mapHeight];
+            terrainZm = new double[mapWidth][mapHeight];
 
-            for (int i = 0; i < mapWidth; i++) {
-                for (int j = 0; j < mapHeight; j++) {
-                    terrainZ[i][j] = in.readInt() / 1000;
-                    //System.out.println(terrainZ[i][j]);
+            int zCounter = 0;
+
+            try {
+                for (int i = 0; i < mapWidth; i++) {
+                    for (int j = 0; j < mapHeight; j++) {
+                        zCounter++;
+                        terrainZm[i][j] = in.readInt() / 1000;
+                        //System.out.println(terrainZm[i][j]);
+                    }
                 }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("V souboru chybí " + (mapWidth * mapWidth - zCounter) + " hodnot s nadmořskou výškou");
+                System.out.println("Tyto hodnoty byli nastaveny na 0 mm");
             }
         } catch (IOException e) {
-            System.out.println("Při četení vstupního souboru '" + fileName + "' došlo k chybě!");
+            System.out.println("Při čtení vstupního souboru '" + fileName + "' došlo k chybě!");
             e.printStackTrace();
+
+            System.out.println("Zadejte správný název souboru (včetně koncovky .ter), nebo 'N'");
         }
     }
 
@@ -58,11 +68,11 @@ public class Data {
         return mapHeight;
     }
 
-    public int getDeltaXm() {
+    public double getDeltaXm() {
         return deltaXm;
     }
 
-    public int getDeltaYm() {
+    public double getDeltaYm() {
         return deltaYm;
     }
 
@@ -74,11 +84,11 @@ public class Data {
         return shooterY;
     }
 
-    public int getShooterXm() {
+    public double getShooterXm() {
         return shooterX * deltaXm;
     }
 
-    public int getShooterYm() {
+    public double getShooterYm() {
         return shooterY * deltaYm;
     }
 
@@ -90,15 +100,15 @@ public class Data {
         return targetY;
     }
 
-    public int getTargetXm() {
+    public double getTargetXm() {
         return targetX * deltaXm;
     }
 
-    public int getTargetYm() {
+    public double getTargetYm() {
         return targetY * deltaYm;
     }
 
-    public int[][] getTerrainZ() {
-        return terrainZ;
+    public double[][] getterrainZm() {
+        return terrainZm;
     }
 }

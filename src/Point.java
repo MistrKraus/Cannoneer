@@ -40,6 +40,11 @@ public class Point {
         return (Math.sqrt(x*x + y*y + z*z));
     }
 
+    /**
+     * vrati x-ovou souradnici v metrech
+     *
+     * @return x-ova souradnice v metrech
+     */
     public double getX() {
         return x;
     }
