@@ -34,13 +34,24 @@ public class MainController implements Initializable {
 
         GraphicsContext context = canvas.getGraphicsContext2D();
 
-        context.setFill(Color.GRAY);
+        context.setFill(Color.LIGHTGREY);
         context.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
+        context.translate(canvas.getLayoutX(), canvas.getLayoutY());
+
+        Player player = new Player(data.getShooterXm(), data.getShooterYm(), data.getterrainZm()[data.getShooterX()][data.getShooterY()]);
+        Target target = new Target(data.getTargetXm(), data.getTargetYm(), data.getterrainZm()[data.getTargetX()][data.getTargetY()]);
+
+
+        double scalePixelperMX =  canvas.getWidth() / data.getMapWidthM();
+        double scalePiselperMY =  canvas.getHeight() / data.getMapHeightM();
+
+        player.draw(context, scalePixelperMX, scalePiselperMY);
+        target.draw(context, scalePixelperMX, scalePiselperMY);
     }
 
     public void handleBtn(ActionEvent actionEvent) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(scanner.next());
+        //Scanner scanner = new Scanner(System.in);
+        //System.out.println(scanner.next());
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource(""));
 //        try {
 //            Parent parent = loader.load();

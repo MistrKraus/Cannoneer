@@ -6,22 +6,17 @@
 public interface IHittable {
 
     /**
-     * okoli (v metrech), ktere muze byt srelou zasazeno
-     */
-    int STRIKE_RADIUS = 60;
-
-    /**
      * Urci pocet zraneni, ktere cil utrpel
      *
-     * @param strikeCoordinates pozice utocnika
+     * @param strikeCoordinates strela
      * @param targetCoordinates pozice cile
      * @return pocet zraneni
      */
-    default int dealtDamage(Point strikeCoordinates, Point targetCoordinates)  {
-        double distance = strikeCoordinates.getPointsDistance(targetCoordinates);
+    default int dealtDamage(Missile strikeCoordinates, Point targetCoordinates)  {
+        double distance = strikeCoordinates.getCoordinates().getPointsDistance(targetCoordinates);
 
-        if (distance <= (STRIKE_RADIUS / 2)) {
-            return (STRIKE_RADIUS / 2) - (int)(distance - 1);
+        if (distance <= (strikeCoordinates.getStrikeRadius() / 2)) {
+            return (int)((strikeCoordinates.getStrikeRadius() / 2) - (distance - 1));
         }
 
         return 0;

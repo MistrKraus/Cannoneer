@@ -1,11 +1,18 @@
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 /**
  * Created by kraus on 11.03.2017.
  *
  * Cil
  */
-public class Target implements IHittable {
+public class Target implements IHittable, IDrawable {
 
-    private static final int DEFAULT_HP = 100;
+    /**
+     * defaultni pocet hp
+     */
+    protected static final int DEFAULT_HP = 100;
+
     /**
      * souracnice cile v metrech
      */
@@ -64,11 +71,11 @@ public class Target implements IHittable {
      * @param azimuth smer strely
      * @param elevation zdvih hlavne
      * @param speed rychlost strely
-     * @param shooterCoordinates souradnice utocnika
+     * @param missile pouzita strela
      * @return zda byl cil zasazen
      */
-    public boolean gotHit(double azimuth, double elevation, double speed, Point shooterCoordinates) {
-        int dmg = dealtDamage(shooterCoordinates, coordinates);
+    public boolean gotHit(double azimuth, double elevation, double speed, Missile missile) {
+        int dmg = dealtDamage(missile, coordinates);
 
         if (dmg > 0) {
             dealDmg(dmg);
@@ -96,6 +103,24 @@ public class Target implements IHittable {
         return hp;
     }
 
+    @Override
+    public void draw(GraphicsContext g, double scaleX, double scaleY) {
+        g.setStroke(Color.RED);
+        g.setLineWidth(1);
+        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
+        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+    }
+
+    @Override
+    public int getHeight() {
+        return 1;
+    }
+
+    @Override
+    public int getWidth() {
+        return 1;
+    }
+
     /**
      * vraci souradnice cile
      *
@@ -105,31 +130,14 @@ public class Target implements IHittable {
         return coordinates;
     }
 
-    /**
-     * vraci x-ovou souradnici
-     *
-     * @return x-ova souradnice
-     */
-    public double getX() {
-        return coordinates.getX();
+    @Override
+    public void setCoordinates(Point point) {
+
     }
 
-    /**
-     * vraci y-ovou souradnici
-     *
-     * @return y-ova souradnice
-     */
-    public double getY() {
-        return coordinates.getY();
-    }
+    @Override
+    public void setCoordinates(double x, double y, double z) {
 
-    /**
-     * vraci nadmorskou vysku
-     *
-     * @return nadmorska vyska
-     */
-    public double getZ() {
-        return coordinates.getZ();
     }
 
     /**

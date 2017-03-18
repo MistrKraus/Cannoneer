@@ -16,8 +16,14 @@ import java.lang.reflect.InvocationTargetException;
 public class Cannoneer extends Application {
 
     static Data data;
-    static double aspectRatio;
+    //static double aspectRatio;
 
+    /**
+     * Zajisti nacteni dat, pokud byla zadana spatne, vypise chybovou hlasku
+     *
+     * @param args nazev vstupniho souboru
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         loadData(args);
 
@@ -29,6 +35,12 @@ public class Cannoneer extends Application {
             launch(args);
     }
 
+    /**
+     * Pokud byl zadan nazev souboru se vstupnimi daty, nacte jej.
+     * Jinak jsou data nactena z vychoziho vstupniho souboru
+     *
+     * @param args nazev stupniho souboru
+     */
     private static void loadData(String[] args) {
         if (args.length == 0)
             data = new Data("terrain257x257.ter");
@@ -48,6 +60,18 @@ public class Cannoneer extends Application {
 //                    data.getTerrainZ()[data.getTargetX()][data.getShooterY()]));
 //    }
 
+/*
+    public void paint(GraphicsContext g) {
+        g.setFill(Color.GRAY);
+
+        Player player = new Player(data.getShooterXm(), data.getShooterYm(), data.getterrainZm()[data.getShooterX()][data.getShooterY()]);
+        Target target = new Target(data.getTargetXm(), data.getTargetYm(), data.getterrainZm()[data.getTargetX()][data.getTargetY()]);
+
+        player.draw(g);
+        target.draw(g);
+    }
+*/
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Petr Kraus / A16B0065P");
@@ -66,21 +90,14 @@ public class Cannoneer extends Application {
         Parent parent = loader.load();
 
         double width = data.getMapWidth() + 20;
-        double height = data.getMapHeight() + 40;
+        double height = data.getMapHeight() + 183;
 
         Scene scene = new Scene(parent, width, height);
 
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(scene.getWidth() + 20);
-        primaryStage.setMinHeight(scene.getHeight() + 40);
+        primaryStage.setMinWidth(width + 20);
+        primaryStage.setMinHeight(height + 40);
         primaryStage.show();
     }
 
-    public void paint(GraphicsContext g) {
-        g.setFill(Color.GRAY);
-
-
-
-
-    }
 }

@@ -10,7 +10,7 @@ public interface IDrawable {
      *
      * @param g graficky kontext, ktery nakresli instanci
      */
-    void draw(GraphicsContext g);
+    void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY);
 
     /**
      * Vrati vysku
@@ -31,9 +31,36 @@ public interface IDrawable {
      *
      * @return instance tridy {@code Point} s aktualni pozici instance
      */
-    Point getPoint();
+    Point getCoordinates();
 
-    void setPoint(Point point);
+    /**
+     * vraci x-ovou souradnici
+     *
+     * @return x-ova souradnice
+     */
+     default double getX() {
+        return getCoordinates().getX();
+    }
 
-    void setPoint(double x, double y, double z);
+    /**
+     * vraci y-ovou souradnici
+     *
+     * @return y-ova souradnice
+     */
+    default double getY() {
+        return getCoordinates().getY();
+    }
+
+    /**
+     * vraci nadmorskou vysku
+     *
+     * @return nadmorska vyska
+     */
+    default double getZ() {
+        return getCoordinates().getZ();
+    }
+
+    void setCoordinates(Point point);
+
+    void setCoordinates(double x, double y, double z);
 }

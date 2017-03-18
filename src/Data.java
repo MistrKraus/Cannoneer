@@ -13,6 +13,8 @@ public class Data {
     private int mapHeight;
     private double deltaXm;
     private double deltaYm;
+    private double mapWidthM;
+    private double mapHeightM;
     private int shooterX;
     private int shooterY;
     private int targetX;
@@ -26,6 +28,8 @@ public class Data {
             this.mapHeight = in.readInt();
             this.deltaXm = in.readInt() / 1000;
             this.deltaYm = in.readInt() / 1000;
+            this.mapWidthM = mapWidth * deltaXm;
+            this.mapHeightM = mapHeight * deltaYm;
             this.shooterX = in.readInt();
             this.shooterY = in.readInt();
             this.targetX = in.readInt();
@@ -74,6 +78,14 @@ public class Data {
 
     public double getDeltaYm() {
         return deltaYm;
+    }
+
+    public double getMapWidthM() {
+        return mapWidthM;
+    }
+
+    public double getMapHeightM() {
+        return mapHeightM;
     }
 
     public int getShooterX() {

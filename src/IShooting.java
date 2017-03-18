@@ -11,10 +11,10 @@ public interface IShooting {
      * @param azimuth smer strely
      * @param elevation zdvih hlavne
      * @param speed rychlot strely
-     * @param shooterCoordinates pozice utocnika
+     * @param missile strela
      * @return pozice "dopadu" strely
      */
-    default Point fire(double azimuth, double elevation, double speed, Point shooterCoordinates) {
+    default Point fire(double azimuth, double elevation, double speed, Missile missile) {
         Point strikeCoordinates = new Point(0, 0, 0);
 
 
