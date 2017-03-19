@@ -112,6 +112,11 @@ public class Target implements IHittable, IDrawable {
     }
 
     @Override
+    public void update(World world) {
+
+    }
+
+    @Override
     public int getHeight() {
         return 1;
     }

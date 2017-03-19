@@ -49,29 +49,6 @@ public class Cannoneer extends Application {
             data = new Data(args[0]);
     }
 
-//    public static void gameloop(Data data) {
-//        Player player = new Player(
-//                new Point(
-//                    data.getShooterXm(), data.getShooterYm(),
-//                    data.getTerrainZ()[data.getShooterX()][data.getShooterY()]));
-//
-//        Target target = new Target(new Point(
-//                    data.getTargetXm(), data.getTargetYm(),
-//                    data.getTerrainZ()[data.getTargetX()][data.getShooterY()]));
-//    }
-
-/*
-    public void paint(GraphicsContext g) {
-        g.setFill(Color.GRAY);
-
-        Player player = new Player(data.getShooterXm(), data.getShooterYm(), data.getterrainZm()[data.getShooterX()][data.getShooterY()]);
-        Target target = new Target(data.getTargetXm(), data.getTargetYm(), data.getterrainZm()[data.getTargetX()][data.getTargetY()]);
-
-        player.draw(g);
-        target.draw(g);
-    }
-*/
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Petr Kraus / A16B0065P");

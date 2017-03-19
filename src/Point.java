@@ -26,6 +26,16 @@ public class Point {
         this.z = z;
     }
 
+    public Point(Point other) {
+        x = other.x;
+        y = other.y;
+        z = other.z;
+    }
+
+    public Point copy() {
+        return new Point(this);
+    }
+
     /**
      * Vraci vzdalenost bodu
      *
@@ -55,6 +65,24 @@ public class Point {
 
     public double getZ() {
         return z;
+    }
+
+    public void add(Point other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+    }
+
+    public void addX(double x) {
+        this.x += x;
+    }
+
+    public void addY(double y) {
+        this.y += y;
+    }
+
+    public void addZ(double z) {
+        this.z += z;
     }
 
     public void setX(double x) {

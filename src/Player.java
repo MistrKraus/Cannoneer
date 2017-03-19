@@ -25,11 +25,21 @@ public class Player extends Target implements IShooting {
     }
 
     @Override
+    public Missile fire(double azimuth, double elevation, double speed) {
+        return new Missile(coordinates, azimuth, elevation, speed);
+    }
+
+    @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
         g.setStroke(Color.BLUE);
         g.setLineWidth(1);
         g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
         g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+    }
+
+    @Override
+    public void update(World world) {
+
     }
 
     @Override

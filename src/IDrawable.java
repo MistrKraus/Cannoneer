@@ -12,6 +12,8 @@ public interface IDrawable {
      */
     void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY);
 
+    void update(World world);
+
     /**
      * Vrati vysku
      *
