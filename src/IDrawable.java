@@ -19,14 +19,14 @@ public interface IDrawable {
      *
      * @return vyska
      */
-    int getHeight();
+    double getHeight();
 
     /**
      * Vrati sirku
      *
      * @return sirka
      */
-    int getWidth();
+    double getWidth();
 
     /**
      * Vrati instanci tridy {@code Point} s aktualni pozici instance

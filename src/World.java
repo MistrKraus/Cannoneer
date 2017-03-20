@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,10 @@ public class World {
     private final ObservableList<Player> players = FXCollections.observableArrayList();
     private final ObservableList<Target> targets = FXCollections.observableArrayList();
     private final ObservableList<Missile> missiles = FXCollections.observableArrayList();
+    private final ObservableList<Explosion> explosions = FXCollections.observableArrayList();
 
     private final List<Missile> missilesToRemove = new ArrayList<>();
+    private final List<Explosion> explosionsToRemove = new ArrayList<>();
 
     private double scalePixelperMX;
     private double scalePixelperMY;
@@ -54,18 +57,29 @@ public class World {
         missiles.add(missile);
     }
 
+    public void addExplosion(Explosion explosion) {
+        explosions.add(explosion);
+    }
+
     public void removeMissile(Missile missile) {
         missilesToRemove.add(missile);
+    }
+
+    public void removeExplosion(Explosion explosion) {
+        explosionsToRemove.add(explosion);
     }
 
     public void update() {
 
         missiles.removeAll(missilesToRemove);
         missilesToRemove.clear();
+        explosions.removeAll(explosionsToRemove);
+        explosionsToRemove.clear();
 
         players.forEach((player1) -> player1.update(this));
         targets.forEach((target1) -> target1.update(this));
         missiles.forEach((missile1) -> missile1.update(this));
+        explosions.forEach((explosion1) -> explosion1.update(this));
 
         scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMapWidthM();
         scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMapHeightM();
@@ -76,6 +90,7 @@ public class World {
         players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
         missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
+        explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
     }
 
     public void start() {
@@ -99,7 +114,15 @@ public class World {
     }
 
     public double[][] getSurface() {
-        return data.getterrainZm();
+        //double[][] surface = Array.getdata.getTerrainZm();
+
+        System.out.println("Surface: " + surface[0][0]);
+        System.out.println("Terrain: " + data.getTerrainZm()[0][0]);
+
+        players.forEach(player -> surface[(int)(player.getX()*scalePixelperMX)][(int)(player.getY()*scalePixelperMY)] += player.getHeight());
+        targets.forEach(targets -> surface[(int)(targets.getX()*scalePixelperMX)][(int)(targets.getY()*scalePixelperMY)] += targets.getHeight());
+
+        return surface;
     }
 
     public double getScalePixelperMX() {

@@ -117,12 +117,12 @@ public class Target implements IHittable, IDrawable {
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return 1;
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return 1;
     }
 

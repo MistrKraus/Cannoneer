@@ -57,6 +57,8 @@ public class Data {
 
             System.out.println("Zadejte správný název souboru (včetně koncovky .ter), nebo 'N'");
         }
+
+        terrainZm[terrainZm.length / 2][terrainZm.length / 2] = 1500;
     }
 
     public boolean dataConsistent() {
@@ -120,7 +122,7 @@ public class Data {
         return targetY * deltaYm;
     }
 
-    public double[][] getterrainZm() {
+    public double[][] getTerrainZm() {
         return terrainZm;
     }
 }

@@ -51,6 +51,8 @@ public class Missile implements IDrawable {
     }
 
 /*
+    PROC???
+
     public Point collidingPointM(double[][] surface, double scalePixelperMX, double scalePixelperMY) {
         for (int i = 0; i < 5; i++) {
             //coordinates()
@@ -74,21 +76,28 @@ public class Missile implements IDrawable {
 
     @Override
     public void update(World world) {
-        coordinates.add(new Point(speed, speed, speed));
-        System.out.println(coordinates);
+        coordinates.add(new Point(speed, speed, 2));
+        //System.out.println(coordinates);
 
-        if (isOutsideMap(world.getData()) || isColliding(world.getSurface(), world.getScalePixelperMX(), world.getScalePixelperMY())) {
+        if (isOutsideMap(world.getData())) {
             world.removeMissile(this);
+            return;
+        }
+
+        if (isColliding(world.getSurface(), world.getScalePixelperMX(), world.getScalePixelperMY())) {
+            world.removeMissile(this);
+            world.addExplosion(new Explosion(coordinates, strikeRadius));
+            System.out.println("Bum!");
         }
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return 0;
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return 0;
     }
 

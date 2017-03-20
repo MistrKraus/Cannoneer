@@ -48,8 +48,8 @@ public class MainController implements Initializable {
         context.translate(canvas.getLayoutX(), canvas.getLayoutY());
 
         world = new World(context, data);
-        world.addPlayer(new Player(data.getShooterXm(), data.getShooterYm(), data.getterrainZm()[data.getShooterX()][data.getShooterY()]));
-        world.addTarget(new Target(data.getTargetXm(), data.getTargetYm(), data.getterrainZm()[data.getTargetX()][data.getTargetY()]));
+        world.addPlayer(new Player(data.getShooterXm(), data.getShooterYm(), data.getTerrainZm()[data.getShooterX()][data.getShooterY()]));
+        world.addTarget(new Target(data.getTargetXm(), data.getTargetYm(), data.getTerrainZm()[data.getTargetX()][data.getTargetY()]));
         world.update();
     }
 
@@ -62,4 +62,6 @@ public class MainController implements Initializable {
         world.addMissile(world.getPlayer().fire(azimuthSp.getValue(), elevationSp.getValue(), speedSp.getValue()));
         world.start();
     }
+
+
 }
