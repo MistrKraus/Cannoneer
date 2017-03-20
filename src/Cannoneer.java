@@ -1,6 +1,7 @@
 import com.sun.deploy.util.FXLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -58,7 +59,7 @@ public class Cannoneer extends Application {
         // mam vlastni dependenci injection (zdroj: budouci bakalar)
         loader.setControllerFactory(param -> {
             try {
-                return param.getConstructor(Data.class).newInstance(data);
+                return param.getConstructor(Data.class, Stage.class).newInstance(data, primaryStage);
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
                 return null;
@@ -66,14 +67,15 @@ public class Cannoneer extends Application {
         });
         Parent parent = loader.load();
 
-        double width = data.getMapWidth() + 20;
-        double height = data.getMapHeight() + 183;
+//        double width = data.getMapWidth() + 233;
+//        double height = data.getMapHeight() + 20;
 
-        Scene scene = new Scene(parent, width, height);
+        //Scene scene = new Scene(parent, width, height);
+        Scene scene = new Scene(parent, primaryStage.getWidth(), primaryStage.getHeight());
 
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(width + 20);
-        primaryStage.setMinHeight(height + 40);
+//        primaryStage.setMinWidth(width + 20);
+//        primaryStage.setMinHeight(height + 40);
         primaryStage.show();
     }
 

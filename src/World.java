@@ -7,7 +7,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +45,18 @@ public class World {
     }
 
     public void addPlayer(Player player) {
+        for (int i = 0; i < (int)(player.getWidthX() * getScalePixelperMX()); i++)
+            for (int j = 0; j < (int)(player.getWidthY() * getScalePixelperMY()); j++)
+                getSurface()[(int)(player.getX() * getScalePixelperMX()) + i][(int)(player.getY() * scalePixelperMY) + j] += player.getHeight();
+
         players.add(player);
     }
 
     public void addTarget(Target target) {
+        for (int i = 0; i < (int)(target.getWidthX() * getScalePixelperMX()); i++)
+            for (int j = 0; j < (int)(target.getWidthY() * getScalePixelperMY()); j++)
+                getSurface()[(int)(target.getX() * getScalePixelperMX()) + i][(int)(target.getY() * scalePixelperMY) + j] += target.getHeight();
+
         targets.add(target);
     }
 
@@ -70,7 +77,6 @@ public class World {
     }
 
     public void update() {
-
         missiles.removeAll(missilesToRemove);
         missilesToRemove.clear();
         explosions.removeAll(explosionsToRemove);
@@ -113,16 +119,12 @@ public class World {
         return players.get(playerIndex);
     }
 
+    public Target getTarget() {
+        return targets.get(playerIndex);
+    }
+
     public double[][] getSurface() {
-        //double[][] surface = Array.getdata.getTerrainZm();
-
-        System.out.println("Surface: " + surface[0][0]);
-        System.out.println("Terrain: " + data.getTerrainZm()[0][0]);
-
-        players.forEach(player -> surface[(int)(player.getX()*scalePixelperMX)][(int)(player.getY()*scalePixelperMY)] += player.getHeight());
-        targets.forEach(targets -> surface[(int)(targets.getX()*scalePixelperMX)][(int)(targets.getY()*scalePixelperMY)] += targets.getHeight());
-
-        return surface;
+        return data.getTerrainZm();
     }
 
     public double getScalePixelperMX() {

@@ -22,11 +22,18 @@ public interface IDrawable {
     double getHeight();
 
     /**
-     * Vrati sirku
+     * Vrati sirku na x-ove ose
      *
-     * @return sirka
+     * @return sirka na x-ove ose
      */
-    double getWidth();
+    double getWidthX();
+
+    /**
+     * Vrati sirku na y-ove ose
+     *
+     * @return sirka na y-ove ose
+     */
+    double getWidthY();
 
     /**
      * Vrati instanci tridy {@code Point} s aktualni pozici instance

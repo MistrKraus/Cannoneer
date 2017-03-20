@@ -43,7 +43,7 @@ public class Data {
                 for (int i = 0; i < mapWidth; i++) {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
-                        terrainZm[i][j] = in.readInt() / 1000;
+                        terrainZm[i][j] = 1;//in.readInt() / 1000;
                         //System.out.println(terrainZm[i][j]);
                     }
                 }
@@ -58,7 +58,7 @@ public class Data {
             System.out.println("Zadejte správný název souboru (včetně koncovky .ter), nebo 'N'");
         }
 
-        terrainZm[terrainZm.length / 2][terrainZm.length / 2] = 1500;
+        //terrainZm[terrainZm.length / 2][terrainZm.length / 2] = 1500;
     }
 
     public boolean dataConsistent() {

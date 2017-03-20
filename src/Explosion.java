@@ -33,7 +33,12 @@ public class Explosion implements IDrawable {
     }
 
     @Override
-    public double getWidth() {
+    public double getWidthX() {
+        return radius;
+    }
+
+    @Override
+    public double getWidthY() {
         return radius;
     }
 

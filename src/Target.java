@@ -12,10 +12,9 @@ public class Target implements IHittable, IDrawable {
      * defaultni pocet hp
      */
     protected static final int DEFAULT_HP = 100;
-
-    /**
-     * souracnice cile v metrech
-     */
+    /** vychozi vyska v metrech*/
+    protected static final double DEFAULT_HEIGHT = 1;
+    /** souracnice cile v metrech */
     protected Point coordinates;
     /**
      * zivoty ~ hp cile
@@ -61,7 +60,7 @@ public class Target implements IHittable, IDrawable {
      * @param hp pocet zivotu ~ hp cile
      */
     public Target(Point point, int hp) {
-        coordinates = point;
+        coordinates = new Point(point.getX(), point.getY(), point.getZ() + DEFAULT_HEIGHT);
         this.hp = hp;
     }
 
@@ -122,7 +121,12 @@ public class Target implements IHittable, IDrawable {
     }
 
     @Override
-    public double getWidth() {
+    public double getWidthX() {
+        return 1;
+    }
+
+    @Override
+    public double getWidthY() {
         return 1;
     }
 

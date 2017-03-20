@@ -67,34 +67,124 @@ public class Point {
         return z;
     }
 
-    public void add(Point other) {
+    public Point add(Point other) {
         x += other.x;
         y += other.y;
         z += other.z;
+
+        return this;
     }
 
-    public void addX(double x) {
+    public Point add(double x) {
         this.x += x;
+        this.y += x;
+        this.z += x;
+
+        return this;
     }
 
-    public void addY(double y) {
+    public Point addX(double x) {
+        this.x += x;
+
+        return this;
+    }
+
+    public Point addY(double y) {
         this.y += y;
+
+        return this;
     }
 
-    public void addZ(double z) {
+    public Point addZ(double z) {
         this.z += z;
+
+        return this;
     }
 
-    public void setX(double x) {
+    public Point sub(Point other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+
+        return this;
+    }
+
+    public Point sub(double x) {
+        this.x -= x;
+        this.y -= x;
+        this.z -= x;
+
+        return this;
+    }
+
+    public Point subX(double x) {
+        this.x -= x;
+
+        return this;
+    }
+
+    public Point subY(double y) {
+        this.y -= y;
+
+        return this;
+    }
+
+    public Point subZ(double z) {
+        this.z -= z;
+
+        return this;
+    }
+
+    public Point mul(Point other) {
+        x *= other.x;
+        y *= other.y;
+        z *= other.z;
+
+        return this;
+    }
+
+    public Point mul(double x) {
+        this.x *= x;
+        this.y *= x;
+        this.z *= x;
+
+        return this;
+    }
+
+    public Point mulX(double x) {
+        this.x *= x;
+
+        return this;
+    }
+
+    public Point mulY(double y) {
+        this.y *= y;
+
+        return this;
+    }
+
+    public Point mulZ(double z) {
+        this.z *= z;
+
+        return this;
+    }
+
+    public Point setX(double x) {
         this.x = x;
+
+        return this;
     }
 
-    public void setY(double y) {
+    public Point setY(double y) {
         this.y = y;
+
+        return this;
     }
 
-    public void setZ(double z) {
+    public Point setZ(double z) {
         this.z = z;
+
+        return this;
     }
 
     @Override
