@@ -44,6 +44,12 @@ public class Missile implements IDrawable {
     public boolean isColliding(double[][] surface, double scalePixelperMX, double scalePixelperMY) {
         return (coordinates.getZ() < surface[(int)(coordinates.getX() * scalePixelperMX)][(int)(coordinates.getY() * scalePixelperMY)]);
     }
+
+    public boolean isOutsideMap(Data data) {
+        return (coordinates.getX() < 0 || coordinates.getY() < 0 || coordinates.getZ() < -5 ||
+            coordinates.getX() > data.getMapWidthM() || coordinates.getY() > data.getMapHeightM());
+    }
+
 /*
     public Point collidingPointM(double[][] surface, double scalePixelperMX, double scalePixelperMY) {
         for (int i = 0; i < 5; i++) {
@@ -60,7 +66,7 @@ public class Missile implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
         g.setFill(Color.ORANGE);
-        g.fillOval(coordinates.getX(), coordinates.getY(), 3, 3);
+        g.fillOval(coordinates.getX() * scaleX, coordinates.getY() * scaleY, 3, 3);
 
 //        g.setFill(Color.ORANGE);
 //        g.strokeOval(coordinates.getX() * scaleX, coordinates.getY() * scaleY, strikeRadius / 2, strikeRadius / 2);
@@ -68,9 +74,10 @@ public class Missile implements IDrawable {
 
     @Override
     public void update(World world) {
-        coordinates.add(new Point(speed, speed, 0));
+        coordinates.add(new Point(speed, speed, speed));
+        System.out.println(coordinates);
 
-        if (isColliding(world.getSurface(), world.getScalePixelperMX(), world.getScalePixelperMY())) {
+        if (isOutsideMap(world.getData()) || isColliding(world.getSurface(), world.getScalePixelperMX(), world.getScalePixelperMY())) {
             world.removeMissile(this);
         }
     }

@@ -90,6 +90,10 @@ public class World {
         timeline.pause();
     }
 
+    public Data getData() {
+        return data;
+    }
+
     public Player getPlayer() {
         return players.get(playerIndex);
     }
