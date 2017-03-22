@@ -44,6 +44,12 @@ public class World {
 
     private boolean runs = false;
 
+    /**
+     * konstruktor
+     *
+     * @param graphics graficky kontext
+     * @param data nactena data
+     */
     public World(GraphicsContext graphics, Data data) {
         this.graphics = graphics;
         this.data = data;
@@ -51,6 +57,11 @@ public class World {
         timeline.setCycleCount(Animation.INDEFINITE);
     }
 
+    /**
+     * ulozi instanci hrace
+     *
+     * @param player hrac
+     */
     public void addPlayer(Player player) {
 //        for (int i = 0; i < (int)(player.getWidthX() * scaleX); i++)
 //            for (int j = 0; j < (int)(player.getWidthY() * scaleY); j++)
@@ -77,6 +88,11 @@ public class World {
         players.add(player);
     }
 
+    /**
+     * prida instanci cile
+     *
+     * @param target cil
+     */
     public void addTarget(Target target) {
         double columnCount = target.getWidthX() / data.getDeltaXm();
         double rowCount = target.getHeight() / data.getDeltaYm();
@@ -97,14 +113,29 @@ public class World {
         targets.add(target);
     }
 
+    /**
+     * prida instanci strely
+     *
+     * @param missile strela
+     */
     public void addMissile(Missile missile) {
         missiles.add(missile);
     }
 
+    /**
+     * prida instanci exploze
+     *
+     * @param explosion exploze
+     */
     public void addExplosion(Explosion explosion) {
         explosions.add(explosion);
     }
 
+    /**
+     * odstrani cil
+     *
+     * @param target cil
+     */
     public void removeTarget(Target target) {
         double columnCount = target.getWidthX() / data.getDeltaXm();
         double rowCount = target.getHeight() / data.getDeltaYm();
@@ -125,6 +156,11 @@ public class World {
         targetsToRemove.add(target);
     }
 
+    /**
+     * odstrani strelu
+     *
+     * @param missile strela
+     */
     public void removeMissile(Missile missile) {
         System.out.println("Strela dopadla");
         missilesToRemove.add(missile);
@@ -134,6 +170,9 @@ public class World {
         explosionsToRemove.add(explosion);
     }
 
+    /**
+     * aktualizuje vsechny objekty
+     */
     public void update() {
         targets.removeAll(targetsToRemove);
         targetsToRemove.clear();
@@ -155,6 +194,9 @@ public class World {
         draw();
     }
 
+    /**
+     * vykresli vsechny objekty
+     */
     public void draw() {
         scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMapWidthM();
         scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMapHeightM();

@@ -1,22 +1,20 @@
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.EventListener;
 import java.util.ResourceBundle;
 
 /**
  * Created by kraus on 13.03.2017.
+ *
+ * obstarava komunikaci s grafickym rozhranim
  */
 public class MainController implements Initializable {
 
@@ -46,6 +44,12 @@ public class MainController implements Initializable {
 
     private static final double DEFAULT_CAVANS_HEIGHT = 257;
 
+    /**
+     * kontruktor
+     *
+     * @param data nactena data ze souboru
+     * @param stage
+     */
     public MainController(Data data, Stage stage) {
         this.data = data;
         this.stage = stage;
@@ -118,6 +122,12 @@ public class MainController implements Initializable {
         world.start();
     }
 
+    /**
+     * Reakce na stisk tlačítka.
+     * Pokud je hra spustena vypise vzdalenost mezi strelcem a cilem zaroven s jejich nadmorskymi vyskami a zajisti vystrel hrace
+     *
+     * @param actionEvent data o stiku tlacitka
+     */
     public void handleBtn(ActionEvent actionEvent) {
         if (!world.isRunning())
             return;

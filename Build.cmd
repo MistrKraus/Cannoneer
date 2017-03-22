@@ -1,1 +1,1 @@
-javac -d bin src\terrainGenerator\*.java
+javac -d bin src\*.java

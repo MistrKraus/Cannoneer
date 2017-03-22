@@ -2,6 +2,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Created by kraus on 18.03.2017.
+ *
+ * Interface pro kreslitelne objekty
  */
 public interface IDrawable {
 
@@ -12,6 +14,11 @@ public interface IDrawable {
      */
     void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY);
 
+    /**
+     * aktualizuje objekt
+     *
+     * @param world ridici trida
+     */
     void update(World world);
 
     /**
@@ -69,7 +76,19 @@ public interface IDrawable {
         return getCoordinates().getZ();
     }
 
+    /**
+     * Nastavi nove souradnice
+     *
+     * @param point souradnice v metrech
+     */
     void setCoordinates(Point point);
 
+    /**
+     * Nastavi nove souradnice
+     *
+     * @param x x-ova souradnice v metrech
+     * @param y y-ova souradnie v metrech
+     * @param z z-ova souradnice v metrech
+     */
     void setCoordinates(double x, double y, double z);
 }

@@ -3,6 +3,8 @@ import javafx.scene.paint.Color;
 
 /**
  * Created by kraus on 18.03.2017.
+ *
+ * strela
  */
 public class Missile implements IDrawable {
 
@@ -11,27 +13,64 @@ public class Missile implements IDrawable {
     private double strikeRadius;
 
     private final double acceleration;
-    /**
-     * vychozi okoli (v metrech), ktere muze byt srelou zasazeno
-     */
+    /** vychozi okoli (v metrech), ktere muze byt srelou zasazeno */
     private static final double DEFAULT_STRIKE_RADIUS = 60;
     private static final Point MAGIC_POINT = new Point(0,0,-1);
     private static final double GRAVITY = 10;
     private static final double DELTA_T = 0.01;
     private static final double MAGIC_B = 0.05;
 
+    /**
+     * pretizeni konstruktoru
+     *
+     * @param x x-ova souradnice v metrech
+     * @param y y-ova souradnice v metrech
+     * @param z z-ova souradnice v metrech
+     * @param azimuth aizmut ve stupnich
+     * @param elevation zdvih dela ve stupnich
+     * @param speed rychlost strely v metrech za sekundu
+     */
     public Missile(double x, double y, double z, double azimuth, double elevation, double speed) {
         this(new Point(x,y,z), azimuth, elevation, speed, DEFAULT_STRIKE_RADIUS);
     }
 
+    /**
+     * pretizeni konstruktoru
+     *
+     * @param coordinates souradnice v metrech
+     * @param azimuth aizmut ve stupnich
+     * @param elevation zdvih dela ve stupnich
+     * @param speed rychlost strely v metrech za sekundu
+     */
     public Missile(Point coordinates, double azimuth, double elevation, double speed) {
         this(coordinates, azimuth, elevation, speed, DEFAULT_STRIKE_RADIUS);
     }
 
+    /**
+     * pretizeni konstruktoru
+     *
+     * @param x x-ova souradnice v metrech
+     * @param y y-ova souradnice v metrech
+     * @param z z-ova souradnice v metrech
+     * @param azimuth aizmut ve stupnich
+     * @param elevation zdvih dela ve stupnich
+     * @param speed rychlost strely v metrech za sekundu
+     * @param strikeRadius prumer vybuchu strely
+     */
     public Missile(double x, double y, double z, double azimuth, double elevation, double speed, double strikeRadius) {
         this(new Point(x,y,z), azimuth, elevation, speed, strikeRadius);
     }
 
+    /**
+     * konstruktor
+     * provede potrebnou matematiku pro pohyb rakety
+     *
+     * @param coordinates souradnice v metrech
+     * @param azimuth aizmut ve stupnich
+     * @param elevation zdvih dela ve stupnich
+     * @param speed rychlost strely v metrech za sekundu
+     * @param strikeRadius prumer vybuchu strely
+     */
     public Missile(Point coordinates, double azimuth, double elevation, double speed, double strikeRadius) {
         this.coordinates = coordinates.copy().subZ(0.3);
         this.strikeRadius = strikeRadius;
@@ -57,10 +96,22 @@ public class Missile implements IDrawable {
         this.speed = new Point(speedX, speedY, speedZ);
     }
 
+    /**
+     * @return prumer potencialne zasazene oblasti v metrech
+     */
     public double getStrikeRadius() {
         return strikeRadius;
     }
 
+    /**
+     * Zjistuje zda strela neco zasasahla
+     *
+     * @param surface povrch mapy (teren) v metrech
+     * @param scaleX hodnota pro prepocet x-ove souradnice v metrech na sloupec
+     * @param scaleY hodnota pro prepocet y-ove souradnice v metrech na radek
+     * @param data nactena data
+     * @return zda-li strela neco zasahla
+     */
     public boolean isColliding(double[][] surface, double scaleX, double scaleY, Data data) {
         int iX; // = (int)(coordinates.getX() * scaleX);
         int iY; // = (int)(coordinates.getY() * scaleY);
@@ -83,17 +134,37 @@ public class Missile implements IDrawable {
         return false;
     }
 
-    public boolean isOutsideMap(Data data) {
+    /**
+     * Zjisti zda strela opustila mapu
+     *
+     * @param mapWidth sirka mapy v metrech
+     * @param mapHeight vyska mapy v metrech
+     * @return zda strela opustila mapu
+     */
+    public boolean isOutsideMap(double mapWidth, double mapHeight) {
         return (coordinates.getX() < 0 || coordinates.getY() < 0 ||
-            coordinates.getX() > data.getMapWidthM() || coordinates.getY() > data.getMapHeightM());
+            coordinates.getX() > mapWidth || coordinates.getY() > mapHeight);
     }
 
+    /**
+     * vykresli strelu
+     *
+     * @param g graficky kontext, ktery nakresli instanci
+     * @param scaleX hodnota, ktera po vynasobeni x-ove souradnice v metrech urci tuto souradnici v pixelech
+     * @param scaleY hodnota, ktera po vynasobeni y-ove souradnice v metrech urci tuto souradnici v pixelech
+     */
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
         g.setFill(Color.ORANGE);
         g.fillOval((coordinates.getX() - 3 / 2) * scaleX, (coordinates.getY() - 3 / 2) * scaleY, 3, 3);
     }
 
+    /**
+     * Porune strelu prislusnym smerem
+     * Zjisti zda neupustila mapu ci nekoliduje s povrchem
+     *
+     * @param world ridici trida
+     */
     @Override
     public void update(World world) {
         // vypocet pozice bez vetru
@@ -106,7 +177,7 @@ public class Missile implements IDrawable {
 
         //System.out.println(coordinates);
 
-        if (isOutsideMap(world.getData())) {
+        if (isOutsideMap(world.getData().getMapWidthM(), world.getData().getMapHeightM())) {
             world.removeMissile(this);
             return;
         }

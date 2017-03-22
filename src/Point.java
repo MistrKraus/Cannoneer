@@ -1,24 +1,19 @@
-import java.util.DoubleSummaryStatistics;
-
 /**
  * Created by kraus on 12.03.2017.
  *
- * Souradnice na mape (v metrech)
+ * bod se tremi souradnicemi
  */
 public class Point {
-    /** x-ova souradnice v metrech*/
     private double x;
-    /** y-ova souradnice v metrch*/
     private double y;
-    /** nadmorska vyska v metech*/
     private double z;
 
     /**
-     * Konstruktor souradnice (bodu) na mape
+     * Konstruktor
      *
-     * @param x x-ova souradnice v metrech
-     * @param y y-ova souradnice v metrch
-     * @param z nadmorska vyska v metech
+     * @param x
+     * @param y
+     * @param z
      */
     public Point(double x, double y, double z) {
         this.x = x;
@@ -26,12 +21,20 @@ public class Point {
         this.z = z;
     }
 
+    /**
+     * prezizeni konstruktoru
+     *
+     * @param other
+     */
     public Point(Point other) {
         x = other.x;
         y = other.y;
         z = other.z;
     }
 
+    /**
+     * @return kopie konstruktoru bodu
+     */
     public Point copy() {
         return new Point(this);
     }
@@ -51,22 +54,34 @@ public class Point {
     }
 
     /**
-     * vrati x-ovou souradnici v metrech
+     * vrati x
      *
-     * @return x-ova souradnice v metrech
+     * @return x
      */
     public double getX() {
         return x;
     }
 
+    /**
+     * @return y
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * @return z
+     */
     public double getZ() {
         return z;
     }
 
+    /**
+     * pricte k jednotlivym slozkam slozky jineho {@code Point}
+     *
+     * @param other {@code Point}
+     * @return bod posunuty o hodnoty jineho bodu
+     */
     public Point add(Point other) {
         x += other.x;
         y += other.y;

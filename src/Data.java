@@ -1,15 +1,13 @@
-import com.sun.deploy.util.StringUtils;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Created by kraus on 12.03.2017.
+ *
+ * Prepravka s daty nactenymi ze vstupniho souboru
  */
 public class Data {
-
     private int mapWidth;
     private int mapHeight;
     private double deltaXm;
@@ -23,6 +21,11 @@ public class Data {
 
     private double[][] terrainZm;
 
+    /**
+     * Konstruktor nacitajici vstupni soubor
+     *
+     * @param fileName nazev vstupniho souboru
+     */
     public Data(String fileName) {
         try (DataInputStream in = new DataInputStream(new FileInputStream(fileName))) {
             this.mapWidth = in.readInt();
@@ -39,6 +42,11 @@ public class Data {
             terrainZm = new double[mapWidth][mapHeight];
 
             int zCounter = 0;
+
+            if (mapHeight <= 0 || mapWidth <= 0) {
+                System.out.println("Nactena data ze souboru jsou chybna!");
+                return;
+            }
 
             try {
                 for (int i = 0; i < mapWidth; i++) {
@@ -63,71 +71,128 @@ public class Data {
         }
     }
 
+    /**
+     * Zjisti zda jsou nactena data spravna
+     *
+     * @return
+     */
     public boolean dataConsistent() {
         return !(mapWidth <= 0 || mapHeight <= 0 || deltaXm <= 0 || deltaYm <= 0 ||
                 shooterX < 0 || shooterY < 0 || targetX < 0 || targetY < 0);
     }
 
+    /**
+     * @return sirka mapy ve sloupcich
+     */
     public int getMapWidth() {
         return mapWidth;
     }
 
+    /**
+     * @return vyska mapy v radcich
+     */
     public int getMapHeight() {
         return mapHeight;
     }
 
+    /**
+     * @return sirka jednoho sloupce
+     */
     public double getDeltaXm() {
         return deltaXm;
     }
 
+    /**
+     * @return vyska jedne radky
+     */
     public double getDeltaYm() {
         return deltaYm;
     }
 
+    /**
+     * @return sirka mapy v metrech
+     */
     public double getMapWidthM() {
         return mapWidthM;
     }
 
+    /**
+     * @return vyska mapy v metrech
+     */
     public double getMapHeightM() {
         return mapHeightM;
     }
 
+    /**
+     * @return vychozi x-ova pozice strelce ve sloupcich
+     */
     public int getShooterX() {
         return shooterX;
     }
 
+    /**
+     * @return vychozi y-ova pozice strelce v radcich
+     */
     public int getShooterY() {
         return shooterY;
     }
 
+    /**
+     * @return vychozi x-ova pozice strelce v metrech
+     */
     public double getShooterXm() {
         return shooterX * deltaXm;
     }
 
+    /**
+     * @return vychozi y-ova pozice strelce v metrech
+     */
     public double getShooterYm() {
         return shooterY * deltaYm;
     }
 
+    /**
+     * @return vychozi x-ova pozice cile ve sloupcich
+     */
     public int getTargetX() {
         return targetX;
     }
 
+    /**
+     * @return vychozi y-ova pozie cile v radcich
+     */
     public int getTargetY() {
         return targetY;
     }
 
+    /**
+     * @return vychozi x-ova pozice cile v metrech
+     */
     public double getTargetXm() {
         return targetX * deltaXm;
     }
 
+    /**
+     * @return vychozi y-ova pozice cile v metrech
+     */
     public double getTargetYm() {
         return targetY * deltaYm;
     }
 
+    /**
+     * @return dvourozmerne pole s vyskou terenu
+     */
     public double[][] getTerrainZm() {
         return terrainZm;
     }
 
+    /**
+     * Zmeni vysku terenu na zadanych souradnicich
+     *
+     * @param x sloupec na mape
+     * @param y radek na mape
+     * @param value nova vyska terenu
+     */
     public void setTerrainZm(int x, int y, double value) {
         terrainZm[x][y] = value;
     }

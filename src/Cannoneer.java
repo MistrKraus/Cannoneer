@@ -1,27 +1,24 @@
-import com.sun.deploy.util.FXLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.EventListener;
 
 /**
  * Created by kraus on 10.03.2017.
+ *
+ * Hlavni trida spoustejici aplikaci
  */
 public class Cannoneer extends Application {
 
     static Data data;
-    //static double aspectRatio;
 
     /**
      * Zajisti nacteni dat, pokud byla zadana spatne, vypise chybovou hlasku
+     * Zajisti vytvoreni okna
      *
      * @param args nazev vstupniho souboru
      * @throws IOException
@@ -55,13 +52,19 @@ public class Cannoneer extends Application {
             data = new Data("src/resources/" + args[0]);
     }
 
+    /**
+     * Vyvori okno
+     *
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Petr Kraus / A16B0065P");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
 
-        // mam vlastni dependenci injection (zdroj: budouci bakalar)
+        // dependence injection
         loader.setControllerFactory(param -> {
             try {
                 return param.getConstructor(Data.class, Stage.class).newInstance(data, primaryStage);
