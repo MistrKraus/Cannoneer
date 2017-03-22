@@ -21,12 +21,12 @@
          <Pane prefHeight="101.0" prefWidth="215.0">
             <children>
                <Label prefHeight="17.0" prefWidth="133.0" text="Vzdálenost střelce a cíle:" />
-                    <Label fx:id="distanceLbl" layoutX="93.0" layoutY="17.0" prefHeight="17.0" prefWidth="62.0" text=" m" textAlignment="RIGHT" />
+                    <Label fx:id="distanceLbl" layoutX="93.0" layoutY="16.0" prefHeight="17.0" prefWidth="62.0" />
                <Label layoutY="48.0" text="Nadmořská výška" />
                <Label layoutX="46.0" layoutY="65.0" text="Střelce:" />
-                    <Label fx:id="shooterZLbl" layoutX="93.0" layoutY="65.0" prefHeight="17.0" prefWidth="62.0" text=" m" textAlignment="RIGHT" />
+                    <Label fx:id="shooterZLbl" layoutX="93.0" layoutY="64.0" prefHeight="17.0" prefWidth="62.0" textAlignment="RIGHT" />
                 <Label layoutX="46.0" layoutY="82.0" text="Cíle:" />
-                    <Label fx:id="targetZLbl" layoutX="93.0" layoutY="82.0" prefHeight="17.0" prefWidth="62.0" text=" m" textAlignment="RIGHT" />
+                    <Label fx:id="targetZLbl" layoutX="93.0" layoutY="81.0" prefHeight="17.0" prefWidth="62.0" textAlignment="RIGHT" />
             </children>
          </Pane>
           <Pane fx:id="container" prefHeight="154.0" prefWidth="215.0">

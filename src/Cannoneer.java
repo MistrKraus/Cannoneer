@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.EventListener;
 
 /**
  * Created by kraus on 10.03.2017.
@@ -45,6 +46,7 @@ public class Cannoneer extends Application {
     private static void loadData(String[] args) {
         if (args.length == 0)
             data = new Data("terrain257x257.ter");
+            //data = new Data("rovny1metr.ter");
 
         if (args.length == 1)
             data = new Data(args[0]);
@@ -67,15 +69,9 @@ public class Cannoneer extends Application {
         });
         Parent parent = loader.load();
 
-//        double width = data.getMapWidth() + 233;
-//        double height = data.getMapHeight() + 20;
-
-        //Scene scene = new Scene(parent, width, height);
         Scene scene = new Scene(parent, primaryStage.getWidth(), primaryStage.getHeight());
 
         primaryStage.setScene(scene);
-//        primaryStage.setMinWidth(width + 20);
-//        primaryStage.setMinHeight(height + 40);
         primaryStage.show();
     }
 

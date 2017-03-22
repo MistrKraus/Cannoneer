@@ -33,7 +33,7 @@ public class Missile implements IDrawable {
     }
 
     public Missile(Point coordinates, double azimuth, double elevation, double speed, double strikeRadius) {
-        this.coordinates = coordinates.copy();
+        this.coordinates = coordinates.copy().subZ(0.3);
         this.strikeRadius = strikeRadius;
         this.acceleration = speed;
 
@@ -51,6 +51,8 @@ public class Missile implements IDrawable {
         elevation = Math.PI * elevation / 180;
 
         double speedZ = Math.sin(elevation);
+        // TODO strelba
+        speedZ = 0;
 
         this.speed = new Point(speedX, speedY, speedZ);
     }
@@ -59,41 +61,63 @@ public class Missile implements IDrawable {
         return strikeRadius;
     }
 
-    public boolean isColliding(double[][] surface, double scalePixelperMX, double scalePixelperMY) {
-        return (coordinates.getZ() < surface[(int)(coordinates.getX() * scalePixelperMX)][(int)(coordinates.getY() * scalePixelperMY)]);
+    public boolean isColliding(double[][] surface, double scaleX, double scaleY, Data data) {
+        int iX; // = (int)(coordinates.getX() * scaleX);
+        int iY; // = (int)(coordinates.getY() * scaleY);
+
+        //return coordinates.getZ() <= surface[iX][iY];
+
+        for (int i =  -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                iX = (int)((coordinates.getX() + i * 2) * scaleX);
+                iY = (int)((coordinates.getY() + j * 2) * scaleY);
+
+                if (iX < 0 || iX >= surface.length || iY < 0 || iY >= surface[0].length)
+                    continue;
+
+                if (coordinates.getZ() <= surface[iX][iY])
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isOutsideMap(Data data) {
-        return (coordinates.getX() < 0 || coordinates.getY() < 0 || coordinates.getZ() < -5 ||
+        return (coordinates.getX() < 0 || coordinates.getY() < 0 ||
             coordinates.getX() > data.getMapWidthM() || coordinates.getY() > data.getMapHeightM());
     }
 
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
         g.setFill(Color.ORANGE);
-        g.fillOval(coordinates.getX() * scaleX, coordinates.getY() * scaleY, 3, 3);
+        g.fillOval((coordinates.getX() - strikeRadius / 2) * scaleX, (coordinates.getY() - strikeRadius / 2) * scaleY, 3, 3);
     }
 
     @Override
     public void update(World world) {
         // vypocet pozice bez vetru
         //coordinates = coordinates.copy().add((speed.add((MAGIC_POINT.copy().mul(GRAVITY * DELTA_T))).add((new Point(0,0,0).sub(acceleration)).mul(MAGIC_B * DELTA_T))));
-        Point v1 = MAGIC_POINT.copy().mul(GRAVITY * DELTA_T);
-        Point v2 = new Point(0,0,0).sub(speed);
-        Point v3 = v2.copy().mul(MAGIC_B*DELTA_T);
+//        Point v1 = MAGIC_POINT.copy().mul(GRAVITY * DELTA_T);
+//        Point v2 = new Point(0,0,0).sub(speed);
+//        Point v3 = v2.copy().mul(MAGIC_B*DELTA_T);
 
-        coordinates = coordinates.copy().add(v1).add(v3);
+        coordinates = coordinates.copy().add(speed.copy().mul(acceleration));
 
-        System.out.println(coordinates);
+        //System.out.println(coordinates);
 
         if (isOutsideMap(world.getData())) {
             world.removeMissile(this);
             return;
         }
 
-        if (isColliding(world.getSurface(), world.getScalePixelperMX(), world.getScalePixelperMY())) {
+        if (isColliding(world.getSurface(), world.getScaleX(), world.getScaleY(), world.getData())) {
             world.removeMissile(this);
-            world.addExplosion(new Explosion(coordinates, strikeRadius));
+
+            Explosion explosion = new Explosion(coordinates, strikeRadius);
+            world.addExplosion(explosion);
+            explosion.explode(world);
+
             System.out.println("Bum!");
         }
     }

@@ -1,3 +1,4 @@
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.*;
 
@@ -13,6 +14,14 @@ public class Explosion implements IDrawable {
     public Explosion(Point coordinates, double radius) {
         this.coordinates = coordinates.copy();
         this.radius = radius;
+    }
+
+    public void explode(World world) {
+        world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
+            .forEach(player -> player.dealtDamage(100));
+
+        world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
+            .forEach(target -> target.dealtDamage(100));
     }
 
     @Override
@@ -60,6 +69,10 @@ public class Explosion implements IDrawable {
     @Override
     public double getZ() {
         return coordinates.getZ();
+    }
+
+    public double getRadius() {
+        return radius;
     }
 
     @Override

@@ -3,6 +3,7 @@ import com.sun.deploy.util.StringUtils;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by kraus on 12.03.2017.
@@ -44,8 +45,9 @@ public class Data {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
                         terrainZm[i][j] = 1;//in.readInt() / 1000;
-                        //System.out.println(terrainZm[i][j]);
+                        //System.out.print(terrainZm[i][j] + "   ");
                     }
+                    //System.out.println();
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("V souboru chybí " + (mapWidth * mapWidth - zCounter) + " hodnot s nadmořskou výškou");
@@ -57,8 +59,6 @@ public class Data {
 
             System.out.println("Zadejte správný název souboru (včetně koncovky .ter), nebo 'N'");
         }
-
-        //terrainZm[terrainZm.length / 2][terrainZm.length / 2] = 1500;
     }
 
     public boolean dataConsistent() {
@@ -124,5 +124,9 @@ public class Data {
 
     public double[][] getTerrainZm() {
         return terrainZm;
+    }
+
+    public void setTerrainZm(int x, int y, double value) {
+        terrainZm[x][y] = value;
     }
 }

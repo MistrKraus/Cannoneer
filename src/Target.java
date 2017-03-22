@@ -65,31 +65,12 @@ public class Target implements IHittable, IDrawable {
     }
 
     /**
-     * Vraci informaci, zda utocnik zasahl cil
-     *
-     * @param azimuth smer strely
-     * @param elevation zdvih hlavne
-     * @param speed rychlost strely
-     * @param missile pouzita strela
-     * @return zda byl cil zasazen
-     */
-    public boolean gotHit(double azimuth, double elevation, double speed, Missile missile) {
-        int dmg = dealtDamage(missile, coordinates);
-
-        if (dmg > 0) {
-            dealDmg(dmg);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * snizi pocet hp cile
      *
      * @param dmg pocet hp ~ zivotu, ktere se maji ubrat
      */
-    public void dealDmg (int dmg) {
+    @Override
+    public void dealtDamage (int dmg) {
         this.hp -= dmg;
     }
 
@@ -112,7 +93,10 @@ public class Target implements IHittable, IDrawable {
 
     @Override
     public void update(World world) {
-
+        if (hp <= 0) {
+            System.out.println("Cil zasazen");
+            world.removeTarget(this);
+        }
     }
 
     @Override
@@ -160,6 +144,7 @@ public class Target implements IHittable, IDrawable {
                 hp + " HP " +
                 "[" + coordinates.getX() +
                 ", " + coordinates.getY() +
-                ", ]" + coordinates.getZ();
+                ", " + coordinates.getZ() +
+                "]";
     }
 }

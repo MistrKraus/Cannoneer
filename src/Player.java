@@ -37,10 +37,10 @@ public class Player extends Target implements IShooting {
         g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
     }
 
-    @Override
-    public void update(World world) {
-
-    }
+//    @Override
+//    public void update(World world) {
+//
+//    }
 
     @Override
     public String toString() {

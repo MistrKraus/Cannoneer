@@ -3,23 +3,23 @@
  *
  * Rozhrani pro objekty, ktere mohou byt zasazeny
  */
-public interface IHittable {
+public interface IHittable extends IDrawable {
+
+    /**
+     * Vraci informaci, zda byl target v radiusu
+     *
+     * @param coordinates souradnice, okolo kterych testuje pritomnost targetu
+     * @param radius okoli
+     * @param targetCoordinates souradnice potencialniho cile
+     * @return zda byl cil zasazen
+     */
+    default boolean isInRadius(Point coordinates, double radius, Point targetCoordinates) {
+        return (coordinates.getPointsDistance(targetCoordinates) < radius);
+    }
 
     /**
      * Urci pocet zraneni, ktere cil utrpel
-     *
-     * @param strikeCoordinates strela
-     * @param targetCoordinates pozice cile
-     * @return pocet zraneni
      */
-    default int dealtDamage(Missile strikeCoordinates, Point targetCoordinates)  {
-        double distance = strikeCoordinates.getCoordinates().getPointsDistance(targetCoordinates);
-
-        if (distance <= (strikeCoordinates.getStrikeRadius() / 2)) {
-            return (int)((strikeCoordinates.getStrikeRadius() / 2) - (distance - 1));
-        }
-
-        return 0;
-    }
+    void dealtDamage(int dmg);
 
 }

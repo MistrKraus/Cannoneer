@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**
@@ -27,9 +28,13 @@ public class World {
     private final ObservableList<Missile> missiles = FXCollections.observableArrayList();
     private final ObservableList<Explosion> explosions = FXCollections.observableArrayList();
 
+    private final List<Player> playersToRemove = new ArrayList<>();
+    private final List<Target> targetsToRemove = new ArrayList<>();
     private final List<Missile> missilesToRemove = new ArrayList<>();
     private final List<Explosion> explosionsToRemove = new ArrayList<>();
 
+    private double scaleX;
+    private double scaleY;
     private double scalePixelperMX;
     private double scalePixelperMY;
 
@@ -45,17 +50,47 @@ public class World {
     }
 
     public void addPlayer(Player player) {
-        for (int i = 0; i < (int)(player.getWidthX() * getScalePixelperMX()); i++)
-            for (int j = 0; j < (int)(player.getWidthY() * getScalePixelperMY()); j++)
-                getSurface()[(int)(player.getX() * getScalePixelperMX()) + i][(int)(player.getY() * scalePixelperMY) + j] += player.getHeight();
+//        for (int i = 0; i < (int)(player.getWidthX() * scaleX); i++)
+//            for (int j = 0; j < (int)(player.getWidthY() * scaleY); j++)
+//                setSurface((int)(player.getX() * getScalePixelperMX()) + i, (int)(player.getY() * scalePixelperMY) + j,
+//                        getSurface()[(int)(player.getX() * getScalePixelperMX()) + i][(int)(player.getY() * scalePixelperMY) + j] +
+//                                player.getHeight());
+/*
+        double columnCount = player.getWidthX() / data.getDeltaXm();
+        double rowCount = player.getHeight() / data.getDeltaYm();
 
+        int x = (int)(player.getX() / data.getDeltaXm());
+        int y = (int)(player.getY() / data.getDeltaYm());
+
+        if (columnCount < 1)
+            columnCount = 1;
+
+        if (rowCount < 1)
+            rowCount = 1;
+
+        for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
+            for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
+                setSurface(x + i,y + j, getSurface()[i][j] + player.getHeight());
+*/
         players.add(player);
     }
 
     public void addTarget(Target target) {
-        for (int i = 0; i < (int)(target.getWidthX() * getScalePixelperMX()); i++)
-            for (int j = 0; j < (int)(target.getWidthY() * getScalePixelperMY()); j++)
-                getSurface()[(int)(target.getX() * getScalePixelperMX()) + i][(int)(target.getY() * scalePixelperMY) + j] += target.getHeight();
+        double columnCount = target.getWidthX() / data.getDeltaXm();
+        double rowCount = target.getHeight() / data.getDeltaYm();
+
+        int x = (int)(target.getX() / data.getDeltaXm());
+        int y = (int)(target.getY() / data.getDeltaYm());
+
+        if (columnCount < 1)
+            columnCount = 1;
+
+        if (rowCount < 1)
+            rowCount = 1;
+
+        for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
+            for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
+                setSurface(x + i, y + j, getSurface()[x + i][y + j] + target.getHeight());
 
         targets.add(target);
     }
@@ -68,7 +103,28 @@ public class World {
         explosions.add(explosion);
     }
 
+    public void removeTarget(Target target) {
+        double columnCount = target.getWidthX() / data.getDeltaXm();
+        double rowCount = target.getHeight() / data.getDeltaYm();
+
+        int x = (int)(target.getX() / data.getDeltaXm());
+        int y = (int)(target.getY() / data.getDeltaYm());
+
+        if (columnCount < 1)
+            columnCount = 1;
+
+        if (rowCount < 1)
+            rowCount = 1;
+
+        for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
+            for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
+                setSurface(x + i, y + j, getSurface()[x + i][y + j] - target.getHeight());
+
+        targetsToRemove.add(target);
+    }
+
     public void removeMissile(Missile missile) {
+        System.out.println("Strela vymazana");
         missilesToRemove.add(missile);
     }
 
@@ -77,6 +133,8 @@ public class World {
     }
 
     public void update() {
+        targets.removeAll(targetsToRemove);
+        targetsToRemove.clear();
         missiles.removeAll(missilesToRemove);
         missilesToRemove.clear();
         explosions.removeAll(explosionsToRemove);
@@ -89,9 +147,12 @@ public class World {
 
         scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMapWidthM();
         scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMapHeightM();
+        scaleX = 1 / data.getDeltaXm();
+        scaleY = 1 / data.getDeltaYm();
 
         graphics.setFill(Color.LIGHTGRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
+
 
         players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
@@ -119,8 +180,16 @@ public class World {
         return players.get(playerIndex);
     }
 
+    public ObservableList<Player> getPlayers() {
+        return players;
+    }
+
     public Target getTarget() {
         return targets.get(playerIndex);
+    }
+
+    public ObservableList<Target> getTargets() {
+        return targets;
     }
 
     public double[][] getSurface() {
@@ -133,5 +202,17 @@ public class World {
 
     public double getScalePixelperMY() {
         return scalePixelperMY;
+    }
+
+    public double getScaleX() {
+        return scaleX;
+    }
+
+    public double getScaleY() {
+        return scaleY;
+    }
+
+    public void setSurface(int x, int y, double value) {
+        data.setTerrainZm(x, y, value);
     }
 }
