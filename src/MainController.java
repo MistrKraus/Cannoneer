@@ -95,7 +95,7 @@ public class MainController implements Initializable {
             world.update();
         });
 
-        azimuthSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-180, 180, -45, 0.5));
+        azimuthSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-180, 180, 0, 0.5));
         elevationSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-90, 90, 20, 0.5));
         speedSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, 1, 0.01));
 
@@ -115,13 +115,16 @@ public class MainController implements Initializable {
         shooterZLbl.setText(String.format("%.2f m",world.getPlayer().getZ()));
         targetZLbl.setText(String.format("%.2f m",world.getTarget().getZ()));
 
-        world.update();
+        world.start();
     }
 
     public void handleBtn(ActionEvent actionEvent) {
-        distanceLbl.setText(String.format("%.2f m",world.getPlayer().getCoordinates().getPointsDistance(world.getTarget().getCoordinates())));
-        shooterZLbl.setText(String.format("%.2f m",world.getPlayer().getZ()));
-        targetZLbl.setText(String.format("%.2f m",world.getTarget().getZ()));
+        if (!world.isRunning())
+            return;
+
+        distanceLbl.setText(String.format("%.2f m", world.getPlayer().getCoordinates().getPointsDistance(world.getTarget().getCoordinates())));
+        shooterZLbl.setText(String.format("%.2f m", world.getPlayer().getZ()));
+        targetZLbl.setText(String.format("%.2f m", world.getTarget().getZ()));
 
 //        System.out.println("Vystrel!\n Azimut: " + azimuthSp.getValue() +
 //                "\n Elevation: " + elevationSp.getValue() +
@@ -129,6 +132,6 @@ public class MainController implements Initializable {
 
 
         world.addMissile(world.getPlayer().fire(azimuthSp.getValue(), elevationSp.getValue(), speedSp.getValue()));
-        world.start();
+        //world.start();
     }
 }

@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class World {
     // TODO budouci moznost iterace
     private int playerIndex = 0;
 
+    private boolean runs = false;
 
     public World(GraphicsContext graphics, Data data) {
         this.graphics = graphics;
@@ -124,7 +126,7 @@ public class World {
     }
 
     public void removeMissile(Missile missile) {
-        System.out.println("Strela vymazana");
+        System.out.println("Strela dopadla");
         missilesToRemove.add(missile);
     }
 
@@ -139,6 +141,12 @@ public class World {
         missilesToRemove.clear();
         explosions.removeAll(explosionsToRemove);
         explosionsToRemove.clear();
+
+        if (targets.size() <= 0) {
+            stop();
+            return;
+        }
+
 
         players.forEach((player1) -> player1.update(this));
         targets.forEach((target1) -> target1.update(this));
@@ -161,14 +169,24 @@ public class World {
     }
 
     public void start() {
+        runs = true;
         timeline.play();
     }
 
     public void stop() {
+        runs = false;
         timeline.stop();
+
+        graphics.setFill(Color.RED);
+        graphics.setTextAlign(TextAlignment.CENTER);
+        graphics.fillText("KONEC HRY!", graphics.getCanvas().getWidth() / 2,
+                graphics.getCanvas().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+
+
     }
 
     public void pause() {
+        runs = false;
         timeline.pause();
     }
 
@@ -212,7 +230,12 @@ public class World {
         return scaleY;
     }
 
+    public boolean isRunning() {
+        return runs;
+    }
+
     public void setSurface(int x, int y, double value) {
         data.setTerrainZm(x, y, value);
     }
+
 }

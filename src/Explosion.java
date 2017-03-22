@@ -17,8 +17,8 @@ public class Explosion implements IDrawable {
     }
 
     public void explode(World world) {
-        world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
-            .forEach(player -> player.dealtDamage(100));
+        //world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
+        //    .forEach(player -> player.dealtDamage(100));
 
         world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
             .forEach(target -> target.dealtDamage(100));

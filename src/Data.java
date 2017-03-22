@@ -44,7 +44,7 @@ public class Data {
                 for (int i = 0; i < mapWidth; i++) {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
-                        terrainZm[i][j] = 1;//in.readInt() / 1000;
+                        terrainZm[i][j] = in.readInt() / 1000;
                         //System.out.print(terrainZm[i][j] + "   ");
                     }
                     //System.out.println();
@@ -57,7 +57,9 @@ public class Data {
             System.out.println("Při čtení vstupního souboru '" + fileName + "' došlo k chybě!");
             e.printStackTrace();
 
-            System.out.println("Zadejte správný název souboru (včetně koncovky .ter), nebo 'N'");
+            System.out.println("Ujistěte se, že ve složce src/resources/ je vámi požadovaný soubor s mapou" +
+                    " a spusťte aplikaci znovu se správným jeho názvem souboru (včetně koncovky .ter), případně bez paramaerů" +
+                    " - mapa bude vybrána automaticky");
         }
     }
 

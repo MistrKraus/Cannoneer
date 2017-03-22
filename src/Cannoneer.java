@@ -31,6 +31,9 @@ public class Cannoneer extends Application {
 
         //aspectRatio = Math.data.getMapWidth(), data.getMapHeight();
 
+        if (data == null)
+            return;
+
         if (!data.dataConsistent())
             System.out.println("Načtená data jsou chybná.");
         else
@@ -45,11 +48,11 @@ public class Cannoneer extends Application {
      */
     private static void loadData(String[] args) {
         if (args.length == 0)
-            data = new Data("terrain257x257.ter");
-            //data = new Data("rovny1metr.ter");
+            data = new Data("src/resources/terrain257x257.ter");
+            //data = new Data("src/resources/rovny1metr.ter");
 
         if (args.length == 1)
-            data = new Data(args[0]);
+            data = new Data("src/resources/" + args[0]);
     }
 
     @Override
