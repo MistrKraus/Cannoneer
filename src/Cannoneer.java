@@ -48,7 +48,7 @@ public class Cannoneer extends Application {
      */
     private static void loadData(String[] args) {
         if (args.length == 0)
-            data = new Data("src/resources/terrain257x257.ter");
+            data = new Data("src/resources/rovny1metr.ter");
             //data = new Data("src/resources/rovny1metr.ter");
 
         if (args.length == 1)

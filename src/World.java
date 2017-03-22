@@ -147,12 +147,15 @@ public class World {
             return;
         }
 
-
         players.forEach((player1) -> player1.update(this));
         targets.forEach((target1) -> target1.update(this));
         missiles.forEach((missile1) -> missile1.update(this));
         explosions.forEach((explosion1) -> explosion1.update(this));
 
+        draw();
+    }
+
+    public void draw() {
         scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMapWidthM();
         scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMapHeightM();
         scaleX = 1 / data.getDeltaXm();
@@ -160,7 +163,6 @@ public class World {
 
         graphics.setFill(Color.LIGHTGRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
-
 
         players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
@@ -176,6 +178,8 @@ public class World {
     public void stop() {
         runs = false;
         timeline.stop();
+
+        draw();
 
         graphics.setFill(Color.RED);
         graphics.setTextAlign(TextAlignment.CENTER);

@@ -91,7 +91,7 @@ public class Missile implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
         g.setFill(Color.ORANGE);
-        g.fillOval((coordinates.getX() - strikeRadius / 2) * scaleX, (coordinates.getY() - strikeRadius / 2) * scaleY, 3, 3);
+        g.fillOval((coordinates.getX() - 3 / 2) * scaleX, (coordinates.getY() - 3 / 2) * scaleY, 3, 3);
     }
 
     @Override
