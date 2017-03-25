@@ -9,7 +9,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,11 +18,12 @@ import java.util.List;
 public class World {
 
     private final Duration duration = Duration.millis(30);
-    /** krok*/
     private final KeyFrame oneFrame = new KeyFrame(duration, event -> update());
     private Timeline timeline;
     private final GraphicsContext graphics;
     private final Data data;
+    private final Map map;
+    private final Wind wind;
 
     private final ObservableList<Player> players = FXCollections.observableArrayList();
     private final ObservableList<Target> targets = FXCollections.observableArrayList();
@@ -53,6 +54,9 @@ public class World {
     public World(GraphicsContext graphics, Data data) {
         this.graphics = graphics;
         this.data = data;
+        this.map = data.getMap();
+        this.wind = new Wind();
+
         timeline = new Timeline(oneFrame);
         timeline.setCycleCount(Animation.INDEFINITE);
     }
@@ -63,28 +67,8 @@ public class World {
      * @param player hrac
      */
     public void addPlayer(Player player) {
-//        for (int i = 0; i < (int)(player.getWidthX() * scaleX); i++)
-//            for (int j = 0; j < (int)(player.getWidthY() * scaleY); j++)
-//                setSurface((int)(player.getX() * getScalePixelperMX()) + i, (int)(player.getY() * scalePixelperMY) + j,
-//                        getSurface()[(int)(player.getX() * getScalePixelperMX()) + i][(int)(player.getY() * scalePixelperMY) + j] +
-//                                player.getHeight());
-/*
-        double columnCount = player.getWidthX() / data.getDeltaXm();
-        double rowCount = player.getHeight() / data.getDeltaYm();
+        //map.addToMap(player);
 
-        int x = (int)(player.getX() / data.getDeltaXm());
-        int y = (int)(player.getY() / data.getDeltaYm());
-
-        if (columnCount < 1)
-            columnCount = 1;
-
-        if (rowCount < 1)
-            rowCount = 1;
-
-        for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
-            for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
-                setSurface(x + i,y + j, getSurface()[i][j] + player.getHeight());
-*/
         players.add(player);
     }
 
@@ -94,21 +78,7 @@ public class World {
      * @param target cil
      */
     public void addTarget(Target target) {
-        double columnCount = target.getWidthX() / data.getDeltaXm();
-        double rowCount = target.getHeight() / data.getDeltaYm();
-
-        int x = (int)(target.getX() / data.getDeltaXm());
-        int y = (int)(target.getY() / data.getDeltaYm());
-
-        if (columnCount < 1)
-            columnCount = 1;
-
-        if (rowCount < 1)
-            rowCount = 1;
-
-        for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
-            for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
-                setSurface(x + i, y + j, getSurface()[x + i][y + j] + target.getHeight());
+        map.addToMap(target);
 
         targets.add(target);
     }
@@ -137,21 +107,7 @@ public class World {
      * @param target cil
      */
     public void removeTarget(Target target) {
-        double columnCount = target.getWidthX() / data.getDeltaXm();
-        double rowCount = target.getHeight() / data.getDeltaYm();
-
-        int x = (int)(target.getX() / data.getDeltaXm());
-        int y = (int)(target.getY() / data.getDeltaYm());
-
-        if (columnCount < 1)
-            columnCount = 1;
-
-        if (rowCount < 1)
-            rowCount = 1;
-
-        for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
-            for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
-                setSurface(x + i, y + j, getSurface()[x + i][y + j] - target.getHeight());
+        map.removeFromMap(target);
 
         targetsToRemove.add(target);
     }
@@ -162,7 +118,7 @@ public class World {
      * @param missile strela
      */
     public void removeMissile(Missile missile) {
-        System.out.println("Strela dopadla");
+        System.out.println("Strela znicena");
         missilesToRemove.add(missile);
     }
 
@@ -190,6 +146,7 @@ public class World {
         targets.forEach((target1) -> target1.update(this));
         missiles.forEach((missile1) -> missile1.update(this));
         explosions.forEach((explosion1) -> explosion1.update(this));
+        wind.update(this);
 
         draw();
     }
@@ -198,10 +155,10 @@ public class World {
      * vykresli vsechny objekty
      */
     public void draw() {
-        scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMapWidthM();
-        scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMapHeightM();
-        scaleX = 1 / data.getDeltaXm();
-        scaleY = 1 / data.getDeltaYm();
+        scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
+        scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
+        scaleX = 1 / data.getMap().getDeltaXm();
+        scaleY = 1 / data.getMap().getDeltaYm();
 
         graphics.setFill(Color.LIGHTGRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
@@ -210,13 +167,20 @@ public class World {
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
         missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
         explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
+        wind.draw(graphics, scalePixelperMX, scalePixelperMY);
     }
 
+    /**
+     * stusti herni smycku
+     */
     public void start() {
         runs = true;
         timeline.play();
     }
 
+    /**
+     * zastavi herni smycku
+     */
     public void stop() {
         runs = false;
         timeline.stop();
@@ -256,8 +220,8 @@ public class World {
         return targets;
     }
 
-    public double[][] getSurface() {
-        return data.getTerrainZm();
+    public Map getMap() {
+        return map;
     }
 
     public double getScalePixelperMX() {
@@ -278,10 +242,6 @@ public class World {
 
     public boolean isRunning() {
         return runs;
-    }
-
-    public void setSurface(int x, int y, double value) {
-        data.setTerrainZm(x, y, value);
     }
 
 }

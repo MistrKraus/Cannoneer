@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
  *
  * strela
  */
-public class Missile implements IDrawable {
+public class Missile implements IDrawable, IMappable {
 
     private Point coordinates;
     private Point speed;
@@ -72,7 +72,7 @@ public class Missile implements IDrawable {
      * @param strikeRadius prumer vybuchu strely
      */
     public Missile(Point coordinates, double azimuth, double elevation, double speed, double strikeRadius) {
-        this.coordinates = coordinates.copy().subZ(0.3);
+        //this.coordinates = coordinates.copy().subZ(0.3);
         this.strikeRadius = strikeRadius;
         this.acceleration = speed;
 
@@ -94,13 +94,12 @@ public class Missile implements IDrawable {
         speedZ = 0;
 
         this.speed = new Point(speedX, speedY, speedZ);
+        this.coordinates = coordinates.copy().subZ(0.3).add((this.speed.mul(2)));
     }
 
-    /**
-     * @return prumer potencialne zasazene oblasti v metrech
-     */
-    public double getStrikeRadius() {
-        return strikeRadius;
+    //TODO nastavit collidingPoint
+    public Point getCollidingPoint() {
+        return new Point(0,0,0);
     }
 
     /**
@@ -155,7 +154,7 @@ public class Missile implements IDrawable {
      */
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
-        g.setFill(Color.ORANGE);
+        g.setFill(Color.BLACK);
         g.fillOval((coordinates.getX() - 3 / 2) * scaleX, (coordinates.getY() - 3 / 2) * scaleY, 3, 3);
     }
 
@@ -167,22 +166,17 @@ public class Missile implements IDrawable {
      */
     @Override
     public void update(World world) {
-        // vypocet pozice bez vetru
-        //coordinates = coordinates.copy().add((speed.add((MAGIC_POINT.copy().mul(GRAVITY * DELTA_T))).add((new Point(0,0,0).sub(acceleration)).mul(MAGIC_B * DELTA_T))));
-//        Point v1 = MAGIC_POINT.copy().mul(GRAVITY * DELTA_T);
-//        Point v2 = new Point(0,0,0).sub(speed);
-//        Point v3 = v2.copy().mul(MAGIC_B*DELTA_T);
-
         coordinates = coordinates.copy().add(speed.copy().mul(acceleration));
 
         //System.out.println(coordinates);
 
-        if (isOutsideMap(world.getData().getMapWidthM(), world.getData().getMapHeightM())) {
+        if (isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())) {
+            System.out.println("Strela opustila mapu!");
             world.removeMissile(this);
             return;
         }
 
-        if (isColliding(world.getSurface(), world.getScaleX(), world.getScaleY(), world.getData())) {
+        if (isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY(), world.getData())) {
             world.removeMissile(this);
 
             Explosion explosion = new Explosion(coordinates, strikeRadius);
@@ -191,6 +185,13 @@ public class Missile implements IDrawable {
 
             System.out.println("Bum!");
         }
+    }
+
+    /**
+     * @return prumer potencialne zasazene oblasti v metrech
+     */
+    public double getStrikeRadius() {
+        return strikeRadius;
     }
 
     @Override

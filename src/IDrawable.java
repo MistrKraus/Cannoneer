@@ -22,73 +22,23 @@ public interface IDrawable {
     void update(World world);
 
     /**
-     * Vrati vysku
+     * Vrati vysku v metrech
      *
-     * @return vyska
+     * @return vyska v metrech
      */
     double getHeight();
 
     /**
-     * Vrati sirku na x-ove ose
+     * Vrati sirku na x-ove ose v metrech
      *
-     * @return sirka na x-ove ose
+     * @return sirka na x-ove ose v metrech
      */
     double getWidthX();
 
     /**
-     * Vrati sirku na y-ove ose
+     * Vrati sirku na y-ove ose v metrech
      *
-     * @return sirka na y-ove ose
+     * @return sirka na y-ove ose v metrech
      */
     double getWidthY();
-
-    /**
-     * Vrati instanci tridy {@code Point} s aktualni pozici instance
-     *
-     * @return instance tridy {@code Point} s aktualni pozici instance
-     */
-    Point getCoordinates();
-
-    /**
-     * vraci x-ovou souradnici
-     *
-     * @return x-ova souradnice
-     */
-     default double getX() {
-        return getCoordinates().getX();
-    }
-
-    /**
-     * vraci y-ovou souradnici
-     *
-     * @return y-ova souradnice
-     */
-    default double getY() {
-        return getCoordinates().getY();
-    }
-
-    /**
-     * vraci nadmorskou vysku
-     *
-     * @return nadmorska vyska
-     */
-    default double getZ() {
-        return getCoordinates().getZ();
-    }
-
-    /**
-     * Nastavi nove souradnice
-     *
-     * @param point souradnice v metrech
-     */
-    void setCoordinates(Point point);
-
-    /**
-     * Nastavi nove souradnice
-     *
-     * @param x x-ova souradnice v metrech
-     * @param y y-ova souradnie v metrech
-     * @param z z-ova souradnice v metrech
-     */
-    void setCoordinates(double x, double y, double z);
 }

@@ -7,7 +7,7 @@ import javafx.scene.paint.*;
  *
  * Objekt reprezentujici vybuch
  */
-public class Explosion implements IDrawable {
+public class Explosion implements IDrawable, IMappable {
 
     private Point coordinates;
     private double radius;
@@ -24,16 +24,16 @@ public class Explosion implements IDrawable {
     }
 
     /**
-     * pokud je v radiusu exploze {@code IHittable} objekt je mu udeleno zraneni
+     * pokud je v radiusu exploze {@code Target} objekt je mu udeleno zraneni
      *
      * @param world ridici trida
      */
     public void explode(World world) {
-        //world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
-        //    .forEach(player -> player.dealtDamage(100));
-
         world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
             .forEach(target -> target.dealtDamage(100));
+
+        //world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
+        //    .forEach(player -> player.dealtDamage(100));
     }
 
     /**

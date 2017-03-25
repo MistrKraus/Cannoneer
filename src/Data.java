@@ -8,18 +8,14 @@ import java.io.IOException;
  * Prepravka s daty nactenymi ze vstupniho souboru
  */
 public class Data {
-    private int mapWidth;
-    private int mapHeight;
-    private double deltaXm;
-    private double deltaYm;
-    private double mapWidthM;
-    private double mapHeightM;
     private int shooterX;
     private int shooterY;
     private int targetX;
     private int targetY;
 
-    private double[][] terrainZm;
+    private Map map;
+
+    private boolean dataConsistent = false;
 
     /**
      * Konstruktor nacitajici vstupni soubor
@@ -28,18 +24,16 @@ public class Data {
      */
     public Data(String fileName) {
         try (DataInputStream in = new DataInputStream(new FileInputStream(fileName))) {
-            this.mapWidth = in.readInt();
-            this.mapHeight = in.readInt();
-            this.deltaXm = in.readInt() / 1000;
-            this.deltaYm = in.readInt() / 1000;
-            this.mapWidthM = mapWidth * deltaXm;
-            this.mapHeightM = mapHeight * deltaYm;
+            int mapWidth = in.readInt();
+            int mapHeight = in.readInt();
+            double deltaXm = in.readInt() / 1000;
+            double deltaYm = in.readInt() / 1000;
             this.shooterX = in.readInt();
             this.shooterY = in.readInt();
             this.targetX = in.readInt();
             this.targetY = in.readInt();
 
-            terrainZm = new double[mapWidth][mapHeight];
+            double[][] terrainZm = new double[mapWidth][mapHeight];
 
             int zCounter = 0;
 
@@ -61,6 +55,10 @@ public class Data {
                 System.out.println("V souboru chybí " + (mapWidth * mapWidth - zCounter) + " hodnot s nadmořskou výškou");
                 System.out.println("Tyto hodnoty byli nastaveny na 0 mm");
             }
+
+            map = new Map(terrainZm, mapWidth, mapHeight, deltaXm, deltaYm);
+
+            dataConsistent = dataConsistent(mapWidth, mapHeight, deltaXm, deltaYm);
         } catch (IOException e) {
             System.out.println("Při čtení vstupního souboru '" + fileName + "' došlo k chybě!");
             e.printStackTrace();
@@ -76,51 +74,9 @@ public class Data {
      *
      * @return
      */
-    public boolean dataConsistent() {
+    public boolean dataConsistent(double mapWidth, double mapHeight, double deltaXm, double deltaYm) {
         return !(mapWidth <= 0 || mapHeight <= 0 || deltaXm <= 0 || deltaYm <= 0 ||
                 shooterX < 0 || shooterY < 0 || targetX < 0 || targetY < 0);
-    }
-
-    /**
-     * @return sirka mapy ve sloupcich
-     */
-    public int getMapWidth() {
-        return mapWidth;
-    }
-
-    /**
-     * @return vyska mapy v radcich
-     */
-    public int getMapHeight() {
-        return mapHeight;
-    }
-
-    /**
-     * @return sirka jednoho sloupce
-     */
-    public double getDeltaXm() {
-        return deltaXm;
-    }
-
-    /**
-     * @return vyska jedne radky
-     */
-    public double getDeltaYm() {
-        return deltaYm;
-    }
-
-    /**
-     * @return sirka mapy v metrech
-     */
-    public double getMapWidthM() {
-        return mapWidthM;
-    }
-
-    /**
-     * @return vyska mapy v metrech
-     */
-    public double getMapHeightM() {
-        return mapHeightM;
     }
 
     /**
@@ -141,14 +97,14 @@ public class Data {
      * @return vychozi x-ova pozice strelce v metrech
      */
     public double getShooterXm() {
-        return shooterX * deltaXm;
+        return shooterX * map.getDeltaXm();
     }
 
     /**
      * @return vychozi y-ova pozice strelce v metrech
      */
     public double getShooterYm() {
-        return shooterY * deltaYm;
+        return shooterY * map.getDeltaYm();
     }
 
     /**
@@ -169,31 +125,24 @@ public class Data {
      * @return vychozi x-ova pozice cile v metrech
      */
     public double getTargetXm() {
-        return targetX * deltaXm;
+        return targetX * map.getDeltaXm();
     }
 
     /**
      * @return vychozi y-ova pozice cile v metrech
      */
     public double getTargetYm() {
-        return targetY * deltaYm;
+        return targetY * map.getDeltaYm();
     }
 
     /**
-     * @return dvourozmerne pole s vyskou terenu
+     * @return instance mapy {@code Map}
      */
-    public double[][] getTerrainZm() {
-        return terrainZm;
+    public Map getMap() {
+        return map;
     }
 
-    /**
-     * Zmeni vysku terenu na zadanych souradnicich
-     *
-     * @param x sloupec na mape
-     * @param y radek na mape
-     * @param value nova vyska terenu
-     */
-    public void setTerrainZm(int x, int y, double value) {
-        terrainZm[x][y] = value;
+    public boolean getDataConsistent() {
+        return dataConsistent;
     }
 }

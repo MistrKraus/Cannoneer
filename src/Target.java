@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
  *
  * Cil
  */
-public class Target implements IHittable, IDrawable {
+public class Target implements IHittable {
 
     /**
      * defaultni pocet hp

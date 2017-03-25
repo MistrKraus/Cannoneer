@@ -3,7 +3,7 @@
  *
  * Rozhrani pro objekty, ktere mohou byt zasazeny
  */
-public interface IHittable extends IDrawable {
+public interface IHittable extends IMappable, IDrawable {
 
     /**
      * Vraci informaci, zda byl target v radiusu

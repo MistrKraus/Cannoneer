@@ -1,1 +1,1 @@
-java -cp bin terrainGenerator/TerrainGenerator %*
+java -cp bin Cannoneer %*

@@ -37,7 +37,7 @@ public class MainController implements Initializable {
     private double defaultStageWidth;
     private double defaultStageHeight;
     private double ratio;
-    private double stageAspectRatio;
+    //private double stageAspectRatio;
 
     private final Data data;
     private final Stage stage;
@@ -57,7 +57,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ratio = data.getMapWidthM() / data.getMapHeightM();
+        ratio = data.getMap().getMapWidthM() / data.getMap().getMapHeightM();
 
         canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio);
         canvas.setHeight(DEFAULT_CAVANS_HEIGHT);
@@ -110,8 +110,8 @@ public class MainController implements Initializable {
         context.translate(canvas.getLayoutX(), canvas.getLayoutY());
 
         world = new World(context, data);
-        world.addPlayer(new Player(data.getShooterXm(), data.getShooterYm(), data.getTerrainZm()[data.getShooterX()][data.getShooterY()]));
-        world.addTarget(new Target(data.getTargetXm(), data.getTargetYm(), data.getTerrainZm()[data.getTargetX()][data.getTargetY()]));
+        world.addPlayer(new Player(data.getShooterXm(), data.getShooterYm(), data.getMap().getTerrain()[data.getShooterX()][data.getShooterY()]));
+        world.addTarget(new Target(data.getTargetXm(), data.getTargetYm(), data.getMap().getTerrain()[data.getTargetX()][data.getTargetY()]));
 
         System.out.println(world.getTarget().toString());
 
