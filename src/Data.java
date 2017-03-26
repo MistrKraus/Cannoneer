@@ -46,7 +46,7 @@ public class Data {
                 for (int i = 0; i < mapWidth; i++) {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
-                        terrainZm[i][j] = in.readInt() / 1000;
+                        terrainZm[j][i] = in.readInt() / 1000;
                         //System.out.print(terrainZm[i][j] + "   ");
                     }
                     //System.out.println();

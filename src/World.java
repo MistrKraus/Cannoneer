@@ -35,8 +35,10 @@ public class World {
     private final List<Missile> missilesToRemove = new ArrayList<>();
     private final List<Explosion> explosionsToRemove = new ArrayList<>();
 
+    /** metry na index v poli*/
     private double scaleX;
     private double scaleY;
+    /** pixely na metr*/
     private double scalePixelperMX;
     private double scalePixelperMY;
 
@@ -141,6 +143,8 @@ public class World {
             stop();
             return;
         }
+        scaleX = 1 / data.getMap().getDeltaXm();
+        scaleY = 1 / data.getMap().getDeltaYm();
 
         players.forEach((player1) -> player1.update(this));
         targets.forEach((target1) -> target1.update(this));
@@ -157,12 +161,11 @@ public class World {
     public void draw() {
         scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
         scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
-        scaleX = 1 / data.getMap().getDeltaXm();
-        scaleY = 1 / data.getMap().getDeltaYm();
 
-        graphics.setFill(Color.LIGHTGRAY);
+        graphics.setFill(Color.RED);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
 
+        map.draw(graphics, scalePixelperMX, scalePixelperMY);
         players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
         missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
