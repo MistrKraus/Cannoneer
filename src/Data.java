@@ -46,7 +46,7 @@ public class Data {
                 for (int i = 0; i < mapWidth; i++) {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
-                        terrainZm[j][i] = in.readInt() / 1000;
+                        terrainZm[i][j] = in.readInt() / 1000;
                         //System.out.print(terrainZm[i][j] + "   ");
                     }
                     //System.out.println();
@@ -64,7 +64,7 @@ public class Data {
             e.printStackTrace();
 
             System.out.println("Ujistěte se, že ve složce src/resources/ je vámi požadovaný soubor s mapou" +
-                    " a spusťte aplikaci znovu se správným jeho názvem souboru (včetně koncovky .ter), případně bez paramaerů" +
+                    " a spusťte aplikaci znovu se správným jeho názvem souboru (včetně koncovky .terrainImg), případně bez paramaerů" +
                     " - mapa bude vybrána automaticky");
         }
     }

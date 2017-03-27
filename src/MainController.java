@@ -1,12 +1,19 @@
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,6 +30,8 @@ public class MainController implements Initializable {
     public Label distanceLbl;
     public Label shooterZLbl;
     public Label targetZLbl;
+    public MenuBar menu;
+    public VBox vBox2;
     @FXML
     private Spinner<Double> azimuthSp;
     @FXML
@@ -66,7 +75,7 @@ public class MainController implements Initializable {
         canvas.minHeight(DEFAULT_CAVANS_HEIGHT);
 
         stage.setWidth(DEFAULT_CAVANS_HEIGHT * ratio + 233);
-        stage.setHeight(DEFAULT_CAVANS_HEIGHT + 20);
+        stage.setHeight(DEFAULT_CAVANS_HEIGHT + menu.getHeight() + 40);
 
         stage.setMinWidth(stage.getWidth() + 20);
         stage.setMinHeight(stage.getHeight() + 40);
@@ -78,8 +87,8 @@ public class MainController implements Initializable {
             double width = defaultStageWidth - newValue.doubleValue();
             double height = width * (1 / ratio);
 
-            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
-            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
+            //canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
+            //canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
 
             //stage.setHeight(defaultStageHeight - height);
 
@@ -91,17 +100,22 @@ public class MainController implements Initializable {
             double height = defaultStageHeight - newValue.doubleValue();
             double width = height * ratio;
 
-            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
-            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
+            //canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
+            //canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
 
             //stage.setWidth(defaultStageWidth - width);
 
             world.update();
         });
 
+        stage.setOnShown(event -> {
+            //System.out.println("showing");
+            world.initialGraphis();
+        });
+
         azimuthSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-180, 180, 0, 0.5));
         elevationSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-90, 90, 20, 0.5));
-        speedSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE, 1, 0.01));
+        speedSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 255, 1, 0.01));
 
         GraphicsContext context = canvas.getGraphicsContext2D();
 
@@ -113,11 +127,11 @@ public class MainController implements Initializable {
         world.addPlayer(new Player(data.getShooterXm(), data.getShooterYm(), data.getMap().getTerrain()[data.getShooterX()][data.getShooterY()]));
         world.addTarget(new Target(data.getTargetXm(), data.getTargetYm(), data.getMap().getTerrain()[data.getTargetX()][data.getTargetY()]));
 
-        System.out.println(world.getTarget().toString());
+        //System.out.println(world.getTarget().toString());
 
         distanceLbl.setText(String.format("%.2f m",world.getPlayer().getCoordinates().getPointsDistance(world.getTarget().getCoordinates())));
-        shooterZLbl.setText(String.format("%.2f m",world.getPlayer().getZ()));
-        targetZLbl.setText(String.format("%.2f m",world.getTarget().getZ()));
+        shooterZLbl.setText(String.format("%.2f m n. m.",world.getPlayer().getZ()));
+        targetZLbl.setText(String.format("%.2f m n. m.",world.getTarget().getZ()));
 
         world.start();
     }
@@ -143,5 +157,31 @@ public class MainController implements Initializable {
 
         world.addMissile(world.getPlayer().fire(azimuthSp.getValue(), elevationSp.getValue(), speedSp.getValue()));
         //world.start();
+    }
+
+    public void openEditor(ActionEvent actionEvent) {
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("editor.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Editor");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openFireStats(ActionEvent actionEvent) {
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fireStats.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Historie strelby");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

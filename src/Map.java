@@ -1,8 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
+import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
 /**
@@ -21,8 +18,9 @@ public class Map implements IDrawable {
     private double deltaYm;
     private double maxHeightM;
 
-    private ImageView terrainImg = new ImageView();
-    Image ter;
+    private ImageView terrainImgView = new ImageView();
+    private Image terrainImg;
+    WritableImage wImage;
 
     private final int IMG_HEIGHT;
 
@@ -34,7 +32,7 @@ public class Map implements IDrawable {
         this.mapWidthM = mapWidth * deltaXm;
         this.mapHeightM = mapHeight * deltaYm;
 
-        IMG_HEIGHT = (int)(2 * mapHeightM);
+        IMG_HEIGHT = 1000;
 
         terrain = new double[mapWidth][mapHeight];
         surface = new double[mapWidth][mapHeight];
@@ -47,13 +45,11 @@ public class Map implements IDrawable {
         }
 
         setMaxHeightM();
-
-        bufferImage();
     }
 
     public void bufferImage() {
 
-        WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * mapWidthM / mapHeightM), IMG_HEIGHT);
+        WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * (mapWidthM / mapHeightM)), IMG_HEIGHT);
         //Color black = Color.BLACK;
 
         double scale = 255 / maxHeightM;
@@ -61,8 +57,8 @@ public class Map implements IDrawable {
 //        double indexX = mapWidth / terrainImgW.getWidth();
 //        double indexY = mapHeight / terrainImgW.getHeight();
 
-        int pXPerDelta = (int)(terrainImgW.getWidth() / terrain.length);
-        int pYPerDelta = (int)(terrainImgW.getHeight() / terrain[1].length);
+        double pXPerDelta = (terrainImgW.getWidth() / terrain.length);
+        double pYPerDelta = (terrainImgW.getHeight() / terrain[1].length);
 
         PixelWriter pixelWriter = terrainImgW.getPixelWriter();
 
@@ -73,22 +69,26 @@ public class Map implements IDrawable {
 
                 for (int k = 0; k < pXPerDelta; k++) {
                     for (int l = 0; l < pYPerDelta; l++) {
-                        pixelWriter.setColor(i * pXPerDelta + k, j * pYPerDelta + l, color);
+                        pixelWriter.setColor((int)(i * pXPerDelta + k), (int)(j * pYPerDelta + l), color);
                         //System.out.println((i * pXPerDelta + k) + "  " + (j * pYPerDelta + l));
                         //x++;
                     }
                 }
             }
         }
-        terrainImg.setImage(terrainImgW);
-        ter = terrainImg.getImage();
+        System.out.println("Obraz mapy aktualizovan");
 
-        System.out.println("Sirka: " + terrainImgW.getWidth() +"\nVyska: " + ter.getHeight());
+        terrainImgView.setImage(terrainImgW);
+        terrainImg = terrainImgView.getImage();
+        wImage = new WritableImage(terrainImg.getPixelReader(), (int)terrainImg.getWidth(), (int)terrainImg.getHeight());
+
+        //System.out.println("Sirka: " + terrainImg.getWidth() +"\nVyska: " + terrainImg.getHeight());
     }
 
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
-        g.drawImage(ter, 0, 0, g.getCanvas().getWidth() + 1, g.getCanvas().getHeight() + 1);
+        terrainImg = wImage;
+        g.drawImage(terrainImg, 0, 0, g.getCanvas().getWidth() + 1, g.getCanvas().getHeight() + 1);
     }
 
     @Override

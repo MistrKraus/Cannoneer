@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FireStatsController">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="Soubor">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Nový" />
+                        <MenuItem mnemonicParsing="false" text="Otevřít" />
+                        <MenuItem mnemonicParsing="false" text="Uložit" />
+                        <MenuItem mnemonicParsing="false" text="Konec" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Nápověda">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <TableView>
+         <columns>
+            <TableColumn prefWidth="75.0" text="Hráč" />
+            <TableColumn maxWidth="-1.0" prefWidth="-1.0" text="Střela">
+               <columns>
+                  <TableColumn prefWidth="75.0" text="Azimut" />
+                  <TableColumn prefWidth="75.0" text="Elevace" />
+                  <TableColumn prefWidth="75.0" text="Rychlost" />
+               </columns>
+            </TableColumn>
+            <TableColumn prefWidth="75.0" text="Dopad">
+               <columns>
+                  <TableColumn prefWidth="75.0" text="X [m]" />
+                  <TableColumn prefWidth="75.0" text="Y [m]" />
+                  <TableColumn prefWidth="75.0" text="Z [m]" />
+                  <TableColumn prefWidth="75.0" text="Místo" />
+               </columns>
+            </TableColumn>
+         </columns></TableView>
+    </center>
+</BorderPane>

@@ -54,7 +54,7 @@ public class Wind implements IDrawable {
             stumpPointsY[i] *= 10;//scaleMperPixelY;
 
 
-        g.setFill(Color.BLACK);
+        g.setFill(Color.LIGHTBLUE);
         g.fillPolygon(stumpPointsX, stumpPointsY, stumpPointsX.length);
 
         g.setTransform(affine);
@@ -77,7 +77,9 @@ public class Wind implements IDrawable {
             if (speed != 0)
                 speedDuration /= Math.abs(speed);
 
-        } else if (azimuthDuration-- < 1) {
+        }
+
+        if (azimuthDuration-- < 1) {
             azimuth += random.nextInt(40) - 20;
 
             azimuthP = new Point(Math.cos(azimuth), Math.sin(azimuth), 0);

@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Stack;
 
 /**
  * Created by kraus on 10.03.2017.
@@ -79,6 +80,7 @@ public class Cannoneer extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+        //System.out.println("Stage vykreslena");
     }
 
 }

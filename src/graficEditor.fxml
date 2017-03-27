@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GraficEditorController">
+    <center>
+        <Canvas height="200.0" width="300.0" BorderPane.alignment="CENTER" />
+    </center>
+   <bottom>
+      <SplitPane orientation="VERTICAL" prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <items>
+             <HBox prefHeight="100.0" prefWidth="200.0">
+                 <Circle radius="25.0" stroke="BLACK" strokeType="INSIDE">
+                    <fill>
+                        <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                            <stops>
+                                <Stop color="WHITE"/>
+                                <Stop color="BLACK" offset="1.0"/>
+                            </stops>
+                        </RadialGradient>
+                    </fill>
+                 </Circle>
+                 <VBox>
+                     <Label text="Radius:">
+                         <padding>
+                             <Insets bottom="2" left="10" right="10" top="7"/>
+                         </padding>
+                     </Label>
+                     <Label text="(metry)">
+                         <padding>
+                             <Insets left="10" right="10"/>
+                         </padding>
+                     </Label>
+                 </VBox>
+                 <Spinner prefHeight="25.0" prefWidth="78.0" editable="true">
+                     <HBox.margin>
+                         <Insets top="10.0"/>
+                     </HBox.margin>
+                 </Spinner>
+                 <VBox>
+                     <Label text="Max vyska:">
+                         <padding>
+                             <Insets bottom="2" left="10" right="10" top="7"/>
+                         </padding>
+                     </Label>
+                     <Label text="(metry)">
+                         <padding>
+                             <Insets left="15" right="10"/>
+                         </padding>
+                     </Label>
+                 </VBox>
+                 <Spinner prefHeight="25.0" prefWidth="78.0" editable="true">
+                   <HBox.margin>
+                       <Insets top="10.0"/>
+                   </HBox.margin>
+                 </Spinner>
+             </HBox>
+         </items>
+      </SplitPane>
+   </bottom>
+</BorderPane>

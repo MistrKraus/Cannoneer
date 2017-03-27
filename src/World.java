@@ -9,14 +9,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by kraus on 19.03.2017.
  */
 public class World {
-
     private final Duration duration = Duration.millis(30);
     private final KeyFrame oneFrame = new KeyFrame(duration, event -> update());
     private Timeline timeline;
@@ -128,6 +126,10 @@ public class World {
         explosionsToRemove.add(explosion);
     }
 
+    public void initialGraphis() {
+        map.bufferImage();
+    }
+
     /**
      * aktualizuje vsechny objekty
      */
@@ -162,7 +164,7 @@ public class World {
         scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
         scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
 
-        graphics.setFill(Color.RED);
+        graphics.setFill(Color.GRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
 
         map.draw(graphics, scalePixelperMX, scalePixelperMY);
