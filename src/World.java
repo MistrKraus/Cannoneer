@@ -229,6 +229,10 @@ public class World {
         return map;
     }
 
+    public Wind getWind() {
+        return wind;
+    }
+
     public double getScalePixelperMX() {
         return scalePixelperMX;
     }

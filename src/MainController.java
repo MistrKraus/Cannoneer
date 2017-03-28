@@ -33,11 +33,11 @@ public class MainController implements Initializable {
     public MenuBar menu;
     public VBox vBox2;
     @FXML
-    private Spinner<Double> azimuthSp;
+    private TextField azimuthTF;
     @FXML
-    private Spinner<Double> elevationSp;
+    private TextField elevationTF;
     @FXML
-    private Spinner<Double> speedSp;
+    private TextField speedTF;
     @FXML
     private Canvas canvas;
 
@@ -51,7 +51,8 @@ public class MainController implements Initializable {
     private final Data data;
     private final Stage stage;
 
-    private static final double DEFAULT_CAVANS_HEIGHT = 257;
+    //private static final double DEFAULT_CAVANS_HEIGHT = 257;
+    private static final double DEFAULT_CAVANS_WIDTH = 270;
 
     /**
      * kontruktor
@@ -66,16 +67,23 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ratio = data.getMap().getMapWidthM() / data.getMap().getMapHeightM();
+        //ratio = data.getMap().getMapWidthM() / data.getMap().getMapHeightM();
+        ratio = data.getMap().getMapHeightM() / data.getMap().getMapWidthM();
 
-        canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio);
-        canvas.setHeight(DEFAULT_CAVANS_HEIGHT);
+//        canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio);
+//        canvas.setHeight(DEFAULT_CAVANS_HEIGHT);
+        canvas.setWidth(DEFAULT_CAVANS_WIDTH);
+        canvas.setHeight(DEFAULT_CAVANS_WIDTH * ratio);
 
-        canvas.minWidth(DEFAULT_CAVANS_HEIGHT * ratio);
-        canvas.minHeight(DEFAULT_CAVANS_HEIGHT);
+//        canvas.minWidth(DEFAULT_CAVANS_HEIGHT * ratio);
+//        canvas.minHeight(DEFAULT_CAVANS_HEIGHT);
+        canvas.minWidth(canvas.getWidth());
+        canvas.minHeight(canvas.getHeight());
 
-        stage.setWidth(DEFAULT_CAVANS_HEIGHT * ratio + 233);
-        stage.setHeight(DEFAULT_CAVANS_HEIGHT + menu.getHeight() + 40);
+//        stage.setWidth(DEFAULT_CAVANS_HEIGHT * ratio + 110);
+//        stage.setHeight(DEFAULT_CAVANS_HEIGHT + menu.getHeight() + 115);
+        stage.setWidth(DEFAULT_CAVANS_WIDTH + 110);
+        stage.setHeight(DEFAULT_CAVANS_WIDTH * ratio + menu.getHeight() + 115);
 
         stage.setMinWidth(stage.getWidth() + 20);
         stage.setMinHeight(stage.getHeight() + 40);
@@ -85,12 +93,13 @@ public class MainController implements Initializable {
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             double width = defaultStageWidth - newValue.doubleValue();
-            double height = width * (1 / ratio);
+            //double height = width * (1 / ratio);
+            double height = width * ratio;
 
-            //canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
-            //canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
-
-            //stage.setHeight(defaultStageHeight - height);
+//            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
+//            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
+            canvas.setWidth(DEFAULT_CAVANS_WIDTH - width);
+            canvas.setHeight(DEFAULT_CAVANS_WIDTH * ratio - width);
 
             world.update();
         });
@@ -98,12 +107,13 @@ public class MainController implements Initializable {
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             //double height = DEFAULT_CAVANS_HEIGHT + 20 - newValue.doubleValue();
             double height = defaultStageHeight - newValue.doubleValue();
-            double width = height * ratio;
+            //double width = height * ratio;
+            double width = height * (1 / ratio);
 
-            //canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
-            //canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
-
-            //stage.setWidth(defaultStageWidth - width);
+//            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
+//            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
+            canvas.setWidth(DEFAULT_CAVANS_WIDTH - width);
+            canvas.setHeight(DEFAULT_CAVANS_WIDTH * ratio - width);
 
             world.update();
         });
@@ -113,9 +123,9 @@ public class MainController implements Initializable {
             world.initialGraphis();
         });
 
-        azimuthSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-180, 180, 0, 0.5));
-        elevationSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-90, 90, 20, 0.5));
-        speedSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 255, 1, 0.01));
+        //azimuthSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-180, 180, 0, 0.5));
+        //elevationSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-90, 90, 20, 0.5));
+        //speedSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 255, 1, 0.01));
 
         GraphicsContext context = canvas.getGraphicsContext2D();
 
@@ -154,8 +164,13 @@ public class MainController implements Initializable {
 //                "\n Elevation: " + elevationSp.getValue() +
 //                "\n Speed: " + speedSp.getValue());
 
+        double azimuth = Double.parseDouble(azimuthTF.getText());
+        double evelation = Double.parseDouble(elevationTF.getText());
+        double speed = Double.parseDouble(speedTF.getText()) * 1000;
 
-        world.addMissile(world.getPlayer().fire(azimuthSp.getValue(), elevationSp.getValue(), speedSp.getValue()));
+
+
+        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed));
         //world.start();
     }
 
@@ -166,7 +181,11 @@ public class MainController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Editor");
             stage.setScene(new Scene(root1));
+
             stage.show();
+
+            stage.setMinWidth(stage.getWidth() + 10);
+            stage.setMinHeight(stage.getHeight());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,7 +198,11 @@ public class MainController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Historie strelby");
             stage.setScene(new Scene(root1));
+
             stage.show();
+
+            stage.setMinWidth(stage.getWidth());
+            stage.setMaxWidth(stage.getWidth());
         } catch (Exception e) {
             e.printStackTrace();
         }

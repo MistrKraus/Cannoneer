@@ -83,12 +83,25 @@ public class Target implements IHittable {
         return hp;
     }
 
+    public double getDrawableSize(double size) {
+        if (size >= 6)
+            return size;
+        return 6;
+    }
+
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
-        g.setStroke(Color.RED);
-        g.setLineWidth(1);
-        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
-        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+//        g.setStroke(Color.RED);
+//        g.setLineWidth(1);
+//        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
+//        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+
+        g.setFill(Color.RED);
+
+        double width = getDrawableSize(getWidthX() * scaleX);
+        double height = getDrawableSize(getWidthY() * scaleY);
+
+        g.fillRect(getX() * scaleX - width / 2, getY() * scaleY - height / 2, width, height);
     }
 
     @Override

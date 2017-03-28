@@ -154,7 +154,7 @@ public class Missile implements IDrawable, IMappable {
      */
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
-        g.setFill(Color.BLACK);
+        g.setFill(Color.ORANGE);
         g.fillOval((coordinates.getX() - 3 / 2) * scaleX, (coordinates.getY() - 3 / 2) * scaleY, 3, 3);
     }
 
@@ -166,9 +166,38 @@ public class Missile implements IDrawable, IMappable {
      */
     @Override
     public void update(World world) {
-        coordinates = coordinates.copy().add(speed.copy().mul(acceleration));
+        //coordinates = coordinates.copy().add(speed.copy().mul(acceleration));
 
-        //System.out.println(coordinates);
+        // Spravne vypocty
+        Point xtPlusDeltaT = coordinates.copy().add(((speed.copy()).mul(acceleration)).mul(0.01));
+        Point temp1 = new Point(0,0,-1).mul(0.01*10);
+        Point temp2 = new Point(world.getWind().getCoordinates().sub(speed.copy()).mul(acceleration));
+
+        coordinates = xtPlusDeltaT.add(temp1).add(temp2.mul(0.05*0.01));
+
+//        Point oldCoord = coordinates.copy();
+//        Point newCoord = coordinates.copy();
+//
+//        Point xtPlusDeltaT = coordinates.copy().add(((speed.copy()).mul(acceleration)).mul(0.01));
+//        Point temp1 = new Point(0,0,-1).mul(0.01*10);
+//        Point temp2 = new Point(world.getWind().getCoordinates().sub(speed.copy()).mul(acceleration));
+//
+//        newCoord = xtPlusDeltaT.add(temp1).add(temp2.mul(0.05*0.01));
+//
+//        double distance = newCoord.getPointsDistance(oldCoord);
+//
+//        double newCoordSize = newCoord.getPointsDistance(new Point(0,0,0));
+//        double oldCoordSize = oldCoord.getPointsDistance(new Point(0,0,0));
+//
+//        Point smerovyVektor = newCoord.copy().sub(oldCoord);
+//
+//        Point normVektor = smerovyVektor.copy().mulX(-1.0).mulY(-1.0);
+//
+//        Point jednotkovyVektor = smerovyVektor.copy().div(normVektor);
+//
+//        coordinates.add(jednotkovyVektor.mul(2));
+
+        System.out.println(coordinates);
 
         if (isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())) {
             System.out.println("Strela opustila mapu!");
@@ -185,6 +214,8 @@ public class Missile implements IDrawable, IMappable {
 
             System.out.println("Bum!");
         }
+
+        System.out.println(coordinates);
     }
 
     /**

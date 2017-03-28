@@ -36,7 +36,7 @@ public class Wind implements IDrawable {
         Affine affine = g.getTransform();
 
 
-        g.translate(50, 50);
+        g.translate(50, 100);
         g.rotate(azimuth);
 
         double[] stumpPointsX = new double[] {
@@ -87,6 +87,12 @@ public class Wind implements IDrawable {
             azimuthDuration = random.nextInt(150) + 20;
             //azimuthDuration = 30;
         }
+
+        coordinates = azimuthP.copy();
+    }
+
+    public Point getCoordinates() {
+        return coordinates;
     }
 
     @Override

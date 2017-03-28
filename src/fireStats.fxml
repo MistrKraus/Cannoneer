@@ -7,9 +7,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FireStatsController">
+<BorderPane maxHeight="-Infinity" maxWidth="750.0" minHeight="-Infinity" minWidth="750.0" prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FireStatsController">
     <top>
-        <MenuBar BorderPane.alignment="CENTER">
+        <MenuBar BorderPane.alignment="CENTER" maxWidth="750.0" minWidth="750.0" prefWidth="750.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Soubor">
                     <items>
@@ -28,24 +28,31 @@
         </MenuBar>
     </top>
     <center>
-        <TableView>
-         <columns>
-            <TableColumn prefWidth="75.0" text="Hráč" />
-            <TableColumn maxWidth="-1.0" prefWidth="-1.0" text="Střela">
-               <columns>
-                  <TableColumn prefWidth="75.0" text="Azimut" />
-                  <TableColumn prefWidth="75.0" text="Elevace" />
-                  <TableColumn prefWidth="75.0" text="Rychlost" />
-               </columns>
-            </TableColumn>
-            <TableColumn prefWidth="75.0" text="Dopad">
-               <columns>
-                  <TableColumn prefWidth="75.0" text="X [m]" />
-                  <TableColumn prefWidth="75.0" text="Y [m]" />
-                  <TableColumn prefWidth="75.0" text="Z [m]" />
-                  <TableColumn prefWidth="75.0" text="Místo" />
-               </columns>
-            </TableColumn>
-         </columns></TableView>
+        <TableView maxHeight="-Infinity" maxWidth="750.0" minHeight="-Infinity" minWidth="750.0" prefHeight="375.0" prefWidth="750.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Hráč" />
+                <TableColumn maxWidth="-1.0" prefWidth="-1.0" text="Střela">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="Azimut" />
+                        <TableColumn prefWidth="75.0" text="Elevace" />
+                        <TableColumn prefWidth="75.0" text="Rychlost" />
+                    </columns>
+                </TableColumn>
+                <TableColumn text="Povětrnostní podmínky">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="Rychlost" />
+                        <TableColumn prefWidth="75.0" text="Směr" />
+                    </columns>
+                </TableColumn>
+                <TableColumn prefWidth="75.0" text="Dopad">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="X [m]" />
+                        <TableColumn prefWidth="75.0" text="Y [m]" />
+                        <TableColumn prefWidth="75.0" text="Z [m]" />
+                        <TableColumn prefWidth="75.0" text="Místo" />
+                    </columns>
+                </TableColumn>
+            </columns>
+        </TableView>
     </center>
 </BorderPane>

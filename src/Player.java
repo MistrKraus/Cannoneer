@@ -1,3 +1,8 @@
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Group;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -60,6 +65,7 @@ public class Player extends Target implements IShooting {
      */
     @Override
     public Missile fire(double azimuth, double elevation, double speed) {
+        System.out.println("Vystrel");
         return new Missile(coordinates, azimuth, elevation, speed);
     }
 
@@ -76,6 +82,20 @@ public class Player extends Target implements IShooting {
         g.setLineWidth(1);
         g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
         g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+
+//        g.setFill(Color.GREEN);
+//
+//        double width = getDrawableSize(getWidthX() * scaleX);
+//        double height = getDrawableSize(getWidthY() * scaleY);
+//
+//        Rectangle base = new Rectangle((int)(getX() - width / 2), (int)(getY() - height / 2), (int)width, (int)height);
+//        base.setFill(Color.color(0, 62, 0));
+//        Rectangle cannon = new Rectangle((int)(getX() - width), (int)getY(), (int)width, (int)(height / 5));
+//        base.setFill(Color.color(0, 112, 0));
+//
+//        Shape player = Shape.union(base, cannon);
+        //Path player = Path.union(base, cannon);
+
     }
 
     /**

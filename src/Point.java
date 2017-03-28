@@ -151,9 +151,9 @@ public class Point {
     }
 
     public Point mul(Point other) {
-        x *= other.x;
-        y *= other.y;
-        z *= other.z;
+        this.x *= other.x;
+        this.y *= other.y;
+        this.z *= other.z;
 
         return this;
     }
@@ -180,6 +180,40 @@ public class Point {
 
     public Point mulZ(double z) {
         this.z *= z;
+
+        return this;
+    }
+
+    public Point div(Point other) {
+        x /= other.x;
+        y /= other.y;
+        z /= other.z;
+
+        return this;
+    }
+
+    public Point div(double x) {
+        this.x /= x;
+        this.y /= x;
+        this.z /= x;
+
+        return this;
+    }
+
+    public Point divX(double x) {
+        this.x /= x;
+
+        return this;
+    }
+
+    public Point divY(double y) {
+        this.y /= y;
+
+        return this;
+    }
+
+    public Point divZ(double z) {
+        this.z /= z;
 
         return this;
     }

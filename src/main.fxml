@@ -7,102 +7,127 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="335.0" prefWidth="245.0" spacing="10" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+<VBox prefHeight="335.0" prefWidth="338.0" spacing="10" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
     <MenuBar fx:id="menu">
-     <menus>
-       <Menu mnemonicParsing="false" text="Soubor">
-         <items>
-               <MenuItem mnemonicParsing="false" text="Nová hra" />
-           <MenuItem mnemonicParsing="false" text="Konec" />
-         </items>
-       </Menu>
-       <Menu mnemonicParsing="false" text="Zobrazení">
-         <items>
-           <MenuItem mnemonicParsing="false" onAction="#openFireStats" text="Historie střelby" />
-         </items>
-       </Menu>
-       <Menu mnemonicParsing="false" text="Možnosti">
-         <items>
-           <MenuItem mnemonicParsing="false" onAction="#openEditor" text="Editor map" />
-               <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-         </items>
-       </Menu>
-     </menus>
-   </MenuBar>
+        <menus>
+            <Menu mnemonicParsing="false" text="Soubor">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Nová hra" />
+                    <MenuItem mnemonicParsing="false" text="Konec" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Zobrazení">
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#openFireStats" text="Historie střelby" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Možnosti">
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#openEditor" text="Editor map" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Nápověda">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Jak hrát" />
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
     <HBox prefHeight="335.0" prefWidth="245.0" spacing="10">
         <padding>
             <Insets bottom="10" left="10" right="10" />
         </padding>
         <Canvas fx:id="canvas" HBox.hgrow="ALWAYS">
         </Canvas>
-      <VBox prefHeight="145.0" prefWidth="100.0">
-         <children>
-            <Label prefHeight="17.0" prefWidth="62.0" text="Střelec - cíl:" />
-                 <Label fx:id="distanceLbl" layoutX="15.0" layoutY="17.0" prefHeight="17.0" prefWidth="102.0">
-               <padding>
-                  <Insets left="10.0" />
-               </padding></Label>
-            <Label layoutX="6.0" layoutY="47.0" prefHeight="17.0" prefWidth="42.0" text="Střelec:" />
-                 <Label fx:id="shooterZLbl" layoutX="93.0" layoutY="64.0" prefHeight="17.0" prefWidth="88.0" textAlignment="RIGHT">
-               <padding>
-                  <Insets left="10.0" />
-               </padding></Label>
-             <Label layoutX="4.0" layoutY="81.0" prefHeight="17.0" prefWidth="20.0" text="Cíl:" />
-                 <Label fx:id="targetZLbl" layoutX="93.0" layoutY="81.0" prefHeight="17.0" prefWidth="90.0" textAlignment="RIGHT">
-               <padding>
-                  <Insets left="10.0" />
-               </padding></Label>
-         </children>
-      </VBox>
+        <VBox prefHeight="145.0" prefWidth="100.0">
+            <children>
+                <Label prefHeight="17.0" prefWidth="62.0" text="Střelec - cíl:" />
+                <Label fx:id="distanceLbl" layoutX="15.0" layoutY="17.0" prefHeight="17.0" prefWidth="102.0">
+                    <padding>
+                        <Insets left="10.0" />
+                    </padding>
+                </Label>
+                <Label layoutX="6.0" layoutY="47.0" prefHeight="17.0" prefWidth="42.0" text="Střelec:">
+                    <padding>
+                        <Insets top="10" />
+                    </padding>
+                </Label>
+                <Label fx:id="shooterZLbl" layoutX="93.0" layoutY="64.0" prefHeight="17.0" prefWidth="88.0" textAlignment="RIGHT">
+                    <padding>
+                        <Insets left="10.0" />
+                    </padding>
+                </Label>
+                <Label layoutX="4.0" layoutY="81.0" prefHeight="17.0" prefWidth="20.0" text="Cíl:">
+                    <padding>
+                        <Insets top="10" />
+                    </padding>
+                </Label>
+                <Label fx:id="targetZLbl" layoutX="93.0" layoutY="81.0" prefHeight="17.0" prefWidth="90.0" textAlignment="RIGHT">
+                    <padding>
+                        <Insets left="10.0" />
+                    </padding>
+                </Label>
+            </children>
+        </VBox>
     </HBox>
     <HBox fx:id="hBox2" prefHeight="315.0" prefWidth="227.0">
-      <children>
-          <HBox>
-              <VBox>
+        <children>
+            <HBox>
+                <VBox>
                     <Label layoutX="11.0" layoutY="7.0" text="Azimut:" />
-                    <Spinner fx:id="azimuthSp" editable="true" layoutX="29.0" layoutY="24.0" prefHeight="25.0" prefWidth="70.0" />
-              </VBox>
-              <Label layoutX="133.0" layoutY="19.0" prefHeight="25.0" prefWidth="5.0" text="°">
-                  <font>
-                      <Font size="17.0" />
-                  </font>
-              </Label>
-              <VBox>
-                  <padding>
-                      <Insets left="5" />
-                  </padding>
-                <Label layoutX="13.0" layoutY="56.0" text="Elevace:" />
-                <Spinner fx:id="elevationSp" editable="true" layoutX="29.0" layoutY="75.0" prefHeight="25.0" prefWidth="70.0" />
-              </VBox>
-              <Label layoutX="133.0" layoutY="19.0" prefHeight="25.0" prefWidth="5.0" text="°">
-                  <font>
-                      <Font size="17.0" />
-                  </font>
-              </Label>
-              <VBox>
-                  <padding>
-                      <Insets left="5" />
-                  </padding>
-                  <Label layoutX="11.0" layoutY="106.0" text="Rychlost:" />
-                  <Spinner fx:id="speedSp" editable="true" layoutX="29.0" layoutY="123.0" prefHeight="25.0" prefWidth="70.0" />
-              </VBox>
-              <Label layoutX="133.0" layoutY="127.0" text="m/s" />
-              <VBox>
-                  <Button onAction="#handleBtn" text="FIRE" textAlignment="CENTER" />
-                  <Button text="Vizualizuj" textAlignment="CENTER" />
-              </VBox>
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
-            <HBox.margin>
-               <Insets left="10.0" />
-            </HBox.margin>
-          </HBox>
-      </children>
-   </HBox>
+                    <TextField fx:id="azimuthTF" layoutX="29.0" layoutY="24.0" minHeight="25.0" minWidth="70.0" HBox.hgrow="ALWAYS" />
+                </VBox>
+                <Label layoutX="133.0" layoutY="19.0" prefHeight="5.0" prefWidth="5.0" text="°">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+                </Label>
+                <VBox>
+                    <padding>
+                        <Insets left="10" />
+                    </padding>
+                    <Label layoutX="13.0" layoutY="56.0" text="Elevace:" />
+                    <TextField fx:id="elevationTF" layoutX="29.0" layoutY="75.0" minHeight="25.0" minWidth="70.0" HBox.hgrow="ALWAYS" />
+                </VBox>
+                <Label layoutX="133.0" layoutY="19.0" prefHeight="5.0" prefWidth="5.0" text="°">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+                </Label>
+                <VBox>
+                    <padding>
+                        <Insets left="10" />
+                    </padding>
+                    <Label layoutX="11.0" layoutY="106.0" text="Rychlost:" />
+                    <TextField fx:id="speedTF" layoutX="29.0" layoutY="123.0" minWidth="70.0" prefHeight="25.0" HBox.hgrow="ALWAYS" />
+                </VBox>
+                <Label layoutX="133.0" layoutY="127.0" minWidth="21" text="m/s">
+                   <HBox.margin>
+                      <Insets top="20.0" />
+                   </HBox.margin>
+                </Label>
+                <VBox spacing="3.0">
+                    <Button minHeight="25.0" minWidth="73.0" onAction="#handleBtn" text="FIRE" textAlignment="CENTER" />
+                    <Button minHeight="10.0" minWidth="73.0" text="Vizualizuj" textAlignment="CENTER" />
+                    <padding>
+                        <Insets bottom="10" left="10" />
+                    </padding>
+                </VBox>
+                <HBox.margin>
+                    <Insets left="10.0" right="5" />
+                </HBox.margin>
+            </HBox>
+        </children>
+    </HBox>
 </VBox>

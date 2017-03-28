@@ -17,26 +17,27 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EditorController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="EditorController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="Soubor">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Nový" />
-                        <MenuItem mnemonicParsing="false" text="Otevřít" />
-                        <MenuItem mnemonicParsing="false" text="Uložit" />
-                        <MenuItem mnemonicParsing="false" text="Konec" />
+                        <MenuItem mnemonicParsing="false" text="Nový"/>
+                        <MenuItem mnemonicParsing="false" text="Otevřít"/>
+                        <MenuItem mnemonicParsing="false" text="Uložit"/>
+                        <MenuItem mnemonicParsing="false" text="Konec"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Zobrazení">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Delete"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Nápověda">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="About"/>
                     </items>
                 </Menu>
             </menus>
@@ -47,12 +48,12 @@
             <tabs>
                 <Tab text="Graficky">
                     <content>
-                        <fx:include fx:id="editorFXML" source="graficEditor.fxml" />
+                        <fx:include fx:id="editorFXML" source="graficEditor.fxml"/>
                     </content>
                 </Tab>
                 <Tab text="Numericky">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
                     </content>
                 </Tab>
             </tabs>
@@ -65,16 +66,16 @@
                     <TitledPane animated="false" prefHeight="224.0" prefWidth="202.0" text="Mapa">
                         <content>
                             <VBox spacing="3">
-                                <Label text="Šířka mapy (sloupce)" />
-                                <TextField fx:id="mapWidth" />
-                                <Label text="Výška mapy (řádky)" />
-                                <TextField fx:id="mapHeight" />
-                                <Label text="Rozestup sloupců (metry)" />
-                                <TextField fx:id="deltaX" />
-                                <Label text="Rozestup řádků (metry)" />
-                                <TextField fx:id="deltaY" />
-                                <Label text="Výchozí výška mapy (metry)" />
-                                <TextField fx:id="defauktHeight" />
+                                <Label text="Šířka mapy (sloupce)"/>
+                                <TextField fx:id="mapWidth"/>
+                                <Label text="Výška mapy (řádky)"/>
+                                <TextField fx:id="mapHeight"/>
+                                <Label text="Rozestup sloupců [mm]"/>
+                                <TextField fx:id="deltaX"/>
+                                <Label text="Rozestup řádků [mm]"/>
+                                <TextField fx:id="deltaY"/>
+                                <Label text="Výchozí výška mapy [mm]"/>
+                                <TextField fx:id="defauktHeight"/>
                                 <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="175.0" text="Potvrdit"/>
                             </VBox>
                         </content>
@@ -83,10 +84,10 @@
                         <content>
                             <HBox>
                                 <VBox>
-                                    <Label text="Pozice ve sloupcich" />
-                                    <TextField fx:id="playerX" />
-                                    <Label text="Pozice ve řádcích" />
-                                    <TextField fx:id="playerY" />
+                                    <Label text="Pozice ve sloupcich"/>
+                                    <TextField fx:id="playerX"/>
+                                    <Label text="Pozice ve řádcích"/>
+                                    <TextField fx:id="playerY"/>
                                 </VBox>
                             </HBox>
                         </content>
@@ -95,10 +96,10 @@
                         <content>
                             <HBox>
                                 <VBox>
-                                    <Label text="Pozice ve sloupcich" />
-                                    <TextField fx:id="targetX" />
-                                    <Label text="Pozice ve řádcích" />
-                                    <TextField fx:id="targetY" />
+                                    <Label text="Pozice ve sloupcich"/>
+                                    <TextField fx:id="targetX"/>
+                                    <Label text="Pozice ve řádcích"/>
+                                    <TextField fx:id="targetY"/>
                                 </VBox>
                             </HBox>
                         </content>

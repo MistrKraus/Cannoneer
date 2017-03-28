@@ -16,7 +16,9 @@ public class Map implements IDrawable {
     private double mapHeightM;
     private double deltaXm;
     private double deltaYm;
-    private double maxHeightM;
+    private double maxHeightM = 0;
+    private double minHeightM = Double.MAX_VALUE;
+    private double midHeightM;
 
     private ImageView terrainImgView = new ImageView();
     private Image terrainImg;
@@ -44,7 +46,7 @@ public class Map implements IDrawable {
             }
         }
 
-        setMaxHeightM();
+        setMaxMinMidVaule();
     }
 
     public void bufferImage() {
@@ -66,6 +68,8 @@ public class Map implements IDrawable {
             for (int j = 0; j < terrain[1].length; j++) {
                 int rgb = (int)(terrain[i][j] * scale);
                 Color color = Color.rgb(rgb, rgb, rgb);
+                if (minHeightM == maxHeightM)
+                    color = Color.GRAY;
 
                 for (int k = 0; k < pXPerDelta; k++) {
                     for (int l = 0; l < pYPerDelta; l++) {
@@ -164,13 +168,17 @@ public class Map implements IDrawable {
         return surface;
     }
 
-    private void setMaxHeightM() {
+    private void setMaxMinMidVaule() {
         for (int i = 0; i < mapWidth; i++) {
             for (int j = 0; j < mapHeight; j++) {
                 if (maxHeightM < surface[i][j])
                     maxHeightM = surface[i][j];
+                if (minHeightM > surface[i][j])
+                    minHeightM = surface[i][j];
             }
         }
+
+        midHeightM = (maxHeightM - minHeightM) / 2;
     }
 
     public void setTerrain(Explosion explosion) {
