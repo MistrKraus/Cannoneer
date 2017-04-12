@@ -1,10 +1,4 @@
-import javafx.beans.property.ObjectProperty;
-import javafx.scene.Group;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  * Created by kraus on 11.03.2017.
@@ -12,6 +6,8 @@ import javafx.scene.paint.Color;
  * Hrac
  */
 public class Player extends Target implements IShooting {
+
+    private static final String IMG_PATH = "images/player1.png";
 
     /**
      * perizeni konstruktoru
@@ -21,7 +17,7 @@ public class Player extends Target implements IShooting {
      * @param z nadmorska vyska v metech
      */
     public Player (double x, double y, double z) {
-        super(x, y, z);
+        this(new Point(x, y, z));
     }
 
     /**
@@ -30,7 +26,7 @@ public class Player extends Target implements IShooting {
      * @param point souradnice v metrech
      */
     public Player (Point point) {
-        super(point);
+        this(point, DEFAULT_HP);
     }
 
     /**
@@ -42,7 +38,7 @@ public class Player extends Target implements IShooting {
      * @param hp pocet zivotu
      */
     public Player (double x, double y, double z, int hp) {
-        super(x, y, z, hp);
+        this(new Point(x, y, z), hp);
     }
 
     /**
@@ -52,7 +48,7 @@ public class Player extends Target implements IShooting {
      * @param hp pocet zivotu
      */
     public Player(Point point, int hp) {
-        super(point, hp);
+        super(point, hp, IMG_PATH);
     }
 
     /**
@@ -66,7 +62,7 @@ public class Player extends Target implements IShooting {
     @Override
     public Missile fire(double azimuth, double elevation, double speed) {
         System.out.println("Vystrel");
-        return new Missile(coordinates, azimuth, elevation, speed);
+        return new Missile(coordinates.copy(), azimuth, elevation, speed);
     }
 
     /**
@@ -78,10 +74,17 @@ public class Player extends Target implements IShooting {
      */
     @Override
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
-        g.setStroke(Color.BLUE);
-        g.setLineWidth(1);
-        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
-        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+//        g.setStroke(Color.BLUE);
+//        g.setLineWidth(1);
+//        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
+//        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
+
+        g.drawImage(IMG, (int)(getX() * scaleX - IMG.getWidth() / 2), (int)(getY() * scaleY - IMG.getHeight() / 2));
+
+//        System.out.println("Player:\n metryX: " + getX() + "\n metryY: " + getY() +
+//                "\n X: " +(int)(getX() * scaleX - IMG.getWidth() / 2) +
+//                "\n Y: " + (int)(getY() * scaleY - IMG.getHeight() / 2));
+
 
 //        g.setFill(Color.GREEN);
 //

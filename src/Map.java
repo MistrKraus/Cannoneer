@@ -1,4 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
@@ -64,6 +66,9 @@ public class Map implements IDrawable {
 
         PixelWriter pixelWriter = terrainImgW.getPixelWriter();
 
+        double x, y;
+
+        long now = System.nanoTime();
         for (int i = 0; i < terrain.length; i++) {
             for (int j = 0; j < terrain[1].length; j++) {
                 int rgb = (int)(terrain[i][j] * scale);
@@ -71,15 +76,18 @@ public class Map implements IDrawable {
                 if (minHeightM == maxHeightM)
                     color = Color.GRAY;
 
+                x = i * pXPerDelta;
+                y = j * pYPerDelta;
+
                 for (int k = 0; k < pXPerDelta; k++) {
                     for (int l = 0; l < pYPerDelta; l++) {
-                        pixelWriter.setColor((int)(i * pXPerDelta + k), (int)(j * pYPerDelta + l), color);
-                        //System.out.println((i * pXPerDelta + k) + "  " + (j * pYPerDelta + l));
-                        //x++;
+                        pixelWriter.setColor((int)(x + k), (int)(y + l), color);
                     }
                 }
             }
         }
+
+        System.out.println("Kresleni terenu = " + (System.nanoTime() - now) + " ns");
         System.out.println("Obraz mapy aktualizovan");
 
         terrainImgView.setImage(terrainImgW);

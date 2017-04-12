@@ -28,7 +28,9 @@ public class Data {
             int mapHeight = in.readInt();
             double deltaXm = in.readInt() / 1000;
             double deltaYm = in.readInt() / 1000;
+            //this.shooterX = 0;
             this.shooterX = in.readInt();
+            //this.shooterY = 0;
             this.shooterY = in.readInt();
             this.targetX = in.readInt();
             this.targetY = in.readInt();
@@ -43,16 +45,19 @@ public class Data {
             }
 
             try {
+                long now = System.nanoTime();
                 for (int i = 0; i < mapWidth; i++) {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
                         terrainZm[i][j] = in.readInt() / 1000;
-                        //terrainZm[i][j] = 1;
+                        terrainZm[i][j] = 1;
 
                         //System.out.print(terrainZm[i][j] + "   ");
                     }
                     //System.out.println();
                 }
+
+                System.out.println("Nacitani terenu = " + (System.nanoTime() - now) + " ns");
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("V souboru chybí " + (mapWidth * mapWidth - zCounter) + " hodnot s nadmořskou výškou");
                 System.out.println("Tyto hodnoty byli nastaveny na 0 mm");

@@ -1,4 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -8,17 +9,16 @@ import javafx.scene.paint.Color;
  */
 public class Target implements IHittable {
 
-    /**
-     * defaultni pocet hp
-     */
+    protected final Image IMG;
+
+    private static final String IMG_PATH = "images/target1.png";
+    /** defaultni pocet hp*/
     protected static final int DEFAULT_HP = 100;
     /** vychozi vyska v metrech*/
     protected static final double DEFAULT_HEIGHT = 1;
     /** souracnice cile v metrech */
     protected Point coordinates;
-    /**
-     * zivoty ~ hp cile
-     */
+    /** zivoty ~ hp cile*/
     protected int hp;
 
     /**
@@ -60,8 +60,18 @@ public class Target implements IHittable {
      * @param hp pocet zivotu ~ hp cile
      */
     public Target(Point point, int hp) {
+        this(point, hp, IMG_PATH);
+    }
+
+    public Target(Point point, int hp, String imgPath) {
         coordinates = new Point(point.getX(), point.getY(), point.getZ() + DEFAULT_HEIGHT);
         this.hp = hp;
+
+        IMG = loadImage(imgPath);
+    }
+
+    public Image loadImage(String path) {
+        return new Image(path);
     }
 
     /**
@@ -96,12 +106,18 @@ public class Target implements IHittable {
 //        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
 //        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
 
-        g.setFill(Color.RED);
+        g.drawImage(IMG, (int)(getX() * scaleX - IMG.getWidth() / 2), (int)(getY() * scaleY - IMG.getHeight() / 2));
 
-        double width = getDrawableSize(getWidthX() * scaleX);
-        double height = getDrawableSize(getWidthY() * scaleY);
+//        System.out.println("Taget\n metryX: " + getX() + "\n metryY: " + getY() +
+//                "\n X: " + (int)(getX() * scaleX - IMG.getWidth() / 2) +
+//            "\n Y: " + (int)(getY() * scaleY - IMG.getHeight() / 2));
 
-        g.fillRect(getX() * scaleX - width / 2, getY() * scaleY - height / 2, width, height);
+//        g.setFill(Color.RED);
+//
+//        double width = getDrawableSize(getWidthX() * scaleX);
+//        double height = getDrawableSize(getWidthY() * scaleY);
+//
+//        g.fillRect(getX() * scaleX - width / 2, getY() * scaleY - height / 2, width, height);
     }
 
     @Override

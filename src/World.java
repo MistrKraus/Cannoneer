@@ -67,6 +67,7 @@ public class World {
      * @param player hrac
      */
     public void addPlayer(Player player) {
+        // hitbox playera
         //map.addToMap(player);
 
         players.add(player);
@@ -78,7 +79,8 @@ public class World {
      * @param target cil
      */
     public void addTarget(Target target) {
-        map.addToMap(target);
+        // hitbox targetu
+        //map.addToMap(target);
 
         targets.add(target);
     }
@@ -145,13 +147,14 @@ public class World {
             stop();
             return;
         }
+
         scaleX = 1 / data.getMap().getDeltaXm();
         scaleY = 1 / data.getMap().getDeltaYm();
 
-        players.forEach((player1) -> player1.update(this));
-        targets.forEach((target1) -> target1.update(this));
-        missiles.forEach((missile1) -> missile1.update(this));
-        explosions.forEach((explosion1) -> explosion1.update(this));
+        players.forEach((player) -> player.update(this));
+        targets.forEach((target) -> target.update(this));
+        missiles.forEach((missile) -> missile.update(this));
+        explosions.forEach((explosion) -> explosion.update(this));
         wind.update(this);
 
         draw();
@@ -196,8 +199,6 @@ public class World {
         graphics.setTextAlign(TextAlignment.CENTER);
         graphics.fillText("KONEC HRY!", graphics.getCanvas().getWidth() / 2,
                 graphics.getCanvas().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
-
-
     }
 
     public void pause() {

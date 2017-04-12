@@ -1,3 +1,5 @@
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -14,7 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
+import javax.xml.bind.Marshaller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -82,7 +87,7 @@ public class MainController implements Initializable {
 
 //        stage.setWidth(DEFAULT_CAVANS_HEIGHT * ratio + 110);
 //        stage.setHeight(DEFAULT_CAVANS_HEIGHT + menu.getHeight() + 115);
-        stage.setWidth(DEFAULT_CAVANS_WIDTH + 110);
+            stage.setWidth(DEFAULT_CAVANS_WIDTH + 110);
         stage.setHeight(DEFAULT_CAVANS_WIDTH * ratio + menu.getHeight() + 115);
 
         stage.setMinWidth(stage.getWidth() + 20);
@@ -123,9 +128,80 @@ public class MainController implements Initializable {
             world.initialGraphis();
         });
 
-        //azimuthSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-180, 180, 0, 0.5));
-        //elevationSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(-90, 90, 20, 0.5));
-        //speedSp.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 255, 1, 0.01));
+        azimuthTF.setTextFormatter(new TextFormatter<>(new StringConverter<Double>() {
+            @Override
+            public Double fromString(String string) {
+                System.out.println("FROM");
+                double x = Double.parseDouble(string);
+
+                if (x < -90)
+                    return -90.0;
+
+                if (x > 180)
+                    return 180.0;
+
+                return x;
+            }
+
+            @Override
+            public String toString(Double object) {
+                System.out.println("TO");
+                if (object == null)
+                    return "0";
+
+                return object.toString();
+            }
+        }));
+
+        elevationTF.setTextFormatter(new TextFormatter<>(new StringConverter<Double>() {
+            @Override
+            public Double fromString(String string) {
+                System.out.println("FROM");
+                double x = Double.parseDouble(string);
+
+                if (x > 90)
+                    return 90.0;
+
+                if (x < -90)
+                    return -90.0;
+
+                return x;
+            }
+
+            @Override
+            public String toString(Double object) {
+                System.out.println("TO");
+                if (object == null)
+                    return "0";
+
+                return object.toString();
+            }
+        }));
+
+        speedTF.setTextFormatter(new TextFormatter<>(new StringConverter<Double>() {
+            @Override
+            public Double fromString(String string) {
+                System.out.println("FROM");
+                double x = Double.parseDouble(string);
+
+                if (x < 0)
+                    return 0.0;
+
+                if (x > 1000)
+                    return 1000.0;
+
+                return x;
+            }
+
+            @Override
+            public String toString(Double object) {
+                System.out.println("TO");
+                if (object == null)
+                    return "0";
+
+                return object.toString();
+            }
+        }));
 
         GraphicsContext context = canvas.getGraphicsContext2D();
 
@@ -144,6 +220,11 @@ public class MainController implements Initializable {
         targetZLbl.setText(String.format("%.2f m n. m.",world.getTarget().getZ()));
 
         world.start();
+    }
+
+    private String ConvertToDouble(String s) {
+
+        return s;
     }
 
     /**
@@ -166,7 +247,7 @@ public class MainController implements Initializable {
 
         double azimuth = Double.parseDouble(azimuthTF.getText());
         double evelation = Double.parseDouble(elevationTF.getText());
-        double speed = Double.parseDouble(speedTF.getText()) * 1000;
+        double speed = Double.parseDouble(speedTF.getText());// * 1000;
 
 
 
@@ -174,8 +255,13 @@ public class MainController implements Initializable {
         //world.start();
     }
 
+    /**
+     * Otevře okno s editorem map
+     *
+     * @param actionEvent
+     */
     public void openEditor(ActionEvent actionEvent) {
-        try{
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("editor.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();

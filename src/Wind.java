@@ -63,7 +63,7 @@ public class Wind implements IDrawable {
     @Override
     public void update(World world) {
         if (speedDuration-- < 1) {
-            speed += random.nextInt(MAX_SPEED / 2) - MAX_SPEED / 4;
+            speed += (random.nextInt(MAX_SPEED / 2) - MAX_SPEED / 4);
 
             if (speed < 0)
                 speed = 0;
@@ -82,7 +82,7 @@ public class Wind implements IDrawable {
         if (azimuthDuration-- < 1) {
             azimuth += random.nextInt(40) - 20;
 
-            azimuthP = new Point(Math.cos(azimuth), Math.sin(azimuth), 0);
+            azimuthP = new Point(Math.cos(azimuth) * speed, Math.sin(azimuth) * speed, 0);
 
             azimuthDuration = random.nextInt(150) + 20;
             //azimuthDuration = 30;
