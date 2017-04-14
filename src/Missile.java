@@ -117,6 +117,7 @@ public class Missile implements IDrawable, IMappable {
 
         this.direction = new Point(speedX, speedY, speedZ);
         this.coordinates = coordinates.copy().add(this.direction.mul(2));
+        this.direction.mul(acceleration);
         this.newCoord = this.coordinates.copy();
         this.temp1 = MAGIC_POINT.copy().mul(DELTA_T * GRAVITY);
 
@@ -216,20 +217,20 @@ public class Missile implements IDrawable, IMappable {
      */
     @Override
     public void update(World world) {
-        Point directionVector = direction.copy().mul(acceleration);
+        //Point directionVector = direction.copy().mul(acceleration);
 
         //System.out.println(direction);
         //System.out.println(directionVector.copy().div(acceleration));
 
-        newCoord = coordinates.copy().add((directionVector.copy()).mul(DELTA_T));
+        newCoord = coordinates.copy().add((direction.copy()).mul(DELTA_T));
         coordinates = newCoord.copy();
         System.out.println(coordinates);
 
-        Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(directionVector.copy()));
+        Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(direction.copy()));
 
-        directionVector = directionVector.copy().add(temp1).add(temp2.mul(MAGIC_B * DELTA_T));
+        direction = direction.copy().add(temp1).add(temp2.mul(MAGIC_B * DELTA_T));
 
-        direction = directionVector.div(acceleration);
+        //direction = directionVector.div(acceleration);
 
         //System.out.println(directionVector.copy().div(acceleration));
         //System.out.println("-----------");

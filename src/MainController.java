@@ -87,7 +87,7 @@ public class MainController implements Initializable {
 
 //        stage.setWidth(DEFAULT_CAVANS_HEIGHT * ratio + 110);
 //        stage.setHeight(DEFAULT_CAVANS_HEIGHT + menu.getHeight() + 115);
-            stage.setWidth(DEFAULT_CAVANS_WIDTH + 110);
+        stage.setWidth(DEFAULT_CAVANS_WIDTH + 110);
         stage.setHeight(DEFAULT_CAVANS_WIDTH * ratio + menu.getHeight() + 115);
 
         stage.setMinWidth(stage.getWidth() + 20);
@@ -128,10 +128,18 @@ public class MainController implements Initializable {
             world.initialGraphis();
         });
 
+        azimuthTF.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue)
+                    world.getPlayer().setAzimuth(Double.parseDouble(azimuthTF.getText()));
+            }
+        });
+
         azimuthTF.setTextFormatter(new TextFormatter<>(new StringConverter<Double>() {
             @Override
             public Double fromString(String string) {
-                System.out.println("FROM");
+                //System.out.println("FROM");
                 double x = Double.parseDouble(string);
 
                 if (x < -90)
@@ -145,7 +153,7 @@ public class MainController implements Initializable {
 
             @Override
             public String toString(Double object) {
-                System.out.println("TO");
+                //System.out.println("TO");
                 if (object == null)
                     return "0.0";
 
@@ -222,18 +230,13 @@ public class MainController implements Initializable {
         world.start();
     }
 
-    private String ConvertToDouble(String s) {
-
-        return s;
-    }
-
     /**
      * Reakce na stisk tlačítka.
      * Pokud je hra spustena vypise vzdalenost mezi strelcem a cilem zaroven s jejich nadmorskymi vyskami a zajisti vystrel hrace
      *
      * @param actionEvent data o stiku tlacitka
      */
-    public void handleBtn(ActionEvent actionEvent) {
+    public void handleBtnFire(ActionEvent actionEvent) {
         if (!world.isRunning())
             return;
 
@@ -249,10 +252,18 @@ public class MainController implements Initializable {
         double evelation = Double.parseDouble(elevationTF.getText());
         double speed = Double.parseDouble(speedTF.getText());// * 1000;
 
-
-
         world.addMissile(world.getPlayer().fire(azimuth, evelation, speed));
         //world.start();
+    }
+
+    /**
+     * Reakce na tlacitko "Vizualizuj"
+     * Pokud je hra spustena, vyzualizuje strelu
+     *
+     * @param actionEvent data o stiku tlacitka
+     */
+    public void handleBtnVizualzuj(ActionEvent actionEvent) {
+        System.out.println("Tato funkce bude implementovana v 3. etape");
     }
 
     /**

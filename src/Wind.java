@@ -80,11 +80,11 @@ public class Wind implements IDrawable {
                 speedDuration /= Math.abs(speed);
             else
                 speedDuration /= 4;
-
         }
 
         if (azimuthDuration-- < 1) {
             azimuth += random.nextInt(40) - 20;
+            //azimuth = -90;
 
             azimuthP = new Point(Math.cos(azimuth) * speed, Math.sin(azimuth) * speed, 0);
 

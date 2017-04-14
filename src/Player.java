@@ -1,4 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.transform.Affine;
 
 /**
  * Created by kraus on 11.03.2017.
@@ -6,6 +7,8 @@ import javafx.scene.canvas.GraphicsContext;
  * Hrac
  */
 public class Player extends Target implements IShooting {
+
+    private double azimuth = 0;
 
     private static final String IMG_PATH = "images/player1.png";
 
@@ -51,6 +54,10 @@ public class Player extends Target implements IShooting {
         super(point, hp, IMG_PATH);
     }
 
+    public void setAzimuth(double azimuth) {
+        this.azimuth = azimuth;
+    }
+
     /**
      * vystreli
      *
@@ -79,7 +86,11 @@ public class Player extends Target implements IShooting {
 //        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
 //        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
 
-        g.drawImage(IMG, (int)(getX() * scaleX - IMG.getWidth() / 2), (int)(getY() * scaleY - IMG.getHeight() / 2));
+        Affine t = g.getTransform();
+        g.translate((int)(getX() * scaleX - IMG.getWidth() / 2), (int)(getY() * scaleY - IMG.getHeight() / 2));
+        g.rotate(-azimuth);
+        g.drawImage(IMG, 0, 0);
+        g.setTransform(t);
 
 //        System.out.println("Player:\n metryX: " + getX() + "\n metryY: " + getY() +
 //                "\n X: " +(int)(getX() * scaleX - IMG.getWidth() / 2) +

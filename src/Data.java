@@ -77,9 +77,7 @@ public class Data {
     }
 
     /**
-     * Zjisti zda jsou nactena data spravna
-     *
-     * @return
+     * @return zda jsou nactena data spravna
      */
     public boolean dataConsistent(double mapWidth, double mapHeight, double deltaXm, double deltaYm) {
         return !(mapWidth <= 0 || mapHeight <= 0 || deltaXm <= 0 || deltaYm <= 0 ||
