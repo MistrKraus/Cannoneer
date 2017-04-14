@@ -35,7 +35,8 @@ public class Wind implements IDrawable {
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         Affine affine = g.getTransform();
 
-
+        double alpha = g.getGlobalAlpha();
+        g.setGlobalAlpha(0.3);
         g.translate(50, 100);
         g.rotate(azimuth);
 
@@ -48,16 +49,17 @@ public class Wind implements IDrawable {
         };
 
         for (int i = 0; i < stumpPointsX.length; i++)
-            stumpPointsX[i] *= 10;//scaleMperPixelX;
+            stumpPointsX[i] *= 6;//scaleMperPixelX;
 
         for (int i = 0; i < stumpPointsY.length; i++)
-            stumpPointsY[i] *= 10;//scaleMperPixelY;
+            stumpPointsY[i] *= 6;//scaleMperPixelY;
 
 
         g.setFill(Color.LIGHTBLUE);
         g.fillPolygon(stumpPointsX, stumpPointsY, stumpPointsX.length);
 
         g.setTransform(affine);
+        g.setGlobalAlpha(alpha);
     }
 
     @Override

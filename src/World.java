@@ -173,8 +173,8 @@ public class World {
         map.draw(graphics, scalePixelperMX, scalePixelperMY);
         players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
-        missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
         explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
+        missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
         wind.draw(graphics, scalePixelperMX, scalePixelperMY);
     }
 

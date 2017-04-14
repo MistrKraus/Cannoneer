@@ -1,6 +1,7 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.MotionBlur;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
@@ -52,10 +53,7 @@ public class Map implements IDrawable {
     }
 
     public void bufferImage() {
-
         WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * (mapWidthM / mapHeightM)), IMG_HEIGHT);
-        //Color black = Color.BLACK;
-
         double scale = 255 / maxHeightM;
 
 //        double indexX = mapWidth / terrainImgW.getWidth();
@@ -100,7 +98,9 @@ public class Map implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         terrainImg = wImage;
+        g.setEffect(new GaussianBlur(3));
         g.drawImage(terrainImg, 0, 0, g.getCanvas().getWidth() + 1, g.getCanvas().getHeight() + 1);
+        g.setEffect(null);
     }
 
     @Override

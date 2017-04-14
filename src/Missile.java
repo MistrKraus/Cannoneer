@@ -99,8 +99,13 @@ public class Missile implements IDrawable, IMappable {
 
         azimuth = Math.PI * azimuth / 180;
 
-        double speedX = Math.cos(azimuth);
-        double speedY = Math.sin(azimuth) * - 1;
+        double speedX = 0;
+        double speedY = 0;
+
+        if (!(elevation == 90 || elevation == - 90)) {
+            speedX = Math.cos(azimuth);
+            speedY = Math.sin(azimuth) * -1;
+        }
 
         if (elevation < 0)
             elevation += 360;
@@ -218,6 +223,7 @@ public class Missile implements IDrawable, IMappable {
 
         newCoord = coordinates.copy().add((directionVector.copy()).mul(DELTA_T));
         coordinates = newCoord.copy();
+        System.out.println(coordinates);
 
         Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(directionVector.copy()));
 

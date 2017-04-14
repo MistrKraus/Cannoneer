@@ -156,7 +156,7 @@ public class MainController implements Initializable {
         elevationTF.setTextFormatter(new TextFormatter<>(new StringConverter<Double>() {
             @Override
             public Double fromString(String string) {
-                System.out.println("FROM");
+                //System.out.println("FROM");
                 double x = Double.parseDouble(string);
 
                 if (x > 90)
@@ -170,7 +170,7 @@ public class MainController implements Initializable {
 
             @Override
             public String toString(Double object) {
-                System.out.println("TO");
+                //System.out.println("TO");
                 if (object == null)
                     return "0.0";
 
