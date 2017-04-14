@@ -20,7 +20,11 @@ public class Missile implements IDrawable, IMappable {
     /** vzdalenost mezi novymi a soucasnymi souradnicemi*/
     private double distance;
 
+    private static int pocet = 0;
+
+    //private final static int index++;
     private final double acceleration;
+    private final int PORADI = ++pocet;
     private final Point temp1;
     private final Image IMG;
     /** vychozi okoli (v metrech), ktere muze byt srelou zasazeno */
@@ -104,7 +108,7 @@ public class Missile implements IDrawable, IMappable {
         elevation = Math.PI * elevation / 180;
 
         double speedZ = Math.sin(elevation);
-        System.out.println(speedZ);
+        //System.out.println(speedZ);
 
         this.direction = new Point(speedX, speedY, speedZ);
         this.coordinates = coordinates.copy().add(this.direction.mul(2));
@@ -112,6 +116,11 @@ public class Missile implements IDrawable, IMappable {
         this.temp1 = MAGIC_POINT.copy().mul(DELTA_T * GRAVITY);
 
         IMG = new Image(IMG_PATH);
+
+        //System.out.println(PORADI + ". Strela vytvorena");
+        //System.out.println(coordinates);
+        //System.out.println(this.direction);
+        //System.out.println();
     }
 
     //TODO nastavit collidingPoint
@@ -130,16 +139,18 @@ public class Missile implements IDrawable, IMappable {
      * @return zda-li strela neco zasahla
      */
     public boolean isColliding(double[][] surface, double scaleX, double scaleY, double mapWidth, double mapHeight) {
-        int iX = 0; // = (int)(coordinates.getX() * scaleX);
-        int iY = 0; // = (int)(coordinates.getY() * scaleY);
+        int iX;// = (int)(coordinates.getX() * scaleX);
+        int iY;// = (int)(coordinates.getY() * scaleY);
 
         //return coordinates.getZ() <= surface[iX][iY];
 
-        if (coordinates.getX() - (HITBOX_TOLERANCE - 1) < 0 || coordinates.getY() - (HITBOX_TOLERANCE - 1) < 0 ||
-                coordinates.getX() + (HITBOX_TOLERANCE - 1) > mapWidth || coordinates.getY() + (HITBOX_TOLERANCE - 1) > mapHeight) {
-            System.out.println("WTF");
-            return false;
-        }
+//        if (coordinates.getX() - (HITBOX_TOLERANCE - 1) < 0 || coordinates.getY() - (HITBOX_TOLERANCE - 1) < 0 ||
+//                coordinates.getX() + (HITBOX_TOLERANCE - 1) > mapWidth || coordinates.getY() + (HITBOX_TOLERANCE - 1) > mapHeight) {
+//
+//            if
+//
+//            return false;
+//        }
 
         for (int i =  -1; i < HITBOX_TOLERANCE; i++) {
             for (int j = -1; j < HITBOX_TOLERANCE; j++) {
@@ -150,7 +161,7 @@ public class Missile implements IDrawable, IMappable {
                     continue;
 
                 if (coordinates.getZ() <= surface[iX][iY]) {
-                    //System.out.println("Povrch: " + surface[iX][iY]);
+                    System.out.println("Povrch: " + surface[iX][iY]);
                     return true;
                 }
             }
@@ -202,9 +213,8 @@ public class Missile implements IDrawable, IMappable {
     public void update(World world) {
         // Spravne vypocty -v
         Point xtPlusDeltaT = coordinates.copy().add(((direction.copy()).mul(acceleration)).mul(DELTA_T));
-        Point temp2 = new Point(world.getWind().getCoordinates().sub(direction.copy()).mul(acceleration));
+        Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(direction.copy()).mul(acceleration));
 
-        //System.out.println(temp1);
         newCoord = xtPlusDeltaT.add(temp1).add(temp2.mul(MAGIC_B * DELTA_T));
 
         distance = newCoord.getPointsDistance(coordinates);
@@ -215,7 +225,10 @@ public class Missile implements IDrawable, IMappable {
         coordinates.add(unitVector);
 //        System.out.println(unitVector);
 
-        System.out.println("Strela: " + coordinates.getZ());
+//        System.out.println(PORADI + ".Strela: ");
+//        System.out.println(coordinates);
+
+        System.out.println(newCoord);
 
         if (isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())) {
             System.out.println("Strela opustila mapu!");
@@ -272,4 +285,6 @@ public class Missile implements IDrawable, IMappable {
     public void setCoordinates(double x, double y, double z) {
         this.coordinates = new Point(x, y, z);
     }
+
+
 }

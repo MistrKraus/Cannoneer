@@ -76,6 +76,8 @@ public class Wind implements IDrawable {
 
             if (speed != 0)
                 speedDuration /= Math.abs(speed);
+            else
+                speedDuration /= 4;
 
         }
 
