@@ -211,24 +211,41 @@ public class Missile implements IDrawable, IMappable {
      */
     @Override
     public void update(World world) {
-        // Spravne vypocty -v
-        Point xtPlusDeltaT = coordinates.copy().add(((direction.copy()).mul(acceleration)).mul(DELTA_T));
-        Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(direction.copy()).mul(acceleration));
+        Point directionVector = direction.copy().mul(acceleration);
 
-        newCoord = xtPlusDeltaT.add(temp1).add(temp2.mul(MAGIC_B * DELTA_T));
+        //System.out.println(direction);
+        //System.out.println(directionVector.copy().div(acceleration));
 
-        distance = newCoord.getPointsDistance(coordinates);
-        unitVector = newCoord.copy().sub(coordinates);
-        unitVector.div(distance);
-        unitVector.mul(2.5);
+        newCoord = coordinates.copy().add((directionVector.copy()).mul(DELTA_T));
+        coordinates = newCoord.copy();
 
-        coordinates.add(unitVector);
-//        System.out.println(unitVector);
+        Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(directionVector.copy()));
+
+        directionVector = directionVector.copy().add(temp1).add(temp2.mul(MAGIC_B * DELTA_T));
+
+        direction = directionVector.div(acceleration);
+
+        //System.out.println(directionVector.copy().div(acceleration));
+        //System.out.println("-----------");
+
+//        Point xtPlusDeltaT = coordinates.copy().add(((direction.copy()).mul(acceleration)).mul(DELTA_T));
+//        Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(direction.copy()).mul(acceleration));
+//
+//        newCoord = xtPlusDeltaT.add(temp1).add(temp2.mul(MAGIC_B * DELTA_T));
+//
+////        distance = newCoord.getPointsDistance(coordinates);
+////        unitVector = newCoord.copy().sub(coordinates);
+////        unitVector.div(distance);
+////        unitVector.mul(2.5);
+//
+////        coordinates.add(unitVector);
+//
+//        coordinates = newCoord.copy();
 
 //        System.out.println(PORADI + ".Strela: ");
 //        System.out.println(coordinates);
 
-        System.out.println(newCoord);
+        //System.out.println(newCoord);
 
         if (isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())) {
             System.out.println("Strela opustila mapu!");

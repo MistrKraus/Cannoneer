@@ -50,7 +50,7 @@ public class Data {
                     for (int j = 0; j < mapHeight; j++) {
                         zCounter++;
                         terrainZm[i][j] = in.readInt() / 1000;
-                        terrainZm[i][j] = 1;
+                        //terrainZm[i][j] = 1;
 
                         //System.out.print(terrainZm[i][j] + "   ");
                     }
