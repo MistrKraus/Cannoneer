@@ -11,8 +11,9 @@ public interface IShooting {
      * @param azimuth smer strely
      * @param elevation zdvih hlavne
      * @param speed rychlot strely
+     * @param visual ma se strela pouze vyzualizovat
      * @return strela
      */
-    Missile fire(double azimuth, double elevation, double speed);
+    Missile fire(double azimuth, double elevation, double speed, boolean visual);
 
 }

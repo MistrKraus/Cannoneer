@@ -37,6 +37,7 @@ public class MainController implements Initializable {
     public Label targetZLbl;
     public MenuBar menu;
     public VBox vBox2;
+    public Button btnVisual;
     @FXML
     private TextField azimuthTF;
     @FXML
@@ -227,16 +228,18 @@ public class MainController implements Initializable {
         shooterZLbl.setText(String.format("%.2f m n. m.",world.getPlayer().getZ()));
         targetZLbl.setText(String.format("%.2f m n. m.",world.getTarget().getZ()));
 
+        //world.visualize();
+
         world.start();
     }
 
     /**
-     * Reakce na stisk tlačítka.
+     * Nacte data potrebna pro strelbu
      * Pokud je hra spustena vypise vzdalenost mezi strelcem a cilem zaroven s jejich nadmorskymi vyskami a zajisti vystrel hrace
      *
-     * @param actionEvent data o stiku tlacitka
+     * @param visual
      */
-    public void handleBtnFire(ActionEvent actionEvent) {
+    private void manageFireParam(boolean visual) {
         if (!world.isRunning())
             return;
 
@@ -252,18 +255,29 @@ public class MainController implements Initializable {
         double evelation = Double.parseDouble(elevationTF.getText());
         double speed = Double.parseDouble(speedTF.getText());// * 1000;
 
-        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed));
-        //world.start();
+        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed, visual));
+    }
+
+    /**
+     * Reakce na stisk tlačítka.
+     *
+     * @param actionEvent data o stiku tlacitka
+     */
+    public void handleBtnFire(ActionEvent actionEvent) {
+        if (!world.isVisuializing())
+            manageFireParam(false);
     }
 
     /**
      * Reakce na tlacitko "Vizualizuj"
-     * Pokud je hra spustena, vyzualizuje strelu
      *
      * @param actionEvent data o stiku tlacitka
      */
     public void handleBtnVizualzuj(ActionEvent actionEvent) {
-        System.out.println("Tato funkce bude implementovana v 3. etape");
+        if (!world.isFiring()) {
+            manageFireParam(true);
+            world.visualize();
+        }
     }
 
     /**

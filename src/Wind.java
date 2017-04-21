@@ -21,14 +21,14 @@ public class Wind implements IDrawable {
 
     private static Random random = new Random();
 
-    private final int MAX_SPEED = 18;
+    private final int MAX_SPEED = 25;
 
     public Wind() {
         coordinates = new Point(0,0,0);
         azimuthP = new Point(0,0,0);
 
         azimuth = random.nextInt(360);
-        speed = random.nextInt(18);
+        speed = random.nextInt(MAX_SPEED);
     }
 
     @Override
@@ -49,10 +49,10 @@ public class Wind implements IDrawable {
         };
 
         for (int i = 0; i < stumpPointsX.length; i++)
-            stumpPointsX[i] *= 6;//scaleMperPixelX;
+            stumpPointsX[i] *= 5;//scaleMperPixelX;
 
         for (int i = 0; i < stumpPointsY.length; i++)
-            stumpPointsY[i] *= 6;//scaleMperPixelY;
+            stumpPointsY[i] *= 5;//scaleMperPixelY;
 
 
         g.setFill(Color.LIGHTBLUE);
@@ -66,6 +66,7 @@ public class Wind implements IDrawable {
     public void update(World world) {
         if (speedDuration-- < 1) {
             speed += (random.nextInt(MAX_SPEED / 2) - MAX_SPEED / 4);
+            //speed = MAX_SPEED;
 
             if (speed < 0)
                 speed = 0;
@@ -84,7 +85,7 @@ public class Wind implements IDrawable {
 
         if (azimuthDuration-- < 1) {
             azimuth += random.nextInt(40) - 20;
-            //azimuth = -90;
+            //azimuth = -45;
 
             azimuthP = new Point(Math.cos(azimuth) * speed, Math.sin(azimuth) * speed, 0);
 

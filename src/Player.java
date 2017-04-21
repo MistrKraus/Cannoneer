@@ -58,18 +58,21 @@ public class Player extends Target implements IShooting {
         this.azimuth = azimuth;
     }
 
+
+
     /**
      * vystreli
      *
      * @param azimuth smer strely
      * @param elevation zdvih hlavne
      * @param speed rychlot strely
+     * @param visual ma se strela pouze vyzualizovat
      * @return strela
      */
     @Override
-    public Missile fire(double azimuth, double elevation, double speed) {
+    public Missile fire(double azimuth, double elevation, double speed, boolean visual) {
         System.out.println("Vystrel");
-        return new Missile(coordinates.copy(), azimuth, elevation, speed);
+        return new Missile(coordinates.copy(), azimuth, elevation, speed, visual);
     }
 
     /**

@@ -43,7 +43,10 @@ public class World {
     // TODO budouci moznost iterace
     private int playerIndex = 0;
 
-    private boolean runs = false;
+    private boolean isRunning = false;
+    private boolean isVisuializing = false;
+
+    private TerrainSide terrSide;
 
     /**
      * konstruktor
@@ -153,7 +156,8 @@ public class World {
 
         players.forEach((player) -> player.update(this));
         targets.forEach((target) -> target.update(this));
-        missiles.forEach((missile) -> missile.update(this));
+        for (int i = 0; i < 8; i++)
+            missiles.forEach((missile) -> missile.update(this));
         explosions.forEach((explosion) -> explosion.update(this));
         wind.update(this);
 
@@ -170,19 +174,24 @@ public class World {
         graphics.setFill(Color.GRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
 
-        map.draw(graphics, scalePixelperMX, scalePixelperMY);
-        players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
-        targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
-        explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
-        missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
-        wind.draw(graphics, scalePixelperMX, scalePixelperMY);
+        if (!isVisuializing) {
+            map.draw(graphics, scalePixelperMX, scalePixelperMY);
+            players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
+            targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
+            explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
+            missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
+            wind.draw(graphics, scalePixelperMX, scalePixelperMY);
+            return;
+        }
+
+        terrSide.draw(graphics, scalePixelperMX, scalePixelperMY);
     }
 
     /**
      * stusti herni smycku
      */
     public void start() {
-        runs = true;
+        isRunning = true;
         timeline.play();
     }
 
@@ -190,7 +199,7 @@ public class World {
      * zastavi herni smycku
      */
     public void stop() {
-        runs = false;
+        isRunning = false;
         timeline.stop();
 
         draw();
@@ -202,8 +211,18 @@ public class World {
     }
 
     public void pause() {
-        runs = false;
+        isRunning = false;
         timeline.pause();
+    }
+
+    public void visualize() {
+        isVisuializing = true;
+        terrSide = new TerrainSide(map.getSurface(), getPlayer().coordinates, getTarget().coordinates,
+                scaleX, scaleY, map.getMapWidthM() / map.getMapHeightM());
+    }
+
+    public void stopVisualize() {
+        isVisuializing = false;
     }
 
     public Data getData() {
@@ -251,7 +270,15 @@ public class World {
     }
 
     public boolean isRunning() {
-        return runs;
+        return isRunning;
+    }
+
+    public boolean isFiring() {
+        return missiles.size() > 0;
+    }
+
+    public boolean isVisuializing() {
+        return isVisuializing;
     }
 
 }
