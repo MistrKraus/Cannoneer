@@ -123,12 +123,26 @@ public class World {
      * @param missile strela
      */
     public void removeMissile(Missile missile) {
+        for (Missile missileToRemove:missilesToRemove)
+            if (missile.equals(missileToRemove))
+                return;
+
         System.out.println("Strela znicena");
         missilesToRemove.add(missile);
     }
 
     public void removeExplosion(Explosion explosion) {
         explosionsToRemove.add(explosion);
+    }
+
+    /**
+     * Odstraneni vsech strel
+     */
+    public void removeAllMissiles() {
+        for (Missile missile:
+             missiles) {
+            missilesToRemove.add(missile);
+        }
     }
 
     public void initialGraphis() {
@@ -158,6 +172,7 @@ public class World {
         targets.forEach((target) -> target.update(this));
         for (int i = 0; i < 8; i++)
             missiles.forEach((missile) -> missile.update(this));
+
         explosions.forEach((explosion) -> explosion.update(this));
         wind.update(this);
 
@@ -174,17 +189,18 @@ public class World {
         graphics.setFill(Color.GRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
 
-        if (!isVisuializing) {
-            map.draw(graphics, scalePixelperMX, scalePixelperMY);
-            players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
-            targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
-            explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
-            missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
-            wind.draw(graphics, scalePixelperMX, scalePixelperMY);
+        if (isVisuializing) {
+            terrSide.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY());
+            missiles.forEach(missile -> missile.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY()));
             return;
         }
 
-        terrSide.draw(graphics, scalePixelperMX, scalePixelperMY);
+        map.draw(graphics, scalePixelperMX, scalePixelperMY);
+        players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
+        targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
+        explosions.forEach(explosion -> explosion.draw(graphics, scalePixelperMX, scalePixelperMY));
+        missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
+        wind.draw(graphics, scalePixelperMX, scalePixelperMY);
     }
 
     /**
@@ -217,8 +233,14 @@ public class World {
 
     public void visualize() {
         isVisuializing = true;
-        terrSide = new TerrainSide(map.getSurface(), getPlayer().coordinates, getTarget().coordinates,
-                scaleX, scaleY, map.getMapWidthM() / map.getMapHeightM());
+
+        Missile missile1 = missiles.get(0);
+        for (Missile missile :missiles)
+            if (missile.getIsVisual())
+                missile1 = missile;
+
+        terrSide = new TerrainSide(map.getSurface(), missile1.getAllCoordinates(), scaleX, scaleY,
+                map.getMapWidthM() / map.getMapHeightM());
     }
 
     public void stopVisualize() {
@@ -251,6 +273,10 @@ public class World {
 
     public Wind getWind() {
         return wind;
+    }
+
+    public GraphicsContext getGraphics() {
+        return graphics;
     }
 
     public double getScalePixelperMX() {

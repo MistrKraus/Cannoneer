@@ -247,15 +247,17 @@ public class MainController implements Initializable {
         shooterZLbl.setText(String.format("%.2f m", world.getPlayer().getZ()));
         targetZLbl.setText(String.format("%.2f m", world.getTarget().getZ()));
 
-//        System.out.println("Vystrel!\n Azimut: " + azimuthSp.getValue() +
-//                "\n Elevation: " + elevationSp.getValue() +
-//                "\n Speed: " + speedSp.getValue());
-
         double azimuth = Double.parseDouble(azimuthTF.getText());
         double evelation = Double.parseDouble(elevationTF.getText());
         double speed = Double.parseDouble(speedTF.getText());// * 1000;
 
-        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed, visual));
+        if (visual) {
+            world.removeAllMissiles();
+            world.stopVisualize();
+            world.update();
+        }
+
+        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed, visual, world));
     }
 
     /**
@@ -274,10 +276,8 @@ public class MainController implements Initializable {
      * @param actionEvent data o stiku tlacitka
      */
     public void handleBtnVizualzuj(ActionEvent actionEvent) {
-        if (!world.isFiring()) {
-            manageFireParam(true);
-            world.visualize();
-        }
+        manageFireParam(true);
+        world.visualize();
     }
 
     /**

@@ -67,6 +67,8 @@ public class Target implements IHittable {
         coordinates = new Point(point.getX(), point.getY(), point.getZ() + DEFAULT_HEIGHT);
         this.hp = hp;
 
+        //System.out.println("tarX: " + point.getX() + " tarY" + point.getY());
+
         IMG = loadImage(imgPath);
     }
 
