@@ -110,6 +110,9 @@ public class VisualMissile extends Missile {
 
     @Override
     public void update(World world) {
+        if (colliding)
+            return;
+
         visualCoordinates = currentVisualCoord.copy();
 
         coordinates = coordinates.copy().add((direction.copy()).mul(DELTA_T));
@@ -136,6 +139,7 @@ public class VisualMissile extends Missile {
             //System.out.println("Mimo mapu");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
                     elevation, ACCELERATION, false, world));
+            colliding = true;
             return;
         }
 
@@ -144,6 +148,7 @@ public class VisualMissile extends Missile {
             //System.out.println(PORADI + ". Kolize s terenem");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
                     elevation, ACCELERATION, false, world));
+            colliding = true;
         }
     }
 

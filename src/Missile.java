@@ -25,15 +25,17 @@ public class Missile implements IDrawable, IMappable {
     protected double distance;
     //protected double visualRotate;
 
+    protected boolean colliding = false;
+
     //protected double[] visualRotate = new double[] { 0, 0, 0 };
 
 //    protected ArrayList<Point> allCoordinates;
 //    protected ArrayList<Point> allVisualCoordinates;
 
-    protected static int pocet = 0;
+    //protected static int pocet = 0;
 
     //protected final static int index++;
-    protected final int PORADI = ++pocet;
+    //protected final int PORADI = ++pocet;
     //protected final int MAX_VISUAL_INDEX;
 
     protected final double ACCELERATION;
@@ -282,6 +284,9 @@ public class Missile implements IDrawable, IMappable {
      */
     @Override
     public void update(World world) {
+        if (colliding)
+            return;
+
 //        if (VISUALIZE) {
 //            updateVisualize();
 //            return;
@@ -326,6 +331,7 @@ public class Missile implements IDrawable, IMappable {
         if (isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())) {
             System.out.println("Strela opustila mapu!");
             world.removeMissile(this);
+            colliding = true;
             return;
         }
 
@@ -338,6 +344,7 @@ public class Missile implements IDrawable, IMappable {
             explosion.explode(world);
 
             System.out.println("Bum!");
+            colliding = true;
         }
         //System.out.println("------");
     }

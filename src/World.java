@@ -183,8 +183,8 @@ public class World {
      */
     public void update() {
         //if (visualMissilesToAdd.size() > 0) {
-//            System.out.println("REM " + visualMissilesToRemove.size());
-//            System.out.println("ADD " + visualMissilesToAdd.size());
+            System.out.println("REM " + visualMissilesToRemove.size());
+            System.out.println("ADD " + visualMissilesToAdd.size());
         //}
 
         targets.removeAll(targetsToRemove);
