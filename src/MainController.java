@@ -196,8 +196,8 @@ public class MainController implements Initializable {
                 if (x < 0)
                     return 0.0;
 
-                if (x > 1000)
-                    return 1000.0;
+                if (x > 500)
+                    return 500.0;
 
                 return x;
             }
@@ -252,12 +252,18 @@ public class MainController implements Initializable {
         double speed = Double.parseDouble(speedTF.getText());// * 1000;
 
         if (visual) {
-            world.removeAllMissiles();
             world.stopVisualize();
             world.update();
-        }
 
-        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed, visual, world));
+
+            world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates(), azimuth, evelation, speed,
+                    true, world));
+
+            return;
+        }
+        world.addMissile(world.getPlayer().fire(azimuth, evelation, speed));
+
+
     }
 
     /**

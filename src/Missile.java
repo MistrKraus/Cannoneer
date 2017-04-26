@@ -3,8 +3,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
-import java.util.*;
-
 /**
  * Created by kraus on 18.03.2017.
  *
@@ -12,61 +10,52 @@ import java.util.*;
  */
 public class Missile implements IDrawable, IMappable {
 
-    private int visualIndex;
+    protected int visualIndex;
 
-    private Point unitVector;
-    private Point coordinates;
-    private Point direction;
-    private Point newCoord;
+    protected Point unitVector;
+    protected Point coordinates;
+    protected Point direction;
+    protected Point newCoord;
+    protected Point collidingPoint;
 
-    private double strikeRadius;
-    private double azimuth;
+    protected double strikeRadius;
+    protected double azimuth;
+    protected double elevation;
     /** vzdalenost mezi novymi a soucasnymi souradnicemi*/
-    private double distance;
+    protected double distance;
+    //protected double visualRotate;
 
-    private ArrayList<Point> allCoordinates;
-    private ArrayList<Point> allVisualCoordinates;
+    //protected double[] visualRotate = new double[] { 0, 0, 0 };
 
-    private static int pocet = 0;
+//    protected ArrayList<Point> allCoordinates;
+//    protected ArrayList<Point> allVisualCoordinates;
 
-    //private final static int index++;
-    private final int PORADI = ++pocet;
-    private final int MAX_VISUAL_INDEX;
+    protected static int pocet = 0;
 
-    private final double ACCELERATION;
+    //protected final static int index++;
+    protected final int PORADI = ++pocet;
+    //protected final int MAX_VISUAL_INDEX;
 
-    private final boolean VISUALIZE;
+    protected final double ACCELERATION;
 
-    private final Point TEMP1;
-    private final Image IMG;
+    //protected final boolean VISUALIZE;
 
-    private static final int VISUALIZED_MISSILES_COUNT = 8;
+    protected final Point TEMP1;
+    protected final Image IMG;
+
+    //protected static final int VISUALIZED_MISSILES_COUNT = 8;
     /** vychozi okoli (v metrech), ktere muze byt srelou zasazeno */
-    private static final double HITBOX_TOLERANCE = 3;
-    private static final double DEFAULT_STRIKE_RADIUS = 60;
-    private static final double GRAVITY = 10;
-    private static final double DELTA_T = 0.01;
-    private static final double MAGIC_B = 0.05;
+    protected static final double HITBOX_TOLERANCE = 3;
+    protected static final double DEFAULT_STRIKE_RADIUS = 60;
+    protected static final double GRAVITY = 10;
+    protected static final double DELTA_T = 0.01;
+    protected static final double MAGIC_B = 0.05;
 
-    private static final Point MAGIC_POINT = new Point(0,0,-1);
+    protected static final Point MAGIC_POINT = new Point(0,0,-1);
 
-    private static final boolean DEFAULT_VISUALIZE = false;
+    protected static final boolean DEFAULT_VISUALIZE = false;
 
-    private static final String IMG_PATH = "images/missile.png";
-
-    /**
-     * pretizeni konstruktoru
-     *
-     * @param x x-ova souradnice v metrech
-     * @param y y-ova souradnice v metrech
-     * @param z z-ova souradnice v metrech
-     * @param azimuth aizmut ve stupnich
-     * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
-     */
-    public Missile(double x, double y, double z, double azimuth, double elevation, double direction) {
-        this(new Point(x,y,z), azimuth, elevation, direction, DEFAULT_STRIKE_RADIUS, DEFAULT_VISUALIZE, null);
-    }
+    protected static final String IMG_PATH = "images/missile.png";
 
     /**
      * pretizeni konstruktoru
@@ -76,12 +65,26 @@ public class Missile implements IDrawable, IMappable {
      * @param z z-ova souradnice v metrech
      * @param azimuth aizmut ve stupnich
      * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
-     * @param visual vyzualizovat strelu
+     * @param acceleration rychlost strely v metrech za sekundu
      */
-    public Missile(double x, double y, double z, double azimuth, double elevation, double direction, boolean visual, World world) {
-        this(new Point(x,y,z), azimuth, elevation, direction, DEFAULT_STRIKE_RADIUS, visual, world);
+    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration) {
+        this(new Point(x,y,z), azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS);
     }
+
+//    /**
+//     * pretizeni konstruktoru
+//     *
+//     * @param x x-ova souradnice v metrech
+//     * @param y y-ova souradnice v metrech
+//     * @param z z-ova souradnice v metrech
+//     * @param azimuth aizmut ve stupnich
+//     * @param elevation zdvih dela ve stupnich
+//     * @param acceleration rychlost strely v metrech za sekundu
+//     * @param visual vyzualizovat strelu
+//     */
+//    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration, boolean visual, World world) {
+//        this(new Point(x,y,z), azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS, visual, world);
+//    }
 
     /**
      * pretizeni konstruktoru
@@ -89,39 +92,24 @@ public class Missile implements IDrawable, IMappable {
      * @param coordinates souradnice v metrech
      * @param azimuth aizmut ve stupnich
      * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
+     * @param acceleration rychlost strely v metrech za sekundu
      */
-    public Missile(Point coordinates, double azimuth, double elevation, double direction) {
-        this(coordinates, azimuth, elevation, direction, DEFAULT_STRIKE_RADIUS, DEFAULT_VISUALIZE, null);
+    public Missile(Point coordinates, double azimuth, double elevation, double acceleration) {
+        this(coordinates, azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS);
     }
 
-    /**
-     * pretizeni konstruktoru
-     *
-     * @param coordinates souradnice v metrech
-     * @param azimuth aizmut ve stupnich
-     * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
-     * @param visual vyzualizovat strelu
-     */
-    public Missile(Point coordinates, double azimuth, double elevation, double direction, boolean visual, World world) {
-        this(coordinates, azimuth, elevation, direction, DEFAULT_STRIKE_RADIUS, visual, world);
-    }
-
-    /**
-     * pretizeni konstruktoru
-     *
-     * @param x x-ova souradnice v metrech
-     * @param y y-ova souradnice v metrech
-     * @param z z-ova souradnice v metrech
-     * @param azimuth aizmut ve stupnich
-     * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
-     * @param strikeRadius prumer vybuchu strely
-     */
-    public Missile(double x, double y, double z, double azimuth, double elevation, double direction, double strikeRadius) {
-        this(new Point(x,y,z), azimuth, elevation, direction, strikeRadius, DEFAULT_VISUALIZE, null);
-    }
+//    /**
+//     * pretizeni konstruktoru
+//     *
+//     * @param coordinates souradnice v metrech
+//     * @param azimuth aizmut ve stupnich
+//     * @param elevation zdvih dela ve stupnich
+//     * @param acceleration rychlost strely v metrech za sekundu
+//     * @param visual vyzualizovat strelu
+//     */
+//    public Missile(Point coordinates, double azimuth, double elevation, double acceleration, boolean visual, World world) {
+//        this(coordinates, azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS, visual, world);
+//    }
 
     /**
      * pretizeni konstruktoru
@@ -131,14 +119,29 @@ public class Missile implements IDrawable, IMappable {
      * @param z z-ova souradnice v metrech
      * @param azimuth aizmut ve stupnich
      * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
+     * @param acceleration rychlost strely v metrech za sekundu
      * @param strikeRadius prumer vybuchu strely
-     * @param visual vyzualizovat strelu
-     * @param world reference na svet
      */
-    public Missile(double x, double y, double z, double azimuth, double elevation, double direction, double strikeRadius, boolean visual, World world) {
-        this(new Point(x,y,z), azimuth, elevation, direction, strikeRadius, visual, world);
+    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration, double strikeRadius) {
+        this(new Point(x,y,z), azimuth, elevation, acceleration, strikeRadius);
     }
+
+//    /**
+//     * pretizeni konstruktoru
+//     *
+//     * @param x x-ova souradnice v metrech
+//     * @param y y-ova souradnice v metrech
+//     * @param z z-ova souradnice v metrech
+//     * @param azimuth aizmut ve stupnich
+//     * @param elevation zdvih dela ve stupnich
+//     * @param acceleration rychlost strely v metrech za sekundu
+//     * @param strikeRadius prumer vybuchu strely
+//     * @param visual vyzualizovat strelu
+//     * @param world reference na svet
+//     */
+//    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration, double strikeRadius, boolean visual, World world) {
+//        this(new Point(x,y,z), azimuth, elevation, acceleration, strikeRadius, visual, world);
+//    }
 
     /**
      * konstruktor
@@ -146,29 +149,13 @@ public class Missile implements IDrawable, IMappable {
      * @param coordinates souradnice v metrech
      * @param azimuth aizmut ve stupnich
      * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
+     * @param acceleration rychlost strely v metrech za sekundu
      * @param strikeRadius prumer vybuchu strely
      */
-    public Missile(Point coordinates, double azimuth, double elevation, double direction, double strikeRadius) {
-        this(coordinates, azimuth, elevation, direction, strikeRadius, DEFAULT_VISUALIZE, null);
-    }
-
-    /**
-     * konstruktor
-     * provede potrebnou matematiku pro pohyb rakety
-     *
-     * @param coordinates souradnice v metrech
-     * @param azimuth aizmut ve stupnich
-     * @param elevation zdvih dela ve stupnich
-     * @param direction rychlost strely v metrech za sekundu
-     * @param strikeRadius prumer vybuchu strely
-     * @param visual vyzualizovat strelu
-     * @param world reference na svet
-     */
-    public Missile(Point coordinates, double azimuth, double elevation, double direction, double strikeRadius, boolean visual, World world) {
+    public Missile(Point coordinates, double azimuth, double elevation, double acceleration, double strikeRadius) {
+        //System.out.printf(PORADI + ". %-10.2f%-10.2f%-10.2f\n", azimuth, elevation, acceleration);
         this.strikeRadius = strikeRadius;
-        this.ACCELERATION = direction;
-        this.VISUALIZE = visual;
+        this.ACCELERATION = acceleration;
 
         if (azimuth < 0) {
             azimuth += 360;
@@ -190,10 +177,11 @@ public class Missile implements IDrawable, IMappable {
             elevation += 360;
         }
 
+        this.elevation = elevation;
+
         elevation = Math.PI * elevation / 180;
 
         double speedZ = Math.sin(elevation);
-        //System.out.println(speedZ);
 
         this.direction = new Point(speedX, speedY, speedZ);
         this.coordinates = coordinates.copy().add(this.direction.mul(2));
@@ -201,27 +189,17 @@ public class Missile implements IDrawable, IMappable {
         this.newCoord = this.coordinates.copy();
         this.TEMP1 = MAGIC_POINT.copy().mul(DELTA_T * GRAVITY);
 
-        if (VISUALIZE) {
-            setAllCoordinates(world);
-            MAX_VISUAL_INDEX = (getAllVisualCoordinates().size() - 1) / VISUALIZED_MISSILES_COUNT;
-        } else
-            MAX_VISUAL_INDEX = 0;
+//        if (VISUALIZE) {
+//            setAllCoordinates(world);
+//            MAX_VISUAL_INDEX = (getAllVisualCoordinates().size() - 1) / VISUALIZED_MISSILES_COUNT;
+//        } else
+//            MAX_VISUAL_INDEX = 0;
 
         IMG = new Image(IMG_PATH);
     }
 
     public Point getCollidingPoint() {
-        if (allCoordinates == null)
-            return new Point(0,0,0);
-
-        return allCoordinates.get(allCoordinates.size() - 1);
-    }
-
-    public Point getVisualCollidingPoint() {
-        if (allVisualCoordinates == null)
-            return new Point(0,0,0);
-
-        return allVisualCoordinates.get(allVisualCoordinates.size() - 1);
+        return collidingPoint;
     }
 
     /**
@@ -278,41 +256,6 @@ public class Missile implements IDrawable, IMappable {
             coordinates.getX() > mapWidth || coordinates.getY() > mapHeight);
     }
 
-    private void drawVisualize(GraphicsContext g, double scaleX, double scaleY) {
-        for (int i = 0; i < VISUALIZED_MISSILES_COUNT; i++) {
-            //System.out.println((allVisualCoordinates.get(visualIndex + (i * MAX_VISUAL_INDEX))));
-            Affine t = g.getTransform();
-
-            g.translate(allVisualCoordinates.get(visualIndex + (i * MAX_VISUAL_INDEX)).getX() * scaleX - IMG.getWidth() / 2,
-                    g.getCanvas().getHeight() - allVisualCoordinates.get(visualIndex + (i * MAX_VISUAL_INDEX)).getY() * scaleY - IMG.getHeight() / 2);
-            g.rotate(-((allVisualCoordinates.get(visualIndex + (i * MAX_VISUAL_INDEX)).getZ() * 180) / Math.PI)%360);
-
-            g.drawImage(IMG, 0, 0);
-            //g.setFill(Color.ORANGE);
-            //g.fillOval(-5, -5, 5, 5);
-            g.setTransform(t);
-
-
-        }
-
-//        g.setFill(Color.ORANGE);
-//        int x,y;
-//
-//        for (int i = 0; i < allVisualCoordinates.size(); i += 20) {
-//            x = (int)(allVisualCoordinates.get(i).getX() * scaleX);
-//            y = (int)(g.getCanvas().getHeight() - allVisualCoordinates.get(i).getY() * scaleY);
-//            g.fillOval(x - 1, y - 1, x + 1, y + 1);
-//        }
-    }
-
-    private void updateVisualize() {
-        //if (visualIndex >= allVisualCoordinates.size())
-        if (visualIndex >= MAX_VISUAL_INDEX)
-            visualIndex = 0;
-
-        visualIndex++;
-    }
-
     /**
      * vykresli strelu
      *
@@ -324,18 +267,11 @@ public class Missile implements IDrawable, IMappable {
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
 //        g.setFill(Color.ORANGE);
 //        g.fillOval((coordinates.getX() - 3 / 2) * scaleX, (coordinates.getY() - 3 / 2) * scaleY, 3, 3);
-
-        if (!VISUALIZE) {
-            Affine t = g.getTransform();
-            g.translate((coordinates.getX() - IMG.getWidth() / 2) * scaleX, (coordinates.getY() - IMG.getHeight() / 2) * scaleY);
-            g.rotate(-azimuth);
-            g.drawImage(IMG, 0, 0);
-            g.setTransform(t);
-
-            return;
-        }
-
-        drawVisualize(g, scaleX, scaleY);
+        Affine t = g.getTransform();
+        g.translate((coordinates.getX() - IMG.getWidth() / 2) * scaleX, (coordinates.getY() - IMG.getHeight() / 2) * scaleY);
+        g.rotate(-azimuth);
+        g.drawImage(IMG, 0, 0);
+        g.setTransform(t);
     }
 
     /**
@@ -346,10 +282,10 @@ public class Missile implements IDrawable, IMappable {
      */
     @Override
     public void update(World world) {
-        if (VISUALIZE) {
-            updateVisualize();
-            return;
-        }
+//        if (VISUALIZE) {
+//            updateVisualize();
+//            return;
+//        }
 
         //Point directionVector = direction.copy().mul(ACCELERATION);
 
@@ -357,7 +293,7 @@ public class Missile implements IDrawable, IMappable {
         //System.out.println(directionVector.copy().div(ACCELERATION));
 
         coordinates = coordinates.copy().add((direction.copy()).mul(DELTA_T));
-        System.out.println(coordinates.getZ());
+        //System.out.println(coordinates.getZ());
 
         Point temp2 = new Point(world.getWind().getCoordinates().copy().sub(direction.copy()));
 
@@ -413,10 +349,6 @@ public class Missile implements IDrawable, IMappable {
         return strikeRadius;
     }
 
-    public boolean getIsVisual() {
-        return VISUALIZE;
-    }
-
     @Override
     public double getHeight() {
         return 0;
@@ -437,12 +369,16 @@ public class Missile implements IDrawable, IMappable {
         return coordinates;
     }
 
-    public ArrayList<Point> getAllCoordinates() {
-        return allCoordinates;
-    }
+//    public ArrayList<Point> getAllCoordinates() {
+//        return allCoordinates;
+//    }
+//
+//    public ArrayList<Point> getAllVisualCoordinates() {
+//        return allVisualCoordinates;
+//    }
 
-    public ArrayList<Point> getAllVisualCoordinates() {
-        return allVisualCoordinates;
+    public void setDirection(Point direction) {
+        this.direction = direction;
     }
 
     @Override
@@ -455,35 +391,21 @@ public class Missile implements IDrawable, IMappable {
         this.coordinates = new Point(x, y, z);
     }
 
-    public void setAllCoordinates(World world) {
-        this.allCoordinates = new ArrayList<>();
-        this.allVisualCoordinates = new ArrayList<>();
+
+    public void setCollidingPoint(World world) {
+        Point currentCoord = coordinates.copy();
 
         while (!isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())
                 && !isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY())) {
 
             coordinates = coordinates.copy().add((direction.copy()).mul(DELTA_T));
-
-            this.allCoordinates.add(coordinates.copy());
-            double x = Math.sqrt(coordinates.getX() * coordinates.getX() + coordinates.getY() * coordinates.getY());
-            this.allVisualCoordinates.add(new Point(x, coordinates.getZ(), direction.getZ()));
-
             Point temp2 = new Point(0, 0, 0).sub(direction.copy());
 
             direction = direction.copy().add(TEMP1).add(temp2.mul(MAGIC_B * DELTA_T));
-
-            int aCoordSize = allVisualCoordinates.size();
-
-            if (aCoordSize > 1) {
-                allVisualCoordinates.get(aCoordSize - 1).setZ(
-                        Math.tan((allVisualCoordinates.get(aCoordSize - 2).getY() - allVisualCoordinates.get(aCoordSize - 1).getY()) /
-                                (allVisualCoordinates.get(aCoordSize - 2).getX() - allVisualCoordinates.get(aCoordSize - 1).getX())));
-            }
-
-            //System.out.println("x: " + allVisualCoordinates.get(aCoordSize - 1).getX() + " y: " + allVisualCoordinates.get(aCoordSize - 1).getY());
         }
-        coordinates = allVisualCoordinates.get(0);
 
-        visualIndex = 0;
+        collidingPoint = coordinates.copy();
+
+        coordinates = currentCoord.copy();
     }
 }

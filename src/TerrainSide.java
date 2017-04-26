@@ -27,29 +27,35 @@ public class TerrainSide implements IDrawable {
      *
      *
      * @param surface mapa povrchu
-     * @param missileCoord seznam vsech souradnic, kudy poletí střela
+     * @param startCoordX x-ová souřadnice počátečního bodu v metrech
+     * @param startCoordY y-ová souřadnice počátečního bodu v metrech
+     * @param visualMissile strela, ktera se bude vizualizovat
      * @param scaleX pomer na prepocet metru z x-ove souradnice na index
      * @param scaleY pomer na prepocet metru z y-ove souradnice na index
      * @param mapScale pomer stran mapy (sirka / vyska)
      */
     //TODO vyresit -90, 0, 180, 270 stupnu
-    public TerrainSide(double surface[][], ArrayList<Point> missileCoord, double scaleX, double scaleY, double mapScale) {
-        double startCoordX = missileCoord.get(0).getX();
-        double startCoordY = missileCoord.get(0).getX();
-        double endCoordX = missileCoord.get(missileCoord.size() - 1).getX();
-        double endCoordY = missileCoord.get(missileCoord.size() - 1).getY();
+    public TerrainSide(double surface[][], double startCoordX, double startCoordY, VisualMissile visualMissile,
+                       double scaleX, double scaleY, double mapScale) {
 
-        int startX = (int)(startCoordX * scaleX);
-        int startY = (int)(startCoordY * scaleY);
-        int endX = (int) Math.floor(endCoordX * scaleX);
-        int endY = (int) Math.floor(endCoordY * scaleY);
+        double endCoordX = visualMissile.getCollidingPoint().getX();
+        double endCoordY = visualMissile.getCollidingPoint().getY();
+
+        int startX = (int) (startCoordX * scaleX);
+        int startY = (int) (startCoordY * scaleY);
+        int endX = (int) (visualMissile.getCollidingPoint().getX() * scaleX);
+        int endY = (int) (visualMissile.getCollidingPoint().getY() * scaleY);
+
+        if (endX >= surface[0].length)
+            endX = surface[0].length - 1;
+
+        if (endY >= surface[1].length)
+            endY = surface[1].length - 1;
 
         double distanceX = startX - endX;
         double distanceY = startY - endY;
 
-        maxHeight = 0;
-        for (Point point:missileCoord)
-            maxHeight = Math.max(point.getZ(), maxHeight);
+        maxHeight = visualMissile.getMaxHeight();
 
         //double scale = distanceY / distanceX;
         double scale = Math.min(distanceX, distanceY) / Math.max(distanceX, distanceY);
@@ -61,6 +67,8 @@ public class TerrainSide implements IDrawable {
         int x = startX;
         int y = startY;
 
+
+        System.out.println(endX + " - " + endY);
 //        while (y < endY && x < endX) {
 //        //while (x != endX) {
 //            for (int i = 0; i < scale; i++) {
@@ -106,15 +114,53 @@ public class TerrainSide implements IDrawable {
 //               while (false){};
 //            }
 
-            if (x == surface[0].length)
-                x--;
-
-            if (y == surface[1].length)
-                y--;
+//            if (x == surface[0].length)
+//                x--;
+//
+//            if (y == surface[1].length)
+//                y--;
         }
-        System.out.println(x + " | " + y);
-        System.out.println(surface[x][y]);
-        System.out.println(missileCoord.get(missileCoord.size() - 1).getZ());
+
+        while (x < endX) {
+            heights.add(surface[x++][y]);
+        }
+
+        while (y < endY) {
+            heights.add(surface[x][y++]);
+        }
+
+        System.out.println(Math.min(x, surface[0].length - 1) + " | " + Math.min(y, surface[1].length - 1));
+        System.out.println(surface[Math.min(x, surface[0].length - 1)][Math.min(y, surface[1].length - 1)]);
+        System.out.println(visualMissile.getCollidingPoint().getZ());
+
+        //-----
+
+        while (j < scale) {
+            if (x < surface[0].length && y < surface[1].length) {
+                heights.add(surface[x][y]);
+            }
+            j++;
+
+            if (distanceY < distanceX) {
+                y++;
+            }
+            else {
+                x++;
+            }
+            //System.out.println(x + " | " + y++);
+        }
+
+        if (distanceY < distanceX) {
+            x++;
+        }
+        else {
+            y++;
+        }
+
+        if (x < surface[0].length && y < surface[1].length) {
+            heights.add(surface[x][y]);
+        }
+
 
 //        int x = startX;
 //        int y = startY;
@@ -174,7 +220,7 @@ public class TerrainSide implements IDrawable {
         double maxY = (9 * terrainImgW.getHeight()) / 10;
         this.scaleY = maxY / maxHeight;
         double delta = terrainImgW.getWidth() / heights.size();
-        this.scaleX = terrainImgW.getWidth() / maxWidth;
+        this.scaleX = (terrainImgW.getWidth() - delta) / maxWidth;
 
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;

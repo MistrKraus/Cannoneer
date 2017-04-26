@@ -89,7 +89,7 @@ public class Player extends Target implements IShooting {
         else
             System.out.println("Vystrel");
 
-        return new Missile(coordinates.copy(), azimuth, elevation, speed, visual, world);
+        return new Missile(coordinates.copy(), azimuth, elevation, speed);
     }
 
     /**
