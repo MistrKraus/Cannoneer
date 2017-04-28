@@ -183,8 +183,8 @@ public class World {
      */
     public void update() {
         //if (visualMissilesToAdd.size() > 0) {
-            System.out.println("REM " + visualMissilesToRemove.size());
-            System.out.println("ADD " + visualMissilesToAdd.size());
+//            System.out.println("REM " + visualMissilesToRemove.size());
+//            System.out.println("ADD " + visualMissilesToAdd.size());
         //}
 
         targets.removeAll(targetsToRemove);
@@ -216,7 +216,7 @@ public class World {
             explosions.forEach((explosion) -> explosion.update(this));
             wind.update(this);
         } else {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 8; i++)
                 visualMissiles.forEach((visualMissile -> visualMissile.update(this)));
             //System.out.println();
         }
