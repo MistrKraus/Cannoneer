@@ -32,6 +32,9 @@ public class VisualMissile extends Missile {
     public VisualMissile(Point coordinates, double azimuth, double elevation, double acceleration, boolean firstVisualMissile, World world) {
         super(coordinates, azimuth, elevation, acceleration);
 
+        if (colliding)
+            return;
+
         double x = Math.sqrt(coordinates.getX() * coordinates.getX() + coordinates.getY() * coordinates.getY());
 
         //double rotate = Math.tan((visualCoordinates.getY() - coordinates.getZ()) / (visualCoordinates.getX() - x));
@@ -76,7 +79,7 @@ public class VisualMissile extends Missile {
 
         Affine t = g.getTransform();
 
-        g.translate(visualCoordinates.getX() * scaleX,// - IMG.getWidth() / 2,
+        g.translate(visualCoordinates.getX() * scaleX - IMG.getWidth() / 2,
                 g.getCanvas().getHeight() - visualCoordinates.getY() * scaleY - IMG.getHeight() / 2);
 
 //            if (i > VISUALIZED_MISSILES_COUNT - visualRotate.length) {

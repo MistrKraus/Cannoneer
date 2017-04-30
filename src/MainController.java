@@ -1,5 +1,6 @@
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
 import javax.xml.bind.Marshaller;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -129,13 +131,13 @@ public class MainController implements Initializable {
             world.initialGraphis();
         });
 
-        azimuthTF.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (!newValue)
-                    world.getPlayer().setAzimuth(Double.parseDouble(azimuthTF.getText()));
-            }
-        });
+//        azimuthTF.focusedProperty().addListener(new ChangeListener<Boolean>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                if (!newValue)
+//                    world.getPlayer().setAzimuth(Double.parseDouble(azimuthTF.getText()));
+//            }
+//        });
 
         azimuthTF.setTextFormatter(new TextFormatter<>(new StringConverter<Double>() {
             @Override
@@ -294,7 +296,16 @@ public class MainController implements Initializable {
     public void openEditor(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("editor.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            fxmlLoader.setControllerFactory(param -> {
+                try {
+                    return param.getConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+            Parent root1 = fxmlLoader.load();
+            //Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("Editor");
             stage.setScene(new Scene(root1));
@@ -311,14 +322,23 @@ public class MainController implements Initializable {
     public void openFireStats(ActionEvent actionEvent) {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fireStats.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            fxmlLoader.setControllerFactory(param -> {
+                try {
+                    return param.getConstructor(ObservableList.class).newInstance(world.getFireStats());
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+            Parent root1 = fxmlLoader.load();
+            //Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("Historie strelby");
             stage.setScene(new Scene(root1));
 
             stage.show();
 
-            stage.setMinWidth(stage.getWidth());
+            //stage.setMinWidth(stage.getWidth());
             stage.setMaxWidth(stage.getWidth());
         } catch (Exception e) {
             e.printStackTrace();

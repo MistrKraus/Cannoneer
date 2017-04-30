@@ -9,18 +9,21 @@ import javafx.scene.paint.*;
  */
 public class Explosion implements IDrawable, IMappable {
 
+    private Missile missile;
+
     private Point coordinates;
     private double radius;
 
     /**
      * kontruktor exploze
      *
-     * @param coordinates souradnice v metrech
-     * @param radius prumer okoli v metrech zasazeneho explozi
+     * @param missile strela, ktera dopadla
      */
-    public Explosion(Point coordinates, double radius) {
-        this.coordinates = coordinates.copy();
-        this.radius = radius;
+    public Explosion(Missile missile) {
+        this.coordinates = missile.getCoordinates().copy();
+        this.radius = missile.getStrikeRadius();
+
+        this.missile = missile;
     }
 
     /**
@@ -30,7 +33,12 @@ public class Explosion implements IDrawable, IMappable {
      */
     public void explode(World world) {
         world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
-            .forEach(target -> target.dealtDamage(100));
+            .forEach(target -> {
+                    target.dealtDamage(100);
+                    missile.setCollidingSpot("Cíl");
+            });
+
+
 
         //world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
         //    .forEach(player -> player.dealtDamage(100));

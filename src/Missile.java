@@ -3,6 +3,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
+import java.util.ArrayList;
+
 /**
  * Created by kraus on 18.03.2017.
  *
@@ -10,7 +12,9 @@ import javafx.scene.transform.Affine;
  */
 public class Missile implements IDrawable, IMappable {
 
-    protected int visualIndex;
+    protected int updateNo;
+
+    protected String collidingSpot = "---";
 
     protected Point unitVector;
     protected Point coordinates;
@@ -26,6 +30,8 @@ public class Missile implements IDrawable, IMappable {
     //protected double visualRotate;
 
     protected boolean colliding = false;
+
+    private ArrayList<Wind> winds;
 
     //protected double[] visualRotate = new double[] { 0, 0, 0 };
 
@@ -159,6 +165,8 @@ public class Missile implements IDrawable, IMappable {
         this.strikeRadius = strikeRadius;
         this.ACCELERATION = acceleration;
 
+        winds = new ArrayList<>();
+
         if (azimuth < 0) {
             azimuth += 360;
         }
@@ -287,6 +295,11 @@ public class Missile implements IDrawable, IMappable {
         if (colliding)
             return;
 
+        if (updateNo % 10 == 0)
+            winds.add(new Wind(world.getWind().getAzimuth(), world.getWind().getSpeed()));
+
+        updateNo++;
+
 //        if (VISUALIZE) {
 //            updateVisualize();
 //            return;
@@ -336,17 +349,38 @@ public class Missile implements IDrawable, IMappable {
         }
 
         if (isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY())) {
-            world.removeMissile(this);
+            this.collidingSpot = "Terén";
+
             //isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY(), world.getMap().getMapWidthM(), world.getMap().getMapHeightM());
 
-            Explosion explosion = new Explosion(coordinates, strikeRadius);
+            Explosion explosion = new Explosion(this);
             world.addExplosion(explosion);
             explosion.explode(world);
 
             System.out.println("Bum!");
+            world.removeMissile(this);
             colliding = true;
         }
-        //System.out.println("------");
+    }
+
+    public double getAzimuth() {
+        return azimuth;
+    }
+
+    public double getElevation() {
+        return elevation;
+    }
+
+    public double getACCELERATION() {
+        return ACCELERATION;
+    }
+
+    public String getCollidingSpot() {
+        return collidingSpot;
+    }
+
+    public ArrayList<Wind> getWinds() {
+        return winds;
     }
 
     /**
@@ -376,7 +410,11 @@ public class Missile implements IDrawable, IMappable {
         return coordinates;
     }
 
-//    public ArrayList<Point> getAllCoordinates() {
+    public void setCollidingSpot(String collidingSpot) {
+        this.collidingSpot = collidingSpot;
+    }
+
+    //    public ArrayList<Point> getAllCoordinates() {
 //        return allCoordinates;
 //    }
 //

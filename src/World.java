@@ -28,6 +28,7 @@ public class World {
     private final ObservableList<Missile> missiles = FXCollections.observableArrayList();
     private final ObservableList<Explosion> explosions = FXCollections.observableArrayList();
     private final ObservableList<VisualMissile> visualMissiles = FXCollections.observableArrayList();
+    private final ObservableList<FireStat> fireStats = FXCollections.observableArrayList();
 
     private final List<Player> playersToRemove = new ArrayList<>();
     private final List<Target> targetsToRemove = new ArrayList<>();
@@ -142,6 +143,8 @@ public class World {
             if (missile.equals(missileToRemove))
                 return;
 
+        fireStats.add(new FireStat("Player1", getPlayer().coordinates, missile));
+
         System.out.println("Strela znicena");
         missilesToRemove.add(missile);
     }
@@ -216,9 +219,9 @@ public class World {
             explosions.forEach((explosion) -> explosion.update(this));
             wind.update(this);
         } else {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 4; i++)
                 visualMissiles.forEach((visualMissile -> visualMissile.update(this)));
-            //System.out.println();
+                terrSide.update(this);
         }
 
         draw();
@@ -364,6 +367,10 @@ public class World {
         if (vMissileFirstCoord == null)
             return new Point(0,0,0);
         return vMissileFirstCoord;
+    }
+
+    public ObservableList<FireStat> getFireStats() {
+        return fireStats;
     }
 
     public boolean isRunning() {

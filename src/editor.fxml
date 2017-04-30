@@ -24,10 +24,10 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Soubor">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Nový"/>
-                        <MenuItem mnemonicParsing="false" text="Otevřít"/>
-                        <MenuItem mnemonicParsing="false" text="Uložit"/>
-                        <MenuItem mnemonicParsing="false" text="Konec"/>
+                        <MenuItem onAction="#openNew" mnemonicParsing="false" text="Nový"/>
+                        <MenuItem onAction="#openFile" mnemonicParsing="false" text="Otevřít"/>
+                        <MenuItem onAction="#saveFile" mnemonicParsing="false" text="Uložit"/>
+                        <MenuItem onAction="#close" mnemonicParsing="false" text="Konec"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Zobrazení">

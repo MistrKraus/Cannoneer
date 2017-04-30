@@ -16,11 +16,14 @@ public class TerrainSide implements IDrawable {
     private double maxHeight;
     private double scaleX;
     private double scaleY;
+    private double delta;
 
     private ImageView terrainImgView = new ImageView();
     private Image terrainImg;
     WritableImage wImage;
 
+    private final int heights_size;
+    private final int img_width;
     private static final int IMG_HEIGHT = 500;
 
     /**
@@ -160,8 +163,6 @@ public class TerrainSide implements IDrawable {
         if (x < surface[0].length && y < surface[1].length) {
             heights.add(surface[x][y]);
         }
-
-
 //        int x = startX;
 //        int y = startY;
 //        x = startX;
@@ -198,7 +199,10 @@ public class TerrainSide implements IDrawable {
 //        System.out.println(System.nanoTime() - t1);
 //        System.out.println(x + " | " + y);
 
-        bufferImg(heights, Math.sqrt(endCoordX * endCoordX + endCoordY * endCoordY), maxHeight, mapScale);
+        this.heights_size = heights.size();
+        this.img_width = (int)(IMG_HEIGHT * mapScale);
+
+        bufferImg(heights, Math.sqrt(endCoordX * endCoordX + endCoordY * endCoordY), maxHeight);
     }
 
     /**
@@ -207,11 +211,11 @@ public class TerrainSide implements IDrawable {
      * @param heights list s vyskami v metrech ve vyrezu mapy, podle trajektorie strely
      * @param maxWidth maximalni sirka, kam zasahuje vizualizace
      * @param maxHeight maximalni vyska, kam zasahuje vizualizace
-     * @param mapScale pomer stran mapy
      */
-    private void bufferImg(ArrayList<Double> heights, double maxWidth, double maxHeight, double mapScale) {
+    private void bufferImg(ArrayList<Double> heights, double maxWidth, double maxHeight) {
         //WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * (mapWidthM / mapHeightM)), IMG_HEIGHT);
-        WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * mapScale), IMG_HEIGHT);
+
+        WritableImage terrainImgW = new WritableImage(img_width, IMG_HEIGHT);
         PixelWriter pixelWriter = terrainImgW.getPixelWriter();
 
         for (double x:heights)
@@ -219,7 +223,7 @@ public class TerrainSide implements IDrawable {
 
         double maxY = (9 * terrainImgW.getHeight()) / 10;
         this.scaleY = maxY / maxHeight;
-        double delta = terrainImgW.getWidth() / heights.size();
+        delta = terrainImgW.getWidth() / heights.size();
         this.scaleX = (terrainImgW.getWidth() - delta) / maxWidth;
 
         this.maxWidth = maxWidth;
@@ -267,13 +271,20 @@ public class TerrainSide implements IDrawable {
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         terrainImg = wImage;
         g.drawImage(terrainImg, 0, 0, g.getCanvas().getWidth() + 1, g.getCanvas().getHeight() + 1);
-        scaleX = (g.getCanvas().getWidth()) / maxWidth;
-        scaleY = ((9 * g.getCanvas().getHeight() + 1) / 10) / maxHeight;
+
+        g.setStroke(Color.RED);
+        g.strokeLine(0, 20, g.getCanvas().getWidth() - delta, 20);
+        g.setStroke(Color.BLUE);
+        g.strokeLine(0, 25,g.getCanvas().getWidth(), 25);
     }
 
     @Override
     public void update(World world) {
+        GraphicsContext g = world.getGraphics();
 
+        delta = g.getCanvas().getWidth() / (heights_size + 1);
+        scaleX = (g.getCanvas().getWidth() - delta) / maxWidth;
+        scaleY = ((9 * g.getCanvas().getHeight() + 1) / 10) / maxHeight;
     }
 
     @Override

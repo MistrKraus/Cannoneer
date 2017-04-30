@@ -7,9 +7,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="1100.0" minHeight="-Infinity" minWidth="1100.0" prefHeight="400.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FireStatsController">
+<BorderPane maxHeight="-Infinity" maxWidth="1067.0" minHeight="-Infinity" prefHeight="400.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FireStatsController">
     <top>
-        <MenuBar maxWidth="1100.0" minWidth="1100.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
+        <MenuBar maxWidth="1100.0" prefWidth="1067.0" BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="Soubor">
                     <items>
@@ -28,31 +28,35 @@
         </MenuBar>
     </top>
     <center>
-        <TableView maxHeight="-Infinity" maxWidth="1100.0" minHeight="-Infinity" minWidth="1100.0" prefHeight="375.0" prefWidth="1100.0" BorderPane.alignment="CENTER_LEFT">
+        <TableView fx:id="table" maxHeight="-Infinity" maxWidth="1067.0" minHeight="375.0" prefWidth="1067.0" BorderPane.alignment="CENTER_LEFT">
             <columns>
-                <TableColumn text="Hráč" />
+                <TableColumn text="Hráč">
+                    <columns>
+                        <TableColumn fx:id="pName" minWidth="70" text="Jméno" />
+                        <TableColumn fx:id="pAzimuth" style="-fx-alignment: CENTER;" minWidth="80" text="Azimut [°]" />
+                        <TableColumn fx:id="pElevation" style="-fx-alignment: CENTER;" minWidth="80" text="Elevace [°]" />
+                        <TableColumn fx:id="pX" style="-fx-alignment: CENTER;" minWidth="70" text="X [m]" />
+                        <TableColumn fx:id="pY" style="-fx-alignment: CENTER;" minWidth="70" text="Y [m]" />
+                        <TableColumn fx:id="pZ" style="-fx-alignment: CENTER;" minWidth="70" text="Z [m]" />
+                    </columns>
+                </TableColumn>
                 <TableColumn maxWidth="-1.0" prefWidth="-1.0" text="Střela">
                     <columns>
-                        <TableColumn text="Azimut [°]" />
-                        <TableColumn text="Elevace [°]" />
-                        <TableColumn minWidth="100" text="Rychlost [m/s]" />
-                        <TableColumn text="X [m]" />
-                        <TableColumn text="Y [m]" />
-                        <TableColumn text="Z [m]" />
+                        <TableColumn fx:id="mSpeed" style="-fx-alignment: CENTER;" minWidth="105" text="Rychlost [m/s]" />
                     </columns>
                 </TableColumn>
                 <TableColumn text="Povětrnostní podmínky">
                     <columns>
-                        <TableColumn text="Směr" />
-                        <TableColumn minWidth="100" text="Rychlost [m/s]" />
+                        <TableColumn fx:id="wDir" style="-fx-alignment: CENTER;" minWidth="105" text="Směr" />
+                        <TableColumn fx:id="wSpeed" style="-fx-alignment: CENTER;" minWidth="105" text="Rychlost [m/s]" />
                     </columns>
                 </TableColumn>
                 <TableColumn text="Dopad">
                     <columns>
-                        <TableColumn text="X [m]" />
-                        <TableColumn text="Y [m]" />
-                        <TableColumn text="Z [m]" />
-                        <TableColumn text="Místo" />
+                        <TableColumn fx:id="endX" style="-fx-alignment: CENTER;" minWidth="70" text="X [m]" />
+                        <TableColumn fx:id="endY" style="-fx-alignment: CENTER;" minWidth="70" text="Y [m]" />
+                        <TableColumn fx:id="endZ" style="-fx-alignment: CENTER;" minWidth="70" text="Z [m]" />
+                        <TableColumn fx:id="endSpot" style="-fx-alignment: CENTER;" minWidth="100" text="Zásah" />
                     </columns>
                 </TableColumn>
             </columns>
