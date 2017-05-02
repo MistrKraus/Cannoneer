@@ -2,13 +2,16 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 
 import java.util.ArrayList;
-import java.util.StringJoiner;
 
 /**
  * Created by kraus on 25.04.2017.
  */
 public class VisualMissile extends Missile {
 
+    private double maxImgWidth;
+    private double maxImgHeight;
+    private double posX;
+    private double posY;
     private double rotate;
     private double maxHeight = -1;
 
@@ -26,11 +29,21 @@ public class VisualMissile extends Missile {
      * @param azimuth aizmut ve stupnich
      * @param elevation zdvih dela ve stupnich
      * @param acceleration rychlost strely v metrech za sekundu
+     * @param maxImgWidth maximalni sirka vykreslene vizualizace
+     * @param maxImgHeight maximalni vyska vykreslene vizualizase
+     * @param posX pocatecni x-ova souradnice (v pixelech
+     * @param posY pocatecni y-ova souradnice (v pixelech)
      * @param firstVisualMissile jedna se o prvni instanci visualizovane strely
      * @param world reference na svet
      */
-    public VisualMissile(Point coordinates, double azimuth, double elevation, double acceleration, boolean firstVisualMissile, World world) {
+    public VisualMissile(Point coordinates, double azimuth, double elevation, double acceleration, double maxImgWidth,
+                         double maxImgHeight, double posX, double posY, boolean firstVisualMissile, World world) {
         super(coordinates, azimuth, elevation, acceleration);
+
+        this.maxImgWidth = maxImgWidth;
+        this.maxImgHeight = maxImgHeight;
+        this.posX = posX;
+        this.posY = posY;
 
         if (colliding)
             return;
@@ -40,6 +53,7 @@ public class VisualMissile extends Missile {
         //double rotate = Math.tan((visualCoordinates.getY() - coordinates.getZ()) / (visualCoordinates.getX() - x));
 
         currentVisualCoord = new Point(x, coordinates.getZ(), elevation);
+        visualCoordinates = currentVisualCoord.copy();
 
         setCollidingPoint(world, firstVisualMissile);
 
@@ -51,7 +65,7 @@ public class VisualMissile extends Missile {
                     continue;
 
                 VisualMissile visualMissile = new VisualMissile(startCoord.coordinates, azimuth, elevation,
-                        acceleration, false, world);
+                        acceleration, maxImgWidth, maxImgHeight, posX, posY, false, world);
                 visualMissile.setDirection(startCoord.direction);
                 world.addVisualMissile(visualMissile);
             }
@@ -80,7 +94,7 @@ public class VisualMissile extends Missile {
         Affine t = g.getTransform();
 
         g.translate(visualCoordinates.getX() * scaleX - IMG.getWidth() / 2,
-                g.getCanvas().getHeight() - visualCoordinates.getY() * scaleY - IMG.getHeight() / 2);
+                maxImgHeight - visualCoordinates.getY() * scaleY - IMG.getHeight() / 2);
 
 //            if (i > VISUALIZED_MISSILES_COUNT - visualRotate.length) {
 //                double newRotate;
@@ -141,7 +155,7 @@ public class VisualMissile extends Missile {
             world.removeVisualMissile(this);
             //System.out.println("Mimo mapu");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
-                    elevation, ACCELERATION, false, world));
+                    elevation, ACCELERATION, maxImgWidth, maxImgHeight, posX, posY, false, world));
             colliding = true;
             return;
         }
@@ -150,7 +164,7 @@ public class VisualMissile extends Missile {
             world.removeVisualMissile(this);
             //System.out.println(PORADI + ". Kolize s terenem");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
-                    elevation, ACCELERATION, false, world));
+                    elevation, ACCELERATION, maxImgWidth, maxImgHeight, posX, posY, false, world));
             colliding = true;
         }
     }

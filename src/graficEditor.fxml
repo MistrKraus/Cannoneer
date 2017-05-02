@@ -21,7 +21,7 @@
     <bottom>
         <SplitPane orientation="VERTICAL" prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
-                <HBox prefHeight="100.0" prefWidth="200.0">
+                <HBox prefWidth="200.0" minHeight="40" maxHeight="40">
                     <!--<Circle radius="25.0" stroke="BLACK" strokeType="INSIDE">
                         <fill>
                             <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
@@ -32,7 +32,7 @@
                             </RadialGradient>
                         </fill>
                     </Circle>-->
-                    <Label text="Min vyska:" minWidth="38">
+                    <Label fx:id="lblMinVyska" text="Min vyska:" minWidth="38">
                         <padding>
                             <Insets left="10" right="10" top="15"/>
                         </padding>
@@ -57,7 +57,7 @@
                             <Insets top="12.0"/>
                         </HBox.margin>
                     </TextField>
-                    <Label text="mm" minWidth="25">
+                    <Label fx:id="lblMM" text="mm" minWidth="25">
                         <padding>
                             <Insets top="15" left="3" right="10"/>
                         </padding>

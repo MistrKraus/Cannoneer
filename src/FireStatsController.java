@@ -1,10 +1,16 @@
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -29,10 +35,14 @@ public class FireStatsController implements Initializable {
     public TableColumn endZ;
     public TableColumn endSpot;
 
-    private ObservableList<FireStat> fireStats;
+    public Stage stage;
+
+//    private ObservableList<FireStat> fireStats;
+
+    private ObservableList<FireStat>[] fireStats = new ObservableList[2];
 
     public FireStatsController(ObservableList<FireStat> fireStats) {
-        this.fireStats = fireStats;
+        this.fireStats[0] = fireStats;
     }
 
     @Override
@@ -51,6 +61,44 @@ public class FireStatsController implements Initializable {
         endZ.setCellValueFactory(new PropertyValueFactory<>("collidingZ"));
         endSpot.setCellValueFactory(new PropertyValueFactory<>("collideSpot"));
 
-        table.setItems(fireStats);
+        table.setItems(fireStats[0]);
+    }
+
+    public void openNew(ActionEvent actionEvent) {
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fireStats.fxml"));
+            fxmlLoader.setControllerFactory(param -> {
+                try {
+                    return param.getConstructor(ObservableList.class).newInstance(fireStats[0]);
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+            Parent root1 = fxmlLoader.load();
+            //Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Historie strelby");
+            stage.setScene(new Scene(root1));
+
+            stage.show();
+
+            //stage.setMinWidth(stage.getWidth());
+            stage.setMaxWidth(stage.getWidth());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openFile(ActionEvent actionEvent) {
+
+    }
+
+    public void saveFile(ActionEvent actionEvent) {
+
+    }
+
+    public void close(ActionEvent actionEvent) {
+        ((Stage)table.getScene().getWindow()).close();
     }
 }

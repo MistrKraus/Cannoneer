@@ -119,12 +119,12 @@ public class Player extends Target implements IShooting {
 
 //        g.setFill(Color.GREEN);
 //
-//        double width = getDrawableSize(getWidthX() * scaleX);
-//        double height = getDrawableSize(getWidthY() * scaleY);
+//        double maxWidth = getDrawableSize(getWidthX() * scaleX);
+//        double maxHeight = getDrawableSize(getWidthY() * scaleY);
 //
-//        Rectangle base = new Rectangle((int)(getX() - width / 2), (int)(getY() - height / 2), (int)width, (int)height);
+//        Rectangle base = new Rectangle((int)(getX() - maxWidth / 2), (int)(getY() - maxHeight / 2), (int)maxWidth, (int)maxHeight);
 //        base.setFill(Color.color(0, 62, 0));
-//        Rectangle cannon = new Rectangle((int)(getX() - width), (int)getY(), (int)width, (int)(height / 5));
+//        Rectangle cannon = new Rectangle((int)(getX() - maxWidth), (int)getY(), (int)maxWidth, (int)(maxHeight / 5));
 //        base.setFill(Color.color(0, 112, 0));
 //
 //        Shape player = Shape.union(base, cannon);

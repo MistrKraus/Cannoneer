@@ -13,10 +13,10 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Soubor">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Nový" />
-                        <MenuItem mnemonicParsing="false" text="Otevřít" />
-                        <MenuItem mnemonicParsing="false" text="Uložit" />
-                        <MenuItem mnemonicParsing="false" text="Konec" />
+                        <MenuItem mnemonicParsing="false" onAction="#openNew" text="Nový" />
+                        <MenuItem mnemonicParsing="false" onAction="#openFile" text="Otevřít" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveFile" text="Uložit" />
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="Konec" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Nápověda">
@@ -32,31 +32,31 @@
             <columns>
                 <TableColumn text="Hráč">
                     <columns>
-                        <TableColumn fx:id="pName" minWidth="70" text="Jméno" />
+                        <TableColumn fx:id="pName" minWidth="70" prefWidth="70" text="Jméno" />
                         <TableColumn fx:id="pAzimuth" style="-fx-alignment: CENTER;" minWidth="80" text="Azimut [°]" />
                         <TableColumn fx:id="pElevation" style="-fx-alignment: CENTER;" minWidth="80" text="Elevace [°]" />
-                        <TableColumn fx:id="pX" style="-fx-alignment: CENTER;" minWidth="70" text="X [m]" />
-                        <TableColumn fx:id="pY" style="-fx-alignment: CENTER;" minWidth="70" text="Y [m]" />
-                        <TableColumn fx:id="pZ" style="-fx-alignment: CENTER;" minWidth="70" text="Z [m]" />
+                        <TableColumn fx:id="pX" style="-fx-alignment: CENTER;" minWidth="70" prefWidth="70" text="X [m]" />
+                        <TableColumn fx:id="pY" style="-fx-alignment: CENTER;" minWidth="70" prefWidth="70" text="Y [m]" />
+                        <TableColumn fx:id="pZ" style="-fx-alignment: CENTER;" minWidth="70" prefWidth="70" text="Z [m]" />
                     </columns>
                 </TableColumn>
                 <TableColumn maxWidth="-1.0" prefWidth="-1.0" text="Střela">
                     <columns>
-                        <TableColumn fx:id="mSpeed" style="-fx-alignment: CENTER;" minWidth="105" text="Rychlost [m/s]" />
+                        <TableColumn fx:id="mSpeed" style="-fx-alignment: CENTER;" minWidth="105" prefWidth="105" text="Rychlost [m/s]" />
                     </columns>
                 </TableColumn>
                 <TableColumn text="Povětrnostní podmínky">
                     <columns>
-                        <TableColumn fx:id="wDir" style="-fx-alignment: CENTER;" minWidth="105" text="Směr" />
-                        <TableColumn fx:id="wSpeed" style="-fx-alignment: CENTER;" minWidth="105" text="Rychlost [m/s]" />
+                        <TableColumn fx:id="wDir" style="-fx-alignment: CENTER;" minWidth="105" prefWidth="105" text="Směr" />
+                        <TableColumn fx:id="wSpeed" style="-fx-alignment: CENTER;" minWidth="105" prefWidth="105" text="Rychlost [m/s]" />
                     </columns>
                 </TableColumn>
                 <TableColumn text="Dopad">
                     <columns>
-                        <TableColumn fx:id="endX" style="-fx-alignment: CENTER;" minWidth="70" text="X [m]" />
-                        <TableColumn fx:id="endY" style="-fx-alignment: CENTER;" minWidth="70" text="Y [m]" />
-                        <TableColumn fx:id="endZ" style="-fx-alignment: CENTER;" minWidth="70" text="Z [m]" />
-                        <TableColumn fx:id="endSpot" style="-fx-alignment: CENTER;" minWidth="100" text="Zásah" />
+                        <TableColumn fx:id="endX" style="-fx-alignment: CENTER;" minWidth="70" prefWidth="70" text="X [m]" />
+                        <TableColumn fx:id="endY" style="-fx-alignment: CENTER;" minWidth="70" prefWidth="70" text="Y [m]" />
+                        <TableColumn fx:id="endZ" style="-fx-alignment: CENTER;" minWidth="70" prefWidth="70" text="Z [m]" />
+                        <TableColumn fx:id="endSpot" style="-fx-alignment: CENTER;" minWidth="100" prefWidth="100" text="Zásah" />
                     </columns>
                 </TableColumn>
             </columns>

@@ -22,44 +22,48 @@ public class World {
     private final Data data;
     private final Map map;
     private final Wind wind;
-
     private final ObservableList<Player> players = FXCollections.observableArrayList();
+
     private final ObservableList<Target> targets = FXCollections.observableArrayList();
     private final ObservableList<Missile> missiles = FXCollections.observableArrayList();
     private final ObservableList<Explosion> explosions = FXCollections.observableArrayList();
     private final ObservableList<VisualMissile> visualMissiles = FXCollections.observableArrayList();
     private final ObservableList<FireStat> fireStats = FXCollections.observableArrayList();
-
     private final List<Player> playersToRemove = new ArrayList<>();
+
     private final List<Target> targetsToRemove = new ArrayList<>();
     private final List<Missile> missilesToRemove = new ArrayList<>();
     private final List<Explosion> explosionsToRemove = new ArrayList<>();
     private final List<VisualMissile> visualMissilesToRemove = new ArrayList<>();
-
     private final List<VisualMissile> visualMissilesToAdd = new ArrayList<>();
 
-    /** metry na index v poli*/
+    /**
+     * metry na index v poli
+     */
     private double scaleX;
+
     private double scaleY;
-    /** pixely na metr*/
+    /**
+     * pixely na metr
+     */
     private double scalePixelperMX;
     private double scalePixelperMY;
-
     // TODO budouci moznost iterace
     private int playerIndex = 0;
 
     private boolean isRunning = false;
+
     private boolean isVisuializing = false;
 
     private Point vMissileFirstCoord;
-
+    private VisualManager visualManager;
     private TerrainSide terrSide;
 
     /**
      * konstruktor
      *
      * @param graphics graficky kontext
-     * @param data nactena data
+     * @param data     nactena data
      */
     public World(GraphicsContext graphics, Data data) {
         this.graphics = graphics;
@@ -139,7 +143,7 @@ public class World {
      * @param missile strela
      */
     public void removeMissile(Missile missile) {
-        for (Missile missileToRemove:missilesToRemove)
+        for (Missile missileToRemove : missilesToRemove)
             if (missile.equals(missileToRemove))
                 return;
 
@@ -153,19 +157,20 @@ public class World {
         explosionsToRemove.add(explosion);
     }
 
-    public  void removeVisualMissile(VisualMissile vMissile) {
-        for (VisualMissile vMissileToRemove:visualMissilesToRemove)
+    public void removeVisualMissile(VisualMissile vMissile) {
+        for (VisualMissile vMissileToRemove : visualMissilesToRemove)
             if (vMissile.equals(vMissileToRemove))
                 return;
 
         visualMissilesToRemove.add(vMissile);
     }
+
     /**
      * Odstraneni vsech strel
      */
     public void removeAllMissiles() {
-        for (Missile missile:
-             missiles) {
+        for (Missile missile :
+                missiles) {
             missilesToRemove.add(missile);
         }
     }
@@ -219,9 +224,10 @@ public class World {
             explosions.forEach((explosion) -> explosion.update(this));
             wind.update(this);
         } else {
-            for (int i = 0; i < 4; i++)
-                visualMissiles.forEach((visualMissile -> visualMissile.update(this)));
-                terrSide.update(this);
+            visualManager.update(this);
+//            for (int i = 0; i < 4; i++)
+//                visualMissiles.forEach((visualMissile -> visualMissile.update(this)));
+//            terrSide.update(this);
         }
 
         draw();
@@ -231,15 +237,16 @@ public class World {
      * vykresli vsechny objekty
      */
     public void draw() {
-        scalePixelperMX =  graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
-        scalePixelperMY =  graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
+        scalePixelperMX = graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
+        scalePixelperMY = graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
 
         graphics.setFill(Color.GRAY);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
 
         if (isVisuializing) {
-            terrSide.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY());
-            visualMissiles.forEach(missile -> missile.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY()));
+            visualManager.draw(graphics, visualManager.getTerrSide().getScaleX(), visualManager.getTerrSide().getScaleY());
+//            terrSide.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY());
+//            visualMissiles.forEach(missile -> missile.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY()));
             return;
         }
 
@@ -279,22 +286,27 @@ public class World {
         timeline.pause();
     }
 
-    public void visualize() {
+    public void visualize(double azimuth, double elevation, double speed) {
+        visualManager = new VisualManager(azimuth, elevation, speed, this);
+
         update();
+
+//        addVisualMissile(new VisualMissile(getPlayer().getCoordinates(), azimuth, elevation, speed,
+//                true, this));
 
         if (visualMissiles.size() == 0)
             return;
 
         isVisuializing = true;
 
-        VisualMissile visualMissile = visualMissiles.get(0);
-
-        terrSide = new TerrainSide(map.getSurface(), visualMissile.getX(), visualMissile.getY(), visualMissile,
-                scaleX, scaleY, map.getMapWidthM() / map.getMapHeightM());
-
-        vMissileFirstCoord = visualMissile.getCoordinates().copy();
-
-        removeVisualMissile(visualMissiles.get(0));
+//        VisualMissile visualMissile = visualMissiles.get(0);
+//
+//        terrSide = new TerrainSide(map.getSurface(), visualMissile.getX(), visualMissile.getY(), visualMissile,
+//                scaleX, scaleY, map.getMapWidthM() / map.getMapHeightM());
+//
+//        vMissileFirstCoord = visualMissile.getCoordinates().copy();
+//
+//        removeVisualMissile(visualMissiles.get(0));
 
 //        Missile missile1 = missiles.get(0);
 //        for (Missile missile :missiles)
@@ -365,12 +377,16 @@ public class World {
 
     public Point getvMissileFirstCoord() {
         if (vMissileFirstCoord == null)
-            return new Point(0,0,0);
+            return new Point(0, 0, 0);
         return vMissileFirstCoord;
     }
 
     public ObservableList<FireStat> getFireStats() {
         return fireStats;
+    }
+
+    public ObservableList<VisualMissile> getVisualMissiles() {
+        return visualMissiles;
     }
 
     public boolean isRunning() {

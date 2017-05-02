@@ -101,11 +101,11 @@ public class MainController implements Initializable {
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             double width = defaultStageWidth - newValue.doubleValue();
-            //double height = width * (1 / ratio);
+            //double maxHeight = maxWidth * (1 / ratio);
             double height = width * ratio;
 
-//            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
-//            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
+//            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - maxWidth);
+//            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - maxHeight);
             canvas.setWidth(DEFAULT_CAVANS_WIDTH - width);
             canvas.setHeight(DEFAULT_CAVANS_WIDTH * ratio - width);
 
@@ -113,13 +113,13 @@ public class MainController implements Initializable {
         });
 
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-            //double height = DEFAULT_CAVANS_HEIGHT + 20 - newValue.doubleValue();
+            //double maxHeight = DEFAULT_CAVANS_HEIGHT + 20 - newValue.doubleValue();
             double height = defaultStageHeight - newValue.doubleValue();
-            //double width = height * ratio;
+            //double maxWidth = maxHeight * ratio;
             double width = height * (1 / ratio);
 
-//            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - width);
-//            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - height);
+//            canvas.setWidth(DEFAULT_CAVANS_HEIGHT * ratio - maxWidth);
+//            canvas.setHeight(DEFAULT_CAVANS_HEIGHT - maxHeight);
             canvas.setWidth(DEFAULT_CAVANS_WIDTH - width);
             canvas.setHeight(DEFAULT_CAVANS_WIDTH * ratio - width);
 
@@ -257,15 +257,14 @@ public class MainController implements Initializable {
             world.stopVisualize();
             world.update();
 
+            world.visualize(azimuth, evelation, speed);
 
-            world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates(), azimuth, evelation, speed,
-                    true, world));
+//            world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates(), azimuth, evelation, speed,
+//                    true, world));
 
             return;
         }
         world.addMissile(world.getPlayer().fire(azimuth, evelation, speed));
-
-
     }
 
     /**
@@ -285,7 +284,6 @@ public class MainController implements Initializable {
      */
     public void handleBtnVizualzuj(ActionEvent actionEvent) {
         manageFireParam(true);
-        world.visualize();
     }
 
     /**
@@ -343,5 +341,13 @@ public class MainController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void openNew(ActionEvent actionEvent) {
+
+    }
+
+    public void close(ActionEvent actionEvent) {
+        stage.close();
     }
 }

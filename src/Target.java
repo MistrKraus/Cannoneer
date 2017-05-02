@@ -116,10 +116,10 @@ public class Target implements IHittable {
 
 //        g.setFill(Color.RED);
 //
-//        double width = getDrawableSize(getWidthX() * scaleX);
-//        double height = getDrawableSize(getWidthY() * scaleY);
+//        double maxWidth = getDrawableSize(getWidthX() * scaleX);
+//        double maxHeight = getDrawableSize(getWidthY() * scaleY);
 //
-//        g.fillRect(getX() * scaleX - width / 2, getY() * scaleY - height / 2, width, height);
+//        g.fillRect(getX() * scaleX - maxWidth / 2, getY() * scaleY - maxHeight / 2, maxWidth, maxHeight);
     }
 
     @Override

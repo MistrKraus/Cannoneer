@@ -17,8 +17,8 @@
         <menus>
             <Menu mnemonicParsing="false" text="Soubor">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="Nová hra" />
-                    <MenuItem mnemonicParsing="false" text="Konec" />
+                    <MenuItem mnemonicParsing="false" onAction="#openNew" text="Nová hra" />
+                    <MenuItem mnemonicParsing="false" onAction="#close" text="Konec" />
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Zobrazení">
@@ -42,8 +42,7 @@
         <padding>
             <Insets bottom="10" left="10" right="10" />
         </padding>
-        <Canvas fx:id="canvas" HBox.hgrow="ALWAYS">
-        </Canvas>
+        <Canvas fx:id="canvas" HBox.hgrow="ALWAYS" />
         <VBox prefHeight="145.0" prefWidth="100.0">
             <children>
                 <Label prefHeight="17.0" prefWidth="62.0" text="Střelec - cíl:" />

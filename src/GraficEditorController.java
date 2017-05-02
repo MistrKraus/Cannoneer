@@ -1,10 +1,15 @@
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -20,6 +25,8 @@ public class GraficEditorController implements Initializable {
     public TextField editMaxHeight;
     public Canvas canvas;
     public Stage stage;
+    public Label lblMinVyska;
+    public Label lblMM;
 
     private GraphicsContext g;
 
@@ -41,7 +48,7 @@ public class GraficEditorController implements Initializable {
             @Override
             public String toString(Double object) {
                 if (object == null)
-                    return "";
+                    return "0.0";
 
                 return object.toString();
             }
@@ -63,26 +70,43 @@ public class GraficEditorController implements Initializable {
             @Override
             public String toString(Double object) {
                 if (object == null)
-                    return "";
+                    return "0.0";
 
                 return object.toString();
             }
         }));
 
         g = canvas.getGraphicsContext2D();
+
+        drawMap();
     }
 
     public void drawMap() {
+        g.setFill(Color.BLACK);
+        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
         if (mapImg != null) {
             g.drawImage(mapImg.getImage(), 0, 0);
             return;
         }
 
-        g.setFill(Color.BLACK);
-        g.fill();
+        g.setFill(Color.WHITE);
+        g.setTextAlign(TextAlignment.CENTER);
+        g.setFont(new Font("Inpact", 20));
+        g.fillText("Nactete soubor obrazku mapy\nve formatu .jpg nebo .png!", (int)(canvas.getWidth() / 2),
+                (int)(canvas.getHeight() / 2));
     }
 
     public void setMapImg(ImageView mapImg) {
         this.mapImg = mapImg;
+    }
+
+    public void setCanvasSize(double width, double height) {
+        canvas.setWidth(width);
+        canvas.setHeight(height);
+
+        System.out.println(width + " " + height);
+
+        drawMap();
     }
 }
