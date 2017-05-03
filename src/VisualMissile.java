@@ -93,8 +93,8 @@ public class VisualMissile extends Missile {
 
         Affine t = g.getTransform();
 
-        g.translate(visualCoordinates.getX() * scaleX - IMG.getWidth() / 2,
-                maxImgHeight - visualCoordinates.getY() * scaleY - IMG.getHeight() / 2);
+        g.translate(posX + visualCoordinates.getX() * scaleX - IMG.getWidth() / 2,
+                 g.getCanvas().getHeight() - (posY + visualCoordinates.getY() * scaleY) - IMG.getHeight() / 2);
 
 //            if (i > VISUALIZED_MISSILES_COUNT - visualRotate.length) {
 //                double newRotate;
@@ -162,7 +162,7 @@ public class VisualMissile extends Missile {
 
         if (isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY())) {
             world.removeVisualMissile(this);
-            //System.out.println(PORADI + ". Kolize s terenem");
+            //System.out.println("Kolize s terenem:");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
                     elevation, ACCELERATION, maxImgWidth, maxImgHeight, posX, posY, false, world));
             colliding = true;

@@ -243,7 +243,7 @@ public class Missile implements IDrawable, IMappable {
                     continue;
 
                 if (coordinates.getZ() <= surface[iX][iY]) {
-                    //System.out.println("Povrch: " + surface[iX][iY]);
+                    System.out.println(surface[iX][iY] + " < " + coordinates.getZ());
                     return true;
                 }
             }

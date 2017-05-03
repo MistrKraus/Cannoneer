@@ -58,6 +58,9 @@ public class MyGraph implements IDrawable {
 
     @Override
     public void update(World world) {
+        this.maxWidth = world.getGraphics().getCanvas().getWidth();
+        this.maxHeight = world.getGraphics().getCanvas().getHeight() / 2;
+
         this.deltaX = (maxWidth - 2 * BORDER_SPACING) / distances.length;
         this.deltaY = (maxHeight - 2 * BORDER_SPACING) / distances[distances.length - 1];
     }

@@ -14,6 +14,8 @@ public class TerrainSide implements IDrawable {
 
     private double maxWidth;
     private double maxHeight;
+    private double posX;
+    private double posY;
     private double scaleX;
     private double scaleY;
     private double delta;
@@ -36,10 +38,17 @@ public class TerrainSide implements IDrawable {
      * @param scaleX pomer na prepocet metru z x-ove souradnice na index
      * @param scaleY pomer na prepocet metru z y-ove souradnice na index
      * @param mapScale pomer stran mapy (sirka / vyska)
+     * @param posX x-ove souradnice, odkud se bude mapa vykreslovat
+     * @param posY y-ove souradnice, odkud se bude mapa vykreslovat
      */
     //TODO vyresit -90, 0, 180, 270 stupnu
     public TerrainSide(double surface[][], double startCoordX, double startCoordY, VisualMissile visualMissile,
-                       double scaleX, double scaleY, double mapScale) {
+                       double scaleX, double scaleY, double mapScale, double posX, double posY) {
+
+
+
+        this.posX = posX;
+        this.posY = posY;
 
         double endCoordX = visualMissile.getCollidingPoint().getX();
         double endCoordY = visualMissile.getCollidingPoint().getY();
@@ -270,12 +279,12 @@ public class TerrainSide implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         terrainImg = wImage;
-        g.drawImage(terrainImg, 0, 0, g.getCanvas().getWidth() + 1, g.getCanvas().getHeight() + 1);
+        g.drawImage(terrainImg, posX, posY, g.getCanvas().getWidth() + 1, (g.getCanvas().getHeight() - posY) + 1);
 
-        g.setStroke(Color.RED);
-        g.strokeLine(0, 20, g.getCanvas().getWidth() - delta, 20);
-        g.setStroke(Color.BLUE);
-        g.strokeLine(0, 25,g.getCanvas().getWidth(), 25);
+//        g.setStroke(Color.RED);
+//        g.strokeLine(0, 20, g.getCanvas().getWidth() - delta, 20);
+//        g.setStroke(Color.BLUE);
+//        g.strokeLine(0, 25,g.getCanvas().getWidth(), 25);
     }
 
     @Override
@@ -284,7 +293,15 @@ public class TerrainSide implements IDrawable {
 
         delta = g.getCanvas().getWidth() / (heights_size + 1);
         scaleX = (g.getCanvas().getWidth() - delta) / maxWidth;
-        scaleY = ((9 * g.getCanvas().getHeight() + 1) / 10) / maxHeight;
+        scaleY = ((9 * (g.getCanvas().getHeight() / 2) + 1) / 10) / maxHeight;
+
+        posX = 0;
+        posY = g.getCanvas().getHeight() / 2;
+
+//        double maxY = (9 * terrainImgW.getHeight()) / 10;
+//        this.scaleY = maxY / maxHeight;
+//        delta = terrainImgW.getWidth() / heights.size();
+//        this.scaleX = (terrainImgW.getWidth() - delta) / maxWidth;
     }
 
     @Override

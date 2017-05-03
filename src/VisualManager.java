@@ -13,6 +13,11 @@ public class VisualManager implements IDrawable {
     private final VisualMissile visualMissile;
     private final ObservableList<VisualMissile> visualMissiles;
 
+    private double graph1Width;
+    private double graph1Height;
+    private double graph2Width;
+    private double graph2Height;
+
     public VisualManager (double azimuth, double elevation, double acceleration, /*boolean firstVisualMissile,*/ World world) {
         this(azimuth, elevation, acceleration, 0, world.getGraphics().getCanvas().getHeight() / 2,
                 world.getGraphics().getCanvas().getHeight() / 2, /*firstVisualMissile,*/ world);
@@ -22,6 +27,11 @@ public class VisualManager implements IDrawable {
                           double splitCood2, /*boolean firstVisualMissile,*/ World world) {
         Canvas canvas = world.getGraphics().getCanvas();
         Point coordinates = world.getPlayer().getCoordinates().copy();
+
+        graph1Width = canvas.getWidth();
+        graph1Height = canvas.getHeight() / 2;
+        graph2Width = canvas.getWidth();
+        graph2Height = canvas.getHeight() / 2;
 
 //        // rozdeleni na ose X
 //        if (splitX1 == splitCood2) {
@@ -56,16 +66,16 @@ public class VisualManager implements IDrawable {
 //        }
 
         // vychozi rozdeleni
-        this.graph = new MyGraph(elevation, acceleration, canvas.getWidth(), canvas.getHeight() / 2, 0, 0);
-        this.visualMissile = new VisualMissile(coordinates, azimuth, elevation, acceleration, canvas.getWidth(),
-                graph.getHeight() / 2, 0, graph.getHeight() / 2, true, world);
+        this.graph = new MyGraph(elevation, acceleration, graph1Width, graph1Height, 0, 0);
+        this.visualMissile = new VisualMissile(coordinates, azimuth, elevation, acceleration, graph2Width,
+                graph2Height, 0, graph.getHeight() / 2, true, world);
 
-        world.addVisualMissile(visualMissile);
+        //world.addVisualMissile(visualMissile);
 
         this.terrSide = new TerrainSide(world.getMap().getSurface(), visualMissile.getX(), visualMissile.getY(), visualMissile,
-                world.getScaleX(), world.getScaleY(), world.getMap().getMapWidthM() / world.getMap().getMapHeightM());
+                world.getScaleX(), world.getScaleY() * 2, world.getMap().getMapWidthM() / (world.getMap().getMapHeightM() / 2), 0, graph2Height);
 
-        world.removeVisualMissile(visualMissile);
+        //world.removeVisualMissile(visualMissile);
 
         this.visualMissiles = world.getVisualMissiles();
     }
@@ -73,15 +83,16 @@ public class VisualManager implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         graph.draw(g, scaleMperPixelX, scaleMperPixelY);
-        //terrSide.draw(g, scaleMperPixelX, scaleMperPixelY);
+        terrSide.draw(g, scaleMperPixelX, scaleMperPixelY);
         visualMissiles.forEach(missile -> missile.draw(g, scaleMperPixelX, scaleMperPixelY));
     }
 
     @Override
-    public void update(World world) {;
+    public void update(World world) {
         graph.update(world);
         for (int i = 0; i < 8; i++)
-            visualMissile.update(world);
+            visualMissiles.forEach(missile -> missile.update(world));
+
         terrSide.update(world);
     }
 
