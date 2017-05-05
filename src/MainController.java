@@ -148,8 +148,8 @@ public class MainController implements Initializable {
                 if (x < -90)
                     return -90.0;
 
-                if (x > 180)
-                    return 180.0;
+                if (x > 270)
+                    return 270.0;
 
                 return x;
             }
@@ -159,6 +159,8 @@ public class MainController implements Initializable {
                 //System.out.println("TO");
                 if (object == null)
                     return "0.0";
+
+                world.getPlayer().setAzimuth(object);
 
                 return object.toString();
             }

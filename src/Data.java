@@ -46,10 +46,13 @@ public class Data {
 
             try {
                 long now = System.nanoTime();
-                for (int i = 0; i < mapWidth; i++) {
-                    for (int j = 0; j < mapHeight; j++) {
+                //for (int i = 0; i < mapWidth; i++) {
+                for (int i = 0; i < mapHeight; i++) {
+                    //for (int j = 0; j < mapHeight; j++) {
+                    for (int j = 0; j < mapWidth; j++) {
                         zCounter++;
-                        terrainZm[i][j] = in.readInt() / 1000;
+                        //terrainZm[i][j] = in.readInt() / 1000;
+                        terrainZm[j][i] = in.readInt() / 1000;
                         //terrainZm[i][j] = 1;
 
                         //System.out.print(terrainZm[i][j] + "   ");

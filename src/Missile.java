@@ -57,7 +57,7 @@ public class Missile implements IDrawable, IMappable {
     protected static final double DEFAULT_STRIKE_RADIUS = 60;
     protected static final double GRAVITY = 10;
     protected static final double DELTA_T = 0.01;
-    protected static final double MAGIC_B = 0.05;
+    protected static final double MAGIC_B = 0.1;
 
     protected static final Point MAGIC_POINT = new Point(0,0,-1);
 

@@ -73,26 +73,6 @@ public class Player extends Target implements IShooting {
     }
 
     /**
-     * vysreli a pripadne vizualizuje
-     *
-     * @param azimuth smer strely
-     * @param elevation zdvih hlavne
-     * @param speed rychlot strely
-     * @param visual ma se strela pouze vyzualizovat
-     * @param world reference na svet
-     * @return strela
-     */
-    @Override
-    public Missile fire(double azimuth, double elevation, double speed, boolean visual, World world) {
-        if (visual)
-            System.out.println("Vizulizace");
-        else
-            System.out.println("Vystrel");
-
-        return new Missile(coordinates.copy(), azimuth, elevation, speed);
-    }
-
-    /**
      * vykresli instanci
      *
      * @param g graficky kontext, ktery nakresli instanci
@@ -107,9 +87,10 @@ public class Player extends Target implements IShooting {
 //        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
 
         Affine t = g.getTransform();
-        g.translate((int)(getX() * scaleX - IMG.getWidth() / 2), (int)(getY() * scaleY - IMG.getHeight() / 2));
+        g.translate((int)(getX() * scaleX - (IMG.getWidth() - 4)), (int)(getY() * scaleY - IMG.getHeight()));
         g.rotate(-azimuth);
-        g.drawImage(IMG, 0, 0);
+        //g.translate(2, 0);
+        g.drawImage(IMG, - (IMG.getWidth() - 4) / 2, -IMG.getHeight() / 2);
         g.setTransform(t);
 
 //        System.out.println("Player:\n metryX: " + getX() + "\n metryY: " + getY() +

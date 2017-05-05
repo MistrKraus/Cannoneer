@@ -82,7 +82,7 @@ public class Wind implements IDrawable {
             //speedDuration = 100000;
 
             if (speed != 0)
-                speedDuration /= Math.abs(speed);
+                speedDuration /= Math.abs(speed) / 2;
             else
                 speedDuration /= 4;
         }
@@ -95,13 +95,13 @@ public class Wind implements IDrawable {
 
             azimuth %= 360;
 
-            //System.out.println(azimuth);
-
-            azimuthP = new Point(Math.cos(azimuth) * speed, Math.sin(azimuth) * speed, 0);
+//            System.out.println((Math.PI * azimuth) / 180);
 
             azimuthDuration = random.nextInt(150) + 20;
             //azimuthDuration = 30;
         }
+
+        azimuthP = new Point(Math.cos((Math.PI * azimuth) / 180) * speed, Math.sin((Math.PI * azimuth) / 180) * speed, 0);
 
         coordinates = azimuthP.copy();
     }
