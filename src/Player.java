@@ -10,6 +10,7 @@ public class Player extends Target implements IShooting {
 
     private double azimuth = 0;
 
+    private static final int IMG_CANNON_WIDTH = 4;
     private static final String IMG_PATH = "images/player1.png";
 
     /**
@@ -87,10 +88,9 @@ public class Player extends Target implements IShooting {
 //        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
 
         Affine t = g.getTransform();
-        g.translate((int)(getX() * scaleX - (IMG.getWidth() - 4)), (int)(getY() * scaleY - IMG.getHeight()));
+        g.translate((int)(getX() * scaleX), (int)(getY() * scaleY));
         g.rotate(-azimuth);
-        //g.translate(2, 0);
-        g.drawImage(IMG, - (IMG.getWidth() - 4) / 2, -IMG.getHeight() / 2);
+        g.drawImage(IMG, - (IMG.getWidth() - IMG_CANNON_WIDTH) / 2, -IMG.getHeight() / 2);
         g.setTransform(t);
 
 //        System.out.println("Player:\n metryX: " + getX() + "\n metryY: " + getY() +
