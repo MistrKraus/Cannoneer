@@ -76,156 +76,13 @@ public class TerrainSide implements IDrawable {
 
         ArrayList<Double> heights = countHeights(surface, (int) visualMissile.getAzimuth(), startX, startY, endX, endY);
 
-        /*
-        //double scale = distanceY / distanceX;
-        double scale = countScale(distanceX, distanceY, visualMissile.getAzimuth());
+//        double scale = distanceY / distanceX;
+//        double scale = countScale(distanceX, distanceY, visualMissile.getAzimuth());
 
-        System.out.println("Scale: " + scale);
-
-        ArrayList<Double> heights = new ArrayList<>();
-
-        //long t1 = System.nanoTime();
-        int x = startX;
-        int y = startY;
-
-
-        System.out.println(endX + " - " + endY);
-//        while (y < endY && x < endX) {
-//        //while (x != endX) {
-//            for (int i = 0; i < scale; i++) {
-//                //heights.add(surface[x][y]);
-//                //heights.add(surface[x][y++]);
-//                //System.out.println(surface[x][y]);
-//                //System.out.println(x++ + " | " + y);
-//                x++;
-//            }
-//
-//            y++;
-//            //x++;
-//        }
-//        //System.out.println(System.nanoTime() - t1);
-//        System.out.println(x + " | " + y);
-//        System.out.println(surface[x][y]);
-//        System.out.println("--------");
-        //heights = new ArrayList<>();
-
-        double j = 0;
-//        x = startX;
-//        y = startY;
-        while (x < endX || y < endY) {
-//            if (distanceY < distanceY) {
-                while (j < scale) {
-                    heights.add(surface[x][y]);
-                    j++;
-
-                    if (distanceY < distanceX)
-                        y++;
-                    else
-                        x++;
-                    //System.out.println(x + " | " + y++);
-                }
-                j %= scale;
-
-            if (distanceY < distanceX)
-                x++;
-            else
-                y++;
-
-//            } else {
-//               while (false){};
-//            }
-
-//            if (x == surface[0].length)
-//                x--;
-//
-//            if (y == surface[1].length)
-//                y--;
-        }
-
-        while (x < endX) {
-            heights.add(surface[x++][y]);
-        }
-
-        while (y < endY) {
-            heights.add(surface[x][y++]);
-        }
-
-
-        System.out.println(x + " | " + y);
-        System.out.println(heights.size());
+         System.out.println(heights.size());
 //        System.out.println(Math.min(x, surface[0].length - 1) + " | " + Math.min(y, surface[1].length - 1));
 //        System.out.println(surface[Math.min(x, surface[0].length - 1)][Math.min(y, surface[1].length - 1)]);
 //        System.out.println(visualMissile.getCollidingPoint().getZ());
-
-        //-----
-
-//        while (j < scale) {
-//            if (x < surface[0].length && y < surface[1].length) {
-//                //System.out.println(x);
-//                heights.add(surface[x][y]);
-//            }
-//            j++;
-//
-//            if (distanceY < distanceX) {
-//                y++;
-//            }
-//            else {
-//                x++;
-//            }
-//            //System.out.println(x + " | " + y++);
-//        }
-//
-//        if (distanceY < distanceX) {
-//            x++;
-//        }
-//        else {
-//            y++;
-//        }
-//
-//        if (x < surface[0].length && y < surface[1].length) {
-//            heights.add(surface[x][y]);
-//        }
-//
-//        System.out.println(x + " | " + y);
-//        System.out.println(heights.size());
-
-//        int x = startX;
-//        int y = startY;
-//        x = startX;
-//        y = startY;
-//
-//        heights = new ArrayList<>();
-//
-//        t1 = System.nanoTime();
-//
-//        int maxX = surface[0].length - 1;
-//        int maxY = surface[1].length - 1;
-//
-//        for (Point coord:missileCoord) {
-//            if (heights.size() == 0) {
-//                heights.add(surface[x][y]);
-//                continue;
-//            }
-//
-//            if (!(x == (int)(coord.getX() * scaleX) && y == (int)(coord.getY() * scaleY))) {
-//                heights.add(surface[x][y]);
-//
-//                //System.out.println(x + " " + (int)(coord.getX() * scaleX) + " | " + y + " " + (int)(coord.getY() * scaleY));
-//            }
-//
-//            x = (int)(coord.getX() * scaleX);
-//            y = (int)(coord.getY() * scaleY);
-//
-//            if (x > maxX)
-//                x = maxX;
-//
-//            if (y > maxY)
-//                y = maxY;
-//        }
-//        System.out.println(System.nanoTime() - t1);
-//        System.out.println(x + " | " + y);
-
-        */
 
         this.heights_size = heights.size();
         this.img_width = (int)(IMG_HEIGHT * mapScale);
@@ -311,7 +168,7 @@ public class TerrainSide implements IDrawable {
         GraphicsContext g = world.getGraphics();
 
         delta = g.getCanvas().getWidth() / (heights_size);
-        System.out.println(startX);
+        //System.out.println(startX);
         this.scaleX = (g.getCanvas().getWidth() - delta) / (maxWidth - startX);
         this.scaleY = ((9 * (g.getCanvas().getHeight() / 2) + 1) / 10) / maxHeight;
 
@@ -357,40 +214,40 @@ public class TerrainSide implements IDrawable {
 
         double scale;
 
-        System.out.println("->");
-        System.out.println(startX);
-        System.out.println(startY);
+//        System.out.println("->");
+//        System.out.println(startX);
+//        System.out.println(startY);
 
         if (degree == -90)
             degree = 270;
 
-        System.out.println(x + " | " + y);
+        //System.out.println(x + " | " + y);
 
         if (distanceX == 0 && distanceY == 0) {
             heights.add(surface[startX][startY]);
             return heights;
         }
 
-
         switch (degree) {
             case 0:
-                while (x != endX && y != endY)
+                while (x < endX)
                     heights.add(surface[x++][y]);
                 break;
 
             case 90:
-                while (x != endX && y != endY)
-                    heights.add(surface[x][y++]);
+                System.out.println(y + " < " + endY);
+                while (y > endY)
+                    heights.add(surface[x][y--]);
                 break;
 
             case 180:
-                while (x != endX && y != endY)
+                while (x > endX)
                     heights.add(surface[x--][y]);
                 break;
 
             case 270:
-                while (x != endX && y != endY)
-                    heights.add(surface[x][y--]);
+                while (y < endY)
+                    heights.add(surface[x][y++]);
                 break;
 
             default:

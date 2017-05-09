@@ -97,8 +97,8 @@ public class VisualMissile extends Missile {
 
         Affine t = g.getTransform();
 
-        System.out.println(startX);
-        System.out.println("-----------");
+//        System.out.println(startX);
+//        System.out.println("-----------");
 
         g.translate(posX + (visualCoordinates.getX() - startX) * scaleX - IMG.getWidth() / 2,
                  g.getCanvas().getHeight() - (posY + visualCoordinates.getY() * scaleY) - IMG.getHeight() / 2);
