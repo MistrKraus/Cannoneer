@@ -28,12 +28,15 @@ public class Data {
             int mapHeight = in.readInt();
             double deltaXm = in.readInt() / 1000;
             double deltaYm = in.readInt() / 1000;
-            //this.shooterX = 0;
-            this.shooterX = in.readInt();
-            //this.shooterY = 0;
-            this.shooterY = in.readInt();
+//            this.shooterX = in.readInt();
+//            this.shooterY = in.readInt();
+//            this.targetX = in.readInt();
+//            this.targetY = in.readInt();
+
             this.targetX = in.readInt();
             this.targetY = in.readInt();
+            this.shooterX = in.readInt();
+            this.shooterY = in.readInt();
 
             double[][] terrainZm = new double[mapWidth][mapHeight];
 

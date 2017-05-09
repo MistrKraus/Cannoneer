@@ -1,6 +1,10 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
+import javax.swing.*;
 import java.lang.reflect.Method;
 
 /**
@@ -16,6 +20,8 @@ public class MyGraph implements IDrawable {
     double posY;
 
     double[] distances;
+
+    private boolean chyba;
 
     private final static int BORDER_SPACING = 10;
 
@@ -35,7 +41,20 @@ public class MyGraph implements IDrawable {
         this.posY = posY;
         this.posX = posX;
 
+        if (acceleration < 2) {
+            chyba = true;
+            acceleration = 2;
+        }
+
+        if (elevation < 0) {
+            chyba = true;
+            elevation = 0;
+        }
+
         setDistances(elevation, (int) Math.ceil(acceleration));
+
+//        if (chyba)
+//            return;
 
         this.deltaX = (maxWidth - 2 * BORDER_SPACING) / distances.length;
         this.deltaY = (maxHeight - 2 * BORDER_SPACING) / distances[distances.length - 1];
@@ -51,6 +70,9 @@ public class MyGraph implements IDrawable {
 
         g.setStroke(Color.ORANGE);
 
+//        if (chyba)
+//            return;
+
         for (int i = 0; i < distances.length - 1; i++)
             g.strokeLine((i * deltaX) + BORDER_SPACING, maxHeight - BORDER_SPACING - (distances[i] * deltaY),
                     ((i + 1) * deltaX) + BORDER_SPACING, maxHeight - BORDER_SPACING - (distances[i + 1] * deltaY));
@@ -60,6 +82,9 @@ public class MyGraph implements IDrawable {
     public void update(World world) {
         this.maxWidth = world.getGraphics().getCanvas().getWidth();
         this.maxHeight = world.getGraphics().getCanvas().getHeight() / 2;
+
+//        if (chyba)
+//            return;
 
         this.deltaX = (maxWidth - 2 * BORDER_SPACING) / distances.length;
         this.deltaY = (maxHeight - 2 * BORDER_SPACING) / distances[distances.length - 1];
@@ -71,7 +96,7 @@ public class MyGraph implements IDrawable {
         Point coords;
         Point direction;
 
-        System.out.println("------------------");
+        //System.out.println("------------------");
 
         for (int i = 0; i < acceleration; i++) {
             coords = new Point(0,0,0);
@@ -87,7 +112,7 @@ public class MyGraph implements IDrawable {
             }
 
             distances[i] = coords.getX();
-            System.out.println(coords.getX());
+            //System.out.println(coords.getX());
         }
     }
 
@@ -120,5 +145,9 @@ public class MyGraph implements IDrawable {
     @Override
     public double getWidthY() {
         return maxHeight;
+    }
+
+    public boolean getChyba() {
+        return chyba;
     }
 }

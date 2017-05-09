@@ -167,31 +167,23 @@ public class Missile implements IDrawable, IMappable {
 
         winds = new ArrayList<>();
 
-        if (azimuth < 0) {
-            azimuth += 360;
-        }
-
         this.azimuth = azimuth;
+        this.elevation = elevation;
 
         azimuth = Math.PI * azimuth / 180;
+        elevation = Math.PI * elevation / 180;
 
         double speedX = 0;
         double speedY = 0;
+        double speedZ = Math.sin(elevation);
 
         if (!(elevation == 90 || elevation == - 90)) {
             speedX = Math.cos(azimuth);
             speedY = Math.sin(azimuth) * -1;
+
+            //speedZ = Math.tan(elevation);
         }
 
-        if (elevation < 0) {
-            elevation += 360;
-        }
-
-        this.elevation = elevation;
-
-        elevation = Math.PI * elevation / 180;
-
-        double speedZ = Math.sin(elevation);
 
         this.direction = new Point(speedX, speedY, speedZ);
         this.coordinates = coordinates.copy().add(this.direction.mul(2));
@@ -243,7 +235,8 @@ public class Missile implements IDrawable, IMappable {
                     continue;
 
                 if (coordinates.getZ() <= surface[iX][iY]) {
-                    System.out.println(surface[iX][iY] + " < " + coordinates.getZ());
+                    //System.out.println(surface[iX][iY] + " < " + coordinates.getZ());
+                    //System.out.println(iX + " - " + iY);
                     return true;
                 }
             }
@@ -295,6 +288,7 @@ public class Missile implements IDrawable, IMappable {
         if (colliding)
             return;
 
+        // zapsani hodnot vetru do "Historie strelby"
         if (updateNo % 10 == 0)
             winds.add(new Wind(world.getWind().getAzimuth(), world.getWind().getSpeed()));
 

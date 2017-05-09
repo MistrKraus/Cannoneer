@@ -2,6 +2,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Created by kraus on 02.05.2017.
@@ -64,7 +68,7 @@ public class VisualManager implements IDrawable {
 //
 //            return;
 //        }
-
+//
         // vychozi rozdeleni
         this.graph = new MyGraph(elevation, acceleration, graph1Width, graph1Height, 0, 0);
         this.visualMissile = new VisualMissile(coordinates, azimuth, elevation, acceleration, graph2Width,
@@ -73,7 +77,7 @@ public class VisualManager implements IDrawable {
         //world.addVisualMissile(visualMissile);
 
         this.terrSide = new TerrainSide(world.getMap().getSurface(), visualMissile.getX(), visualMissile.getY(), visualMissile,
-                world.getScaleX(), world.getScaleY() * 2, world.getMap().getMapWidthM() / (world.getMap().getMapHeightM() / 2), 0, graph2Height);
+                world.getScaleX(), world.getScaleY(), world.getMap().getMapWidthM() / (world.getMap().getMapHeightM() / 2), 0, graph2Height);
 
         //world.removeVisualMissile(visualMissile);
 
@@ -83,6 +87,20 @@ public class VisualManager implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         graph.draw(g, scaleMperPixelX, scaleMperPixelY);
+
+        if (graph.getChyba()) {
+            g.setFill(Color.RED);
+            g.setTextAlign(TextAlignment.CENTER);
+            g.setFont(Font.font("INPACT", FontWeight.BOLD, 20));
+//            g.fillText("CHYBA!", g.getCanvas().getWidth() / 2, g.getCanvas().getHeight() - 30);
+//            g.setFont(Font.font("INPACT", FontWeight.NORMAL, 15));
+            g.fillText("Tyto paramatry nelze\nvizualizovat", g.getCanvas().getWidth() / 2,
+                    3 * g.getCanvas().getHeight() / 4);
+
+            return;
+        }
+
+        //TODO prohodit!
         terrSide.draw(g, scaleMperPixelX, scaleMperPixelY);
         visualMissiles.forEach(missile -> missile.draw(g, scaleMperPixelX, scaleMperPixelY));
     }
@@ -90,6 +108,7 @@ public class VisualManager implements IDrawable {
     @Override
     public void update(World world) {
         graph.update(world);
+
         for (int i = 0; i < 8; i++)
             visualMissiles.forEach(missile -> missile.update(world));
 

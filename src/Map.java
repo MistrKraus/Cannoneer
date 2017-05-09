@@ -73,6 +73,7 @@ public class Map implements IDrawable {
             for (int j = 0; j < terrain[1].length; j++) {
                 int rgb = (int)(terrain[i][j] * scale);
                 Color color = Color.rgb(rgb, rgb, rgb);
+
                 if (minHeightM == maxHeightM)
                     color = Color.GRAY;
 

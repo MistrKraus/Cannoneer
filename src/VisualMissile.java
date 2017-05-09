@@ -19,6 +19,8 @@ public class VisualMissile extends Missile {
     private Point visualCoordinates;
     private Point currentVisualCoord;
 
+    private final double startX;
+
     private ArrayList<MissileCopyingMessenger> missileCopyingMessengerList;
 
     /**
@@ -31,7 +33,7 @@ public class VisualMissile extends Missile {
      * @param acceleration rychlost strely v metrech za sekundu
      * @param maxImgWidth maximalni sirka vykreslene vizualizace
      * @param maxImgHeight maximalni vyska vykreslene vizualizase
-     * @param posX pocatecni x-ova souradnice (v pixelech
+     * @param posX pocatecni x-ova souradnice (v pixelech)
      * @param posY pocatecni y-ova souradnice (v pixelech)
      * @param firstVisualMissile jedna se o prvni instanci visualizovane strely
      * @param world reference na svet
@@ -45,15 +47,17 @@ public class VisualMissile extends Missile {
         this.posX = posX;
         this.posY = posY;
 
-        if (colliding)
-            return;
-
         double x = Math.sqrt(coordinates.getX() * coordinates.getX() + coordinates.getY() * coordinates.getY());
 
         //double rotate = Math.tan((visualCoordinates.getY() - coordinates.getZ()) / (visualCoordinates.getX() - x));
 
         currentVisualCoord = new Point(x, coordinates.getZ(), elevation);
         visualCoordinates = currentVisualCoord.copy();
+
+        startX = visualCoordinates.getX();
+
+        if (colliding)
+            return;
 
         setCollidingPoint(world, firstVisualMissile);
 
@@ -93,7 +97,10 @@ public class VisualMissile extends Missile {
 
         Affine t = g.getTransform();
 
-        g.translate(posX + visualCoordinates.getX() * scaleX - IMG.getWidth() / 2,
+        System.out.println(startX);
+        System.out.println("-----------");
+
+        g.translate(posX + (visualCoordinates.getX() - startX) * scaleX - IMG.getWidth() / 2,
                  g.getCanvas().getHeight() - (posY + visualCoordinates.getY() * scaleY) - IMG.getHeight() / 2);
 
 //            if (i > VISUALIZED_MISSILES_COUNT - visualRotate.length) {
@@ -156,6 +163,7 @@ public class VisualMissile extends Missile {
             //System.out.println("Mimo mapu");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
                     elevation, ACCELERATION, maxImgWidth, maxImgHeight, posX, posY, false, world));
+
             colliding = true;
             return;
         }
@@ -203,14 +211,15 @@ public class VisualMissile extends Missile {
 
             direction = direction.copy().add(TEMP1).add(temp2.mul(MAGIC_B * DELTA_T));
 
-            if (setStartingCoords) {
-//                if (missileCopyingMessengerList.get(missileCopyingMessengerList.size() - 1)
-//                        .coordinates.getPointsDistance(coordinates) > 200)
-                if (loopNuber++ > 150) {
-                    loopNuber = 0;
-                    missileCopyingMessengerList.add(new MissileCopyingMessenger(coordinates, direction));
-                }
-            }
+            //TODO ODKOMENTOVAT!!!
+//            if (setStartingCoords) {
+////                if (missileCopyingMessengerList.get(missileCopyingMessengerList.size() - 1)
+////                        .coordinates.getPointsDistance(coordinates) > 200)
+//                if (loopNuber++ > 150) {
+//                    loopNuber = 0;
+//                    missileCopyingMessengerList.add(new MissileCopyingMessenger(coordinates, direction));
+//                }
+//            }
 
             maxHeight = Math.max(maxHeight, coordinates.getZ());
         }
