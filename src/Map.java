@@ -1,11 +1,8 @@
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.effect.MotionBlur;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -25,14 +22,16 @@ public class Map implements IDrawable {
     private double maxHeightM;
     private double minHeightM;
     private double midHeightM;
+    private double heightRange;
 
     private ImageView terrainImgView = new ImageView();
     private Image terrainImg;
     WritableImage wImage;
 
     private final int IMG_HEIGHT;
-
     private final Point[] RGB_SCALE = new Point[4];
+
+    private final int CONTOUR_LINE_DISTANCE;
 
     public Map(double[][] terrainZm, int mapWidth, int mapHeight, double deltaXm, double deltaYm) {
         this.mapWidth = mapWidth;
@@ -54,28 +53,31 @@ public class Map implements IDrawable {
             }
         }
 
-        minHeightM = surface[0][0];
-        maxHeightM = minHeightM;
+        setMaxMinMidVaule();
 
-        for (int i = 0; i < mapWidth; i++) {
-            for (int j = 0; j < mapHeight; j++) {
-                double height = surface[i][j];
-                minHeightM = Math.min(minHeightM, height);
-                maxHeightM = Math.max(maxHeightM, height);
-            }
+        heightRange = maxHeightM - minHeightM;
+        if (heightRange < 50) {
+            CONTOUR_LINE_DISTANCE = 0;
+            return;
         }
 
-        System.out.println(minHeightM);
-        System.out.println(maxHeightM);
+        if (heightRange < 100) {
+            CONTOUR_LINE_DISTANCE = 10;
+            return;
+        }
 
-        setMaxMinMidVaule();
+        int i = 0;
+        while (heightRange > i * 100 && i < 10)
+            i++;
+
+        CONTOUR_LINE_DISTANCE = i * 10;
     }
 
     public void bufferImage() {
         WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * (mapWidthM / mapHeightM)), IMG_HEIGHT);
         double scale = 255 / maxHeightM;
 
-        double colorSection = (maxHeightM - minHeightM) / RGB_SCALE.length;
+        double colorSection = (heightRange) / RGB_SCALE.length;
         setupColorScale(colorSection);
 
 //        double indexX = mapWidth / terrainImgW.getWidth();
@@ -95,24 +97,8 @@ public class Map implements IDrawable {
         for (int i = 0; i < mapWidth; i++) {
             for (int j = 0; j < mapHeight; j++) {
                 height = terrain[i][j];
-                rgb = (int)(height * scale);
-                color = Color.rgb(rgb, rgb, rgb);
 
-                // vyber barvy
-                for (int k = 0; k < RGB_SCALE.length; k++) {
-                    if (height <= (minHeightM + ((k + 1) * colorSection))) {
-                        System.out.println((minHeightM + colorSection * (k + 1)) - height);
-                        Point rgbPoint = RGB_SCALE[k].copy().mul((minHeightM + colorSection * (k + 1)) - height);
-
-                        color = Color.rgb((int)rgbPoint.getX(), (int)rgbPoint.getY(), (int)rgbPoint.getZ());
-                        //System.out.println(rgbPoint.getX());
-
-                        if (color.equals(Color.BLACK))
-                            color = Color.rgb(210, 178, 0);
-
-                        break;
-                    }
-                }
+                color = pickColor(height, colorSection, scale);
 
                 x = i * pXPerDelta;
                 y = j * pYPerDelta;
@@ -137,6 +123,44 @@ public class Map implements IDrawable {
         wImage = new WritableImage(terrainImg.getPixelReader(), (int)terrainImg.getWidth(), (int)terrainImg.getHeight());
 
         //System.out.println("Sirka: " + terrainImg.getWidth() +"\nVyska: " + terrainImg.getHeight());
+    }
+
+    private Color pickColor(double height, double colorSection, double scale) {
+        int rgb = (int)(height * scale);
+        Color color = Color.rgb(rgb, rgb, rgb);
+
+        // vyber barvy
+        for (int k = 0; k < RGB_SCALE.length; k++) {
+            if (height < (minHeightM + ((k + 1) * colorSection))) {
+                Point rgbPoint = RGB_SCALE[k].copy().mul((minHeightM + colorSection * (k + 1)) - height);
+
+                color = Color.rgb((int)rgbPoint.getX(), (int)rgbPoint.getY(), (int)rgbPoint.getZ());
+
+                if (color.equals(Color.BLACK))
+                    color = Color.rgb(210, 178, 0);
+
+                break;
+            }
+        }
+
+        color = drawContourLines(height, color);
+
+        return color;
+    }
+
+    private Color drawContourLines(double height, Color color) {
+        if (CONTOUR_LINE_DISTANCE == 0)
+            return color;
+
+        double x = heightRange / CONTOUR_LINE_DISTANCE;
+
+        for (int i = 0; i < x; i++) {
+            if (height > (minHeightM + i * CONTOUR_LINE_DISTANCE - CONTOUR_LINE_DISTANCE / (1.3 * x)) &&
+                    height < (minHeightM + i * CONTOUR_LINE_DISTANCE + CONTOUR_LINE_DISTANCE / (1.3 * x)))
+                color = Color.rgb(170, 0, 0);
+        }
+
+        return color;
     }
 
     @Override
@@ -221,16 +245,18 @@ public class Map implements IDrawable {
     }
 
     private void setMaxMinMidVaule() {
+        minHeightM = surface[0][0];
+        maxHeightM = minHeightM;
+
         for (int i = 0; i < mapWidth; i++) {
             for (int j = 0; j < mapHeight; j++) {
-                if (maxHeightM < surface[i][j])
-                    maxHeightM = surface[i][j];
-                if (minHeightM > surface[i][j])
-                    minHeightM = surface[i][j];
+                double height = surface[i][j];
+                minHeightM = Math.min(minHeightM, height);
+                maxHeightM = Math.max(maxHeightM, height);
             }
         }
 
-        midHeightM = (maxHeightM - minHeightM) / 2;
+        midHeightM = (heightRange) / 2;
     }
 
     public void setTerrain(Explosion explosion) {

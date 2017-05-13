@@ -100,7 +100,6 @@ public class MyGraph implements IDrawable {
         this.deltaY = (maxHeight - 2 * (BORDER_SPACING + TEXT_SPACING_Y)) / distances[distances.length - 1];
     }
 
-
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         g.translate(posX, posY);
@@ -151,19 +150,20 @@ public class MyGraph implements IDrawable {
         // vodorovne osy
         g.translate(BORDER_SPACING + TEXT_SPACING_X, 0);
 
+        double temp = maxHeight - BORDER_SPACING;
         for (int i = 1; i < axisVerticalCount; i++) {
             g.strokeLine( TEXT_SPACING_X + i * axisDeltaX, BORDER_SPACING,
-                    TEXT_SPACING_X + i * axisDeltaX, maxHeight - BORDER_SPACING - TEXT_SPACING_Y);
-            g.fillText(String.valueOf(i * axisXstep), TEXT_SPACING_X + i * axisDeltaX, maxHeight - BORDER_SPACING);
+                    TEXT_SPACING_X + i * axisDeltaX, temp - TEXT_SPACING_Y);
+            g.fillText(String.valueOf(i * axisXstep), TEXT_SPACING_X + i * axisDeltaX, temp);
         }
 
         //g.setTransform(t);
 
         // horizontalni osy
         for (int i = 1; i < axisHorizontalCount; i++) {
-            g.strokeLine(TEXT_SPACING_X, maxHeight - BORDER_SPACING - TEXT_SPACING_Y -(i * axisDeltaY),
-                    maxWidth - (2 * BORDER_SPACING + TEXT_SPACING_X), maxHeight - BORDER_SPACING - TEXT_SPACING_Y -(i * axisDeltaY));
-            g.fillText(Integer.toString(i * axisYstep), 0,maxHeight - BORDER_SPACING - TEXT_SPACING_Y -(i * axisDeltaY));
+            g.strokeLine(TEXT_SPACING_X, temp - TEXT_SPACING_Y -(i * axisDeltaY),
+                    maxWidth - (2 * BORDER_SPACING + TEXT_SPACING_X), temp - TEXT_SPACING_Y -(i * axisDeltaY));
+            g.fillText(Integer.toString(i * axisYstep), 0,temp - TEXT_SPACING_Y -(i * axisDeltaY));
         }
 
         //osa Y max hodnota
@@ -176,10 +176,10 @@ public class MyGraph implements IDrawable {
         g.setStroke(Color.BLACK);
         // Osa y
         g.strokeLine(TEXT_SPACING_X, BORDER_SPACING,
-                TEXT_SPACING_X, maxHeight - BORDER_SPACING - TEXT_SPACING_Y);
+                TEXT_SPACING_X, temp - TEXT_SPACING_Y);
         // Osa x
-        g.strokeLine(TEXT_SPACING_X, maxHeight - BORDER_SPACING - TEXT_SPACING_Y,
-                maxWidth - (2 * BORDER_SPACING + TEXT_SPACING_X), maxHeight - BORDER_SPACING - TEXT_SPACING_Y);
+        g.strokeLine(TEXT_SPACING_X, temp - TEXT_SPACING_Y,
+                maxWidth - (2 * BORDER_SPACING + TEXT_SPACING_X), temp - TEXT_SPACING_Y);
 
         return g;
     }
