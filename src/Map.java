@@ -6,6 +6,7 @@ import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by kraus on 24.03.2017.
@@ -21,8 +22,8 @@ public class Map implements IDrawable {
     private double mapHeightM;
     private double deltaXm;
     private double deltaYm;
-    private double maxHeightM = 0;
-    private double minHeightM = Double.MAX_VALUE;
+    private double maxHeightM;
+    private double minHeightM;
     private double midHeightM;
 
     private ImageView terrainImgView = new ImageView();
@@ -30,6 +31,8 @@ public class Map implements IDrawable {
     WritableImage wImage;
 
     private final int IMG_HEIGHT;
+
+    private final Point[] RGB_SCALE = new Point[4];
 
     public Map(double[][] terrainZm, int mapWidth, int mapHeight, double deltaXm, double deltaYm) {
         this.mapWidth = mapWidth;
@@ -51,12 +54,29 @@ public class Map implements IDrawable {
             }
         }
 
+        minHeightM = surface[0][0];
+        maxHeightM = minHeightM;
+
+        for (int i = 0; i < mapWidth; i++) {
+            for (int j = 0; j < mapHeight; j++) {
+                double height = surface[i][j];
+                minHeightM = Math.min(minHeightM, height);
+                maxHeightM = Math.max(maxHeightM, height);
+            }
+        }
+
+        System.out.println(minHeightM);
+        System.out.println(maxHeightM);
+
         setMaxMinMidVaule();
     }
 
     public void bufferImage() {
         WritableImage terrainImgW = new WritableImage((int)(IMG_HEIGHT * (mapWidthM / mapHeightM)), IMG_HEIGHT);
         double scale = 255 / maxHeightM;
+
+        double colorSection = (maxHeightM - minHeightM) / RGB_SCALE.length;
+        setupColorScale(colorSection);
 
 //        double indexX = mapWidth / terrainImgW.getWidth();
 //        double indexY = mapHeight / terrainImgW.getHeight();
@@ -66,22 +86,43 @@ public class Map implements IDrawable {
 
         PixelWriter pixelWriter = terrainImgW.getPixelWriter();
 
-        double x, y;
+        int rgb;
+        double x, y, height;
+        Color color;
+        Random r = new Random();
 
         long now = System.nanoTime();
-        for (int i = 0; i < terrain.length; i++) {
-            for (int j = 0; j < terrain[1].length; j++) {
-                int rgb = (int)(terrain[i][j] * scale);
-                Color color = Color.rgb(rgb, rgb, rgb);
+        for (int i = 0; i < mapWidth; i++) {
+            for (int j = 0; j < mapHeight; j++) {
+                height = terrain[i][j];
+                rgb = (int)(height * scale);
+                color = Color.rgb(rgb, rgb, rgb);
 
-                if (minHeightM == maxHeightM)
-                    color = Color.GRAY;
+                // vyber barvy
+                for (int k = 0; k < RGB_SCALE.length; k++) {
+                    if (height <= (minHeightM + ((k + 1) * colorSection))) {
+                        System.out.println((minHeightM + colorSection * (k + 1)) - height);
+                        Point rgbPoint = RGB_SCALE[k].copy().mul((minHeightM + colorSection * (k + 1)) - height);
+
+                        color = Color.rgb((int)rgbPoint.getX(), (int)rgbPoint.getY(), (int)rgbPoint.getZ());
+                        //System.out.println(rgbPoint.getX());
+
+                        if (color.equals(Color.BLACK))
+                            color = Color.rgb(210, 178, 0);
+
+                        break;
+                    }
+                }
 
                 x = i * pXPerDelta;
                 y = j * pYPerDelta;
 
+                // nastaveni barvy
                 for (int k = 0; k < pXPerDelta; k++) {
                     for (int l = 0; l < pYPerDelta; l++) {
+                        if (minHeightM == maxHeightM)
+                            color = Color.rgb(0, r.nextInt(90) + 110, 0);
+
                         pixelWriter.setColor((int)(x + k), (int)(y + l), color);
                     }
                 }
@@ -229,5 +270,14 @@ public class Map implements IDrawable {
         for (int i = (int)-Math.floor(columnCount / 2); i < (int)Math.ceil(columnCount / 2); i ++)
             for (int j = (int)-Math.floor(rowCount / 2); j < (int)Math.ceil(rowCount / 2); j++)
                 surface[x + i][y + j] -= object.getHeight();
+    }
+
+    private void setupColorScale(double colorSection) {
+        RGB_SCALE[0] = new Point(209 / (colorSection), 178 / (colorSection) ,0);
+        RGB_SCALE[1] = new Point(0, 147 / ((colorSection )), 0);
+        RGB_SCALE[2] = new Point(86 / ((colorSection)),
+                55 / ((colorSection)),0);
+        RGB_SCALE[3] = new Point(255 / ((colorSection)),
+                255 / ((colorSection)), 255 / ((colorSection)));
     }
 }

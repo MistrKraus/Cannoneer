@@ -27,6 +27,9 @@ public class VisualManager implements IDrawable {
     private double graph1Height;
     private double graph2Width;
     private double graph2Height;
+    private double colorScale;
+    private double redScale = 53 / 255;
+    private double greenScale = 173 / 255;
 
     private PrintWriter printWriter;
 
@@ -44,6 +47,8 @@ public class VisualManager implements IDrawable {
         graph1Height = canvas.getHeight() / 2;
         graph2Width = canvas.getWidth();
         graph2Height = canvas.getHeight() / 2;
+
+        colorScale = graph2Height / 255;
 
 //        // rozdeleni na ose X
 //        if (splitX1 == splitCood2) {
@@ -102,16 +107,11 @@ public class VisualManager implements IDrawable {
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         g.setFill(Color.rgb(150, 212, 255));
-        g.fillRect(0,0, g.getCanvas().getWidth(), g.getCanvas().getHeight() / 2);
-
-        double heigth = g.getCanvas().getHeight() / 2;
-        double scale = heigth / 255;
-        double redScale = 53 / 255;
-        double greenScale = 173 / 255;
+        g.fillRect(0,0, g.getCanvas().getWidth(), graph1Height);
 
         for (int i = 0; i < 255; i++) {
             g.setFill(Color.rgb((int)(150 -(i * redScale)), (int)(212 - (i * greenScale)), 255 - i));
-            g.fillRect(0, heigth + i * scale, g.getCanvas().getWidth(), heigth + i * scale);
+            g.fillRect(0, graph1Height + i * colorScale, g.getCanvas().getWidth(), graph1Height + i * colorScale);
         }
 
         graph.draw(g, scaleMperPixelX, scaleMperPixelY);
@@ -134,6 +134,13 @@ public class VisualManager implements IDrawable {
 
     @Override
     public void update(World world) {
+        graph1Width = world.getGraphics().getCanvas().getWidth();
+        graph1Height = world.getGraphics().getCanvas().getHeight() / 2;
+        graph2Width = world.getGraphics().getCanvas().getWidth();
+        graph2Height = world.getGraphics().getCanvas().getHeight() / 2;
+
+        colorScale = graph2Height / 255;
+
         graph.update(world);
 
         for (int i = 0; i < 8; i++)

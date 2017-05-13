@@ -98,6 +98,8 @@ public class VisualMissile extends Missile {
 
         Affine t = g.getTransform();
 
+        IMG = imgV.getImage();
+
 //        System.out.println(startX);
 //        System.out.println("-----------");
 

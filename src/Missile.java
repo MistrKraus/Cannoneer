@@ -30,7 +30,6 @@ public class Missile implements IDrawable, IMappable {
     protected double strikeRadius;
     protected double azimuth;
     protected double elevation;
-    /** vzdalenost mezi novymi a soucasnymi souradnicemi*/
     protected double distance;
     //protected double visualRotate;
 
@@ -65,7 +64,7 @@ public class Missile implements IDrawable, IMappable {
 
     protected static final Point MAGIC_POINT = new Point(0,0,-1);
 
-    protected static final boolean DEFAULT_VISUALIZE = false;
+    //protected static final boolean DEFAULT_VISUALIZE = false;
 
     protected static final String IMG_PATH = "images/missile.png";
 
@@ -204,7 +203,7 @@ public class Missile implements IDrawable, IMappable {
 
         try {
             imgV = new ImageView(new Image(IMG_PATH));
-            //IMG = imgV.getImage();
+            IMG = imgV.getImage();
         } catch (Exception e) {
             WritableImage imgW = new WritableImage(7, 5);
 
@@ -229,10 +228,15 @@ public class Missile implements IDrawable, IMappable {
                 pixelWriter.setColor(i + 3, 2, Color.WHITE);
 
             imgV = new ImageView(imgW);
-            //IMG = imgV.getImage();
+            IMG = imgV.getImage();
         }
 
-        imgV.setPreserveRatio(true);
+//        imgV.setPreserveRatio(false);
+//        imgV.resize(14, 10);
+//
+//        IMG = imgV.getImage();
+//        System.out.println(imgV.getImage().getWidth());
+//        System.out.println(IMG.getWidth());
     }
 
     public Point getCollidingPoint() {
@@ -310,13 +314,15 @@ public class Missile implements IDrawable, IMappable {
     public void draw(GraphicsContext g, double scaleX, double scaleY) {
 //        g.setFill(Color.ORANGE);
 //        g.fillOval((coordinates.getX() - 3 / 2) * scaleX, (coordinates.getY() - 3 / 2) * scaleY, 3, 3);
+
+
+//        double scale = coordinates.getZ() / Math.max(300, startZ);
+//        imgV.setFitHeight(30);
+//        imgV.setFitWidth(30);
+//        IMG = imgV.getImage();
         Affine t = g.getTransform();
         g.translate((coordinates.getX() - IMG.getWidth() / 2) * scaleX, (coordinates.getY() - IMG.getHeight() / 2) * scaleY);
         g.rotate(-azimuth);
-
-        // coordinates.getZ() / startZ;
-
-        IMG = imgV.getImage();
 
         g.drawImage(IMG, 0, 0);
         g.setTransform(t);
