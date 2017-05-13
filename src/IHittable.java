@@ -17,6 +17,12 @@ public interface IHittable extends IMappable, IDrawable {
         return (coordinates.getPointsDistance(targetCoordinates) < radius);
     }
 
+    int getHp();
+
+    double getMapX();
+
+    double getMapY();
+
     /**
      * Urci pocet zraneni, ktere cil utrpel
      */

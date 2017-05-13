@@ -9,8 +9,13 @@ import javafx.scene.paint.Color;
  */
 public class Target implements IHittable {
 
-    protected final Image IMG;
+    /** zivoty ~ hp cile*/
+    protected int hp;
 
+    protected double mapX;
+    protected double mapY;
+
+    protected final Image IMG;
     private static final String IMG_PATH = "images/target1.png";
     /** defaultni pocet hp*/
     protected static final int DEFAULT_HP = 100;
@@ -18,8 +23,9 @@ public class Target implements IHittable {
     protected static final double DEFAULT_HEIGHT = 1;
     /** souracnice cile v metrech */
     protected Point coordinates;
-    /** zivoty ~ hp cile*/
-    protected int hp;
+    protected static int pocet = 0;
+    protected final int PORADI = ++pocet;
+    protected Banner banner;
 
     /**
      * Konstruktor prirazujuci cili vychozi pocet zivotu ~ hp
@@ -70,6 +76,7 @@ public class Target implements IHittable {
         //System.out.println("tarX: " + point.getX() + " tarY" + point.getY());
 
         IMG = loadImage(imgPath);
+        banner = new Banner(this);
     }
 
     public Image loadImage(String path) {
@@ -108,7 +115,12 @@ public class Target implements IHittable {
 //        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
 //        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
 
-        g.drawImage(IMG, (int)(getX() * scaleX - IMG.getWidth() / 2), (int)(getY() * scaleY - IMG.getHeight() / 2));
+        mapX = (getX() * scaleX - IMG.getWidth() / 2);
+        mapY = (getY() * scaleY - IMG.getHeight() / 2);
+
+        g.drawImage(IMG, mapX, mapY);
+
+        banner.draw(g, scaleX, scaleY);
 
 //        System.out.println("Taget\n metryX: " + getX() + "\n metryY: " + getY() +
 //                "\n X: " + (int)(getX() * scaleX - IMG.getWidth() / 2) +
@@ -128,21 +140,31 @@ public class Target implements IHittable {
             System.out.println("Cil zasazen");
             world.removeTarget(this);
         }
+
+        banner.update(world);
     }
 
     @Override
     public double getHeight() {
-        return 1;
+        return IMG.getHeight();
     }
 
     @Override
     public double getWidthX() {
-        return 1;
+        return IMG.getWidth();
     }
 
     @Override
     public double getWidthY() {
         return 1;
+    }
+
+    public double getMapX() {
+        return mapX;
+    }
+
+    public double getMapY() {
+        return mapY;
     }
 
     /**
@@ -171,11 +193,6 @@ public class Target implements IHittable {
      */
     @Override
     public String toString() {
-        return "Target: " +
-                hp + " HP " +
-                "[" + coordinates.getX() +
-                ", " + coordinates.getY() +
-                ", " + coordinates.getZ() +
-                "]";
+        return "Target" + PORADI;
     }
 }

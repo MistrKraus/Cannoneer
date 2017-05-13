@@ -1,6 +1,8 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.*;
 
+import java.util.Random;
+
 
 /**
  * Created by kraus on 20.03.2017.
@@ -12,7 +14,8 @@ public class Explosion implements IDrawable, IMappable {
     private Missile missile;
 
     private Point coordinates;
-    private double radius;
+    private final int dmg;
+    private final double radius;
 
     /**
      * kontruktor exploze
@@ -20,10 +23,12 @@ public class Explosion implements IDrawable, IMappable {
      * @param missile strela, ktera dopadla
      */
     public Explosion(Missile missile) {
+        this.missile = missile;
+
         this.coordinates = missile.getCoordinates().copy();
         this.radius = missile.getStrikeRadius();
 
-        this.missile = missile;
+        this.dmg = missile.getDmg();
     }
 
     /**
@@ -34,8 +39,9 @@ public class Explosion implements IDrawable, IMappable {
     public void explode(World world) {
         world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
             .forEach(target -> {
-                    target.dealtDamage(100);
-                    missile.setCollidingSpot("Cíl");
+                    target.dealtDamage((new Random().nextInt(dmg)));
+
+                    missile.setCollidingSpot(target.toString());
             });
 
 

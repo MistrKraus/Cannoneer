@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -25,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 /**
@@ -102,6 +104,8 @@ public class MainController implements Initializable {
 
         defaultStageWidth = stage.getWidth();
         defaultStageHeight = stage.getHeight();
+
+        stage.setOnCloseRequest(event -> Platform.exit());
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             double width = defaultStageWidth - newValue.doubleValue();
@@ -362,5 +366,14 @@ public class MainController implements Initializable {
 
     public void close(ActionEvent actionEvent) {
         stage.close();
+    }
+
+    public void addNewTarget(ActionEvent actionEvent) {
+        Random r = new Random();
+        double x = r.nextInt((int) data.getMap().getMapWidthM());
+        double y = r.nextInt((int) data.getMap().getMapHeightM());
+        double z = data.getMap().getTerrain()[(int)(x * world.getScaleX())][(int)(y * world.getScaleY())];
+
+        world.addTarget(new Target(x, y, z));
     }
 }

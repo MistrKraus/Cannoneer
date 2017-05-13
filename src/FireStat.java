@@ -45,17 +45,16 @@ public class FireStat {
             wSpeed += wind.getSpeed();
         }
         wDir /= missile.getWinds().size();
-        wDir = 310;
         windSpeed = Math.round((wSpeed / missile.getWinds().size()) * 100) / 100;
 
 
         if (wDir >= 330 || wDir < 30) {
-            windDirection = "Východ";
+            windDirection = "Vychod";
             return;
         }
 
         if (wDir >= 30 && wDir < 60) {
-            windDirection = "Jiho-východ";
+            windDirection = "Jiho-vychod";
             return;
         }
 
@@ -65,17 +64,17 @@ public class FireStat {
         }
 
         if (wDir >= 120 && wDir < 150) {
-            windDirection = "Jiho-západ";
+            windDirection = "Jiho-zapad";
             return;
         }
 
         if (wDir >= 150 && wDir < 210) {
-            windDirection = "Západ";
+            windDirection = "Zapad";
             return;
         }
 
         if (wDir >= 210 && wDir < 240) {
-            windDirection = "Severo-západ";
+            windDirection = "Severo-zapad";
             return;
         }
 
@@ -85,7 +84,7 @@ public class FireStat {
         }
 
         if (wDir >= 300 && wDir < 330) {
-            windDirection = "Severo-východ";
+            windDirection = "Severo-vychod";
             return;
         }
 

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -29,6 +30,7 @@
             <Menu mnemonicParsing="false" text="Možnosti">
                 <items>
                     <MenuItem mnemonicParsing="false" onAction="#openEditor" text="Editor map" />
+               <MenuItem mnemonicParsing="false" onAction="#addNewTarget" text="Přidat nový cíl" />
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Nápověda">
@@ -61,6 +63,7 @@
                         <Insets left="10.0" />
                     </padding>
                 </Label>
+            <!--<ComboBox fx:id="targetComboBox" maxWidth="62" promptText="Target1" />-->
                 <Label layoutX="4.0" layoutY="81.0" prefHeight="17.0" prefWidth="20.0" text="Cíl:">
                     <padding>
                         <Insets top="10" />
@@ -117,8 +120,8 @@
                    </HBox.margin>
                 </Label>
                 <VBox spacing="3.0">
-                    <Button minHeight="25.0" minWidth="73.0" onAction="#handleBtnFire" fx:id="btnFire" text="FIRE" textAlignment="CENTER" />
-                    <Button minHeight="25.0" minWidth="73.0" onAction="#handleBtnVizualzuj" fx:id="btnVisual" text="Vizualizuj" textAlignment="CENTER" />
+                    <Button fx:id="btnFire" minHeight="25.0" minWidth="73.0" onAction="#handleBtnFire" text="FIRE" textAlignment="CENTER" />
+                    <Button fx:id="btnVisual" minHeight="25.0" minWidth="73.0" onAction="#handleBtnVizualzuj" text="Vizualizuj" textAlignment="CENTER" />
                     <padding>
                         <Insets bottom="10" left="10" />
                     </padding>

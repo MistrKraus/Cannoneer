@@ -281,7 +281,7 @@ public class World {
         draw();
 
         graphics.setFill(Color.RED);
-        graphics.setFont(Font.font("INPACT", FontWeight.BOLD, 10));
+        graphics.setFont(Font.font("INPACT", FontWeight.BOLD, 30));
         graphics.setTextAlign(TextAlignment.CENTER);
         graphics.fillText("KONEC HRY!", graphics.getCanvas().getWidth() / 2,
                 graphics.getCanvas().getHeight() / 2, graphics.getCanvas().getWidth() / 2);

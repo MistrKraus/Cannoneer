@@ -31,7 +31,7 @@ public class Missile implements IDrawable, IMappable {
     protected double azimuth;
     protected double elevation;
     protected double distance;
-    //protected double visualRotate;
+    private int dmg;
 
     protected boolean colliding = false;
 
@@ -61,6 +61,7 @@ public class Missile implements IDrawable, IMappable {
     protected static final double GRAVITY = 10;
     protected static final double DELTA_T = 0.01;
     protected static final double MAGIC_B = 0.05;
+    private static final int DMG = 100;
 
     protected static final Point MAGIC_POINT = new Point(0,0,-1);
 
@@ -79,7 +80,7 @@ public class Missile implements IDrawable, IMappable {
      * @param acceleration rychlost strely v metrech za sekundu
      */
     public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration) {
-        this(new Point(x,y,z), azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS);
+        this(new Point(x,y,z), azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS, DMG);
     }
 
 //    /**
@@ -106,7 +107,7 @@ public class Missile implements IDrawable, IMappable {
      * @param acceleration rychlost strely v metrech za sekundu
      */
     public Missile(Point coordinates, double azimuth, double elevation, double acceleration) {
-        this(coordinates, azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS);
+        this(coordinates, azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS, DMG);
     }
 
 //    /**
@@ -122,6 +123,10 @@ public class Missile implements IDrawable, IMappable {
 //        this(coordinates, azimuth, elevation, acceleration, DEFAULT_STRIKE_RADIUS, visual, world);
 //    }
 
+    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration, double strikeRadius, int damage) {
+        this(new Point(x,y,z), azimuth, elevation, acceleration, strikeRadius, damage);
+    }
+
     /**
      * pretizeni konstruktoru
      *
@@ -133,8 +138,8 @@ public class Missile implements IDrawable, IMappable {
      * @param acceleration rychlost strely v metrech za sekundu
      * @param strikeRadius prumer vybuchu strely
      */
-    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration, double strikeRadius) {
-        this(new Point(x,y,z), azimuth, elevation, acceleration, strikeRadius);
+    public Missile(double x, double y, double z, double azimuth, double elevation, double acceleration, int strikeRadius) {
+        this(new Point(x,y,z), azimuth, elevation, acceleration, strikeRadius, DMG);
     }
 
 //    /**
@@ -164,9 +169,23 @@ public class Missile implements IDrawable, IMappable {
      * @param strikeRadius prumer vybuchu strely
      */
     public Missile(Point coordinates, double azimuth, double elevation, double acceleration, double strikeRadius) {
+        this(coordinates, azimuth, elevation, acceleration, strikeRadius, DMG);
+    }
+
+    /**
+     * konstruktor
+     *
+     * @param coordinates souradnice v metrech
+     * @param azimuth aizmut ve stupnich
+     * @param elevation zdvih dela ve stupnich
+     * @param acceleration rychlost strely v metrech za sekundu
+     * @param strikeRadius prumer vybuchu strely
+     */
+    public Missile(Point coordinates, double azimuth, double elevation, double acceleration, double strikeRadius, int damage) {
         //System.out.printf(PORADI + ". %-10.2f%-10.2f%-10.2f\n", azimuth, elevation, acceleration);
         this.strikeRadius = strikeRadius;
         this.ACCELERATION = acceleration;
+        this.dmg = damage;
 
         winds = new ArrayList<>();
 
@@ -394,7 +413,7 @@ public class Missile implements IDrawable, IMappable {
         }
 
         if (isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY())) {
-            this.collidingSpot = "Terén";
+            this.collidingSpot = "Teren";
 
             //isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY(), world.getMap().getMapWidthM(), world.getMap().getMapHeightM());
 
@@ -426,6 +445,10 @@ public class Missile implements IDrawable, IMappable {
 
     public ArrayList<Wind> getWinds() {
         return winds;
+    }
+
+    public int getDmg() {
+        return dmg;
     }
 
     /**

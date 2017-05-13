@@ -53,6 +53,7 @@ public class Player extends Target implements IShooting {
      */
     public Player(Point point, int hp) {
         super(point, hp, IMG_PATH);
+        banner = new Banner(this);
     }
 
     public void setAzimuth(double azimuth) {
@@ -87,12 +88,16 @@ public class Player extends Target implements IShooting {
 //        g.strokeLine(getX() * scaleX - 5, getY() * scaleY, getX() * scaleX + 5, getY() * scaleY);
 //        g.strokeLine(getX() * scaleX, getY() * scaleY + 5, getX() * scaleX, getY() * scaleY - 5);
 
+        mapX = (getX() * scaleX - IMG.getWidth() / 2);
+        mapY = (getY() * scaleY - IMG.getHeight() / 2);
+
         Affine t = g.getTransform();
         g.translate((int)(getX() * scaleX), (int)(getY() * scaleY));
         g.rotate(-azimuth);
         g.drawImage(IMG, - (IMG.getWidth() - IMG_CANNON_WIDTH) / 2, -IMG.getHeight() / 2);
         g.setTransform(t);
 
+        //banner.draw(g, scaleX, scaleY);
 //        System.out.println("Player:\n metryX: " + getX() + "\n metryY: " + getY() +
 //                "\n X: " +(int)(getX() * scaleX - IMG.getWidth() / 2) +
 //                "\n Y: " + (int)(getY() * scaleY - IMG.getHeight() / 2));
@@ -113,15 +118,19 @@ public class Player extends Target implements IShooting {
 
     }
 
+    @Override
+    public void update(World world) {
+        if (hp <= 0)
+            System.out.println("Hrac znicen");
+
+        //banner.update(world);
+    }
+
     /**
      * @return retezec popisujici instanci daneho hrace
      */
     @Override
     public String toString() {
-        return "Player: " +
-                hp + " HP " +
-                "[" + coordinates.getX() +
-                ", " + coordinates.getY() +
-                ", ]" + coordinates.getZ();
+        return "Player" + PORADI;
     }
 }
