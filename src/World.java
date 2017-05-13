@@ -10,6 +10,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,23 +45,25 @@ public class World {
      * metry na index v poli
      */
     private double scaleX;
-
     private double scaleY;
     /**
      * pixely na metr
      */
     private double scalePixelperMX;
     private double scalePixelperMY;
-    // TODO budouci moznost iterace
-    private int playerIndex = 0;
+
+    private double visualTime;
 
     private boolean isRunning = false;
-
+    // TODO budouci moznost iterace
+    private int playerIndex = 0;
     private boolean isVisuializing = false;
 
     private Point vMissileFirstCoord;
     private VisualManager visualManager;
     private TerrainSide terrSide;
+
+    private static final int DEFAULT_VISUAL_TIME = 10;
 
     /**
      * konstruktor
@@ -239,18 +243,17 @@ public class World {
      * vykresli vsechny objekty
      */
     public void draw() {
-        scalePixelperMX = graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
-        scalePixelperMY = graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
-
-        graphics.setFill(Color.GRAY);
-        graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
-
         if (isVisuializing) {
             visualManager.draw(graphics, visualManager.getTerrSide().getScaleX(), visualManager.getTerrSide().getScaleY());
 //            terrSide.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY());
 //            visualMissiles.forEach(missile -> missile.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY()));
             return;
         }
+        scalePixelperMX = graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
+        scalePixelperMY = graphics.getCanvas().getHeight() / data.getMap().getMapHeightM();
+
+        graphics.setFill(Color.GRAY);
+        graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
 
         map.draw(graphics, scalePixelperMX, scalePixelperMY);
         targets.forEach(target -> target.draw(graphics, scalePixelperMX, scalePixelperMY));
@@ -289,7 +292,7 @@ public class World {
         timeline.pause();
     }
 
-    public void visualize(double azimuth, double elevation, double speed) {
+    public void visualize(double azimuth, double elevation, double speed) throws FileNotFoundException, UnsupportedEncodingException {
         visualManager = new VisualManager(azimuth, elevation, speed, this);
 
         update();
@@ -390,6 +393,14 @@ public class World {
 
     public ObservableList<VisualMissile> getVisualMissiles() {
         return visualMissiles;
+    }
+
+    public double getVisualTime() {
+        return visualTime;
+    }
+
+    public static int getDefaultVisualTime() {
+        return DEFAULT_VISUAL_TIME;
     }
 
     public boolean isRunning() {

@@ -23,20 +23,22 @@ public class VisualMissile extends Missile {
 
     private ArrayList<MissileCopyingMessenger> missileCopyingMessengerList;
 
+    private ArrayList<Double> heights = new ArrayList<>();
+
     /**
      * konstruktor
      * provede potrebnou matematiku pro pohyb rakety
      *
-     * @param coordinates souradnice v metrech
-     * @param azimuth aizmut ve stupnich
-     * @param elevation zdvih dela ve stupnich
-     * @param acceleration rychlost strely v metrech za sekundu
-     * @param maxImgWidth maximalni sirka vykreslene vizualizace
-     * @param maxImgHeight maximalni vyska vykreslene vizualizase
-     * @param posX pocatecni x-ova souradnice (v pixelech)
-     * @param posY pocatecni y-ova souradnice (v pixelech)
+     * @param coordinates        souradnice v metrech
+     * @param azimuth            aizmut ve stupnich
+     * @param elevation          zdvih dela ve stupnich
+     * @param acceleration       rychlost strely v metrech za sekundu
+     * @param maxImgWidth        maximalni sirka vykreslene vizualizace
+     * @param maxImgHeight       maximalni vyska vykreslene vizualizase
+     * @param posX               pocatecni x-ova souradnice (v pixelech)
+     * @param posY               pocatecni y-ova souradnice (v pixelech)
      * @param firstVisualMissile jedna se o prvni instanci visualizovane strely
-     * @param world reference na svet
+     * @param world              reference na svet
      */
     public VisualMissile(Point coordinates, double azimuth, double elevation, double acceleration, double maxImgWidth,
                          double maxImgHeight, double posX, double posY, boolean firstVisualMissile, World world) {
@@ -59,9 +61,9 @@ public class VisualMissile extends Missile {
         if (colliding)
             return;
 
-        setCollidingPoint(world, firstVisualMissile);
-
         if (firstVisualMissile) {
+            setCollidingPoint(world);
+
             for (MissileCopyingMessenger startCoord :
                     missileCopyingMessengerList) {
 
@@ -73,15 +75,14 @@ public class VisualMissile extends Missile {
                 visualMissile.setDirection(startCoord.direction);
                 world.addVisualMissile(visualMissile);
             }
+            world.removeVisualMissile(this);
         }
-
-        //world.removeVisualMissile(this);
     }
 
     /**
      * vizualizuje strelu
      *
-     * @param g graficky kontext, ktery nakresli instanci
+     * @param g      graficky kontext, ktery nakresli instanci
      * @param scaleX hodnota, ktera po vynasobeni x-ove souradnice v metrech urci tuto souradnici v pixelech
      * @param scaleY hodnota, ktera po vynasobeni y-ove souradnice v metrech urci tuto souradnici v pixelech
      */
@@ -101,7 +102,7 @@ public class VisualMissile extends Missile {
 //        System.out.println("-----------");
 
         g.translate(posX + (visualCoordinates.getX() - startX) * scaleX - IMG.getWidth() / 2,
-                 g.getCanvas().getHeight() - (posY + visualCoordinates.getY() * scaleY) - IMG.getHeight() / 2);
+                g.getCanvas().getHeight() - (posY + visualCoordinates.getY() * scaleY) - IMG.getHeight() / 2);
 
 //            if (i > VISUALIZED_MISSILES_COUNT - visualRotate.length) {
 //                double newRotate;
@@ -134,8 +135,10 @@ public class VisualMissile extends Missile {
 
     @Override
     public void update(World world) {
-        if (colliding)
+        if (colliding) {
+            //System.out.print("!");
             return;
+        }
 
         visualCoordinates = currentVisualCoord.copy();
 
@@ -151,10 +154,17 @@ public class VisualMissile extends Missile {
         currentVisualCoord = new Point(x, coordinates.getZ(), 0);
 
         //double rotate = Math.tan((visualCoordinates.getY() - coordinates.getZ()) / (visualCoordinates.getX() - x));
-        double rotate = (Math.tan((visualCoordinates.getY() - currentVisualCoord.getY()) /
+        double rotate;
+        if (elevation > 90 && elevation < 270)
+            rotate = (Math.atan((visualCoordinates.getY() - currentVisualCoord.getY()) /
+                    (visualCoordinates.getX() - currentVisualCoord.getX())) * 180) / Math.PI;
+        else
+            rotate = (Math.atan((-visualCoordinates.getY() + currentVisualCoord.getY()) /
                 (visualCoordinates.getX() - currentVisualCoord.getX())) * 180) / Math.PI;
 
-        currentVisualCoord.setZ(-rotate);
+        //System.out.println("Rotate " + rotate);
+
+        currentVisualCoord.setZ(rotate);
 
         //System.out.print(String.format("(" + PORADI + ") %.2f m", + coordinates.getX()));
 
@@ -163,6 +173,8 @@ public class VisualMissile extends Missile {
             //System.out.println("Mimo mapu");
             world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates().copy(), azimuth,
                     elevation, ACCELERATION, maxImgWidth, maxImgHeight, posX, posY, false, world));
+
+            //System.out.println("MS: " + world.getPlayer().getCoordinates().getX() + " - " + world.getPlayer().getCoordinates().getY());
 
             colliding = true;
             return;
@@ -188,7 +200,15 @@ public class VisualMissile extends Missile {
         return maxHeight;
     }
 
+    public ArrayList<Double> getHeights() {
+        return heights;
+    }
+
     public void setStartingCoordLists(World world) {
+        setCollidingPoint(world, true);
+    }
+
+    public void setCollidingPoint(World world) {
         setCollidingPoint(world, true);
     }
 
@@ -201,32 +221,55 @@ public class VisualMissile extends Missile {
         Point currentCoord = coordinates.copy();
         Point currentDirection = direction.copy();
 
+        double mapWidthM = world.getMap().getMapWidthM();
+        double mapHeightM = world.getMap().getMapHeightM();
+        double scaleX = world.getScaleX();
+        double scaleY = world.getScaleY();
+        double[][] surface = world.getMap().getSurface();
+
+        int iX = -1;
+        int iY = -1;
+        int iXcurr;
+        int iYcurr;
+
         maxHeight = 0;
         int loopNuber = 0;
-        while (!isOutsideMap(world.getMap().getMapWidthM(), world.getMap().getMapHeightM())
-                && !isColliding(world.getMap().getSurface(), world.getScaleX(), world.getScaleY())) {
+        while (!isOutsideMap(mapWidthM, mapHeightM) && !isColliding(surface, scaleX, scaleY)) {
+
+            iXcurr = (int) (coordinates.getX() * scaleX);
+            iYcurr = (int) (coordinates.getY() * scaleY);
+
+            if (iX != iXcurr || iY != iYcurr)
+                heights.add(surface[iXcurr][iYcurr]);
+
+            iX = iXcurr;
+            iY = iYcurr;
 
             coordinates = coordinates.copy().add((direction.copy()).mul(DELTA_T));
             Point temp2 = new Point(0, 0, 0).sub(direction.copy());
 
             direction = direction.copy().add(TEMP1).add(temp2.mul(MAGIC_B * DELTA_T));
 
-            //TODO ODKOMENTOVAT!!!
-//            if (setStartingCoords) {
-////                if (missileCopyingMessengerList.get(missileCopyingMessengerList.size() - 1)
-////                        .coordinates.getPointsDistance(coordinates) > 200)
-//                if (loopNuber++ > 150) {
-//                    loopNuber = 0;
-//                    missileCopyingMessengerList.add(new MissileCopyingMessenger(coordinates, direction));
-//                }
-//            }
+            if (setStartingCoords) {
+//                if (missileCopyingMessengerList.get(missileCopyingMessengerList.size() - 1)
+//                        .coordinates.getPointsDistance(coordinates) > 200)
+                if (loopNuber++ > 150) {
+                    loopNuber = 0;
+                    missileCopyingMessengerList.add(new MissileCopyingMessenger(coordinates, direction));
+                }
+            }
 
             maxHeight = Math.max(maxHeight, coordinates.getZ());
         }
+        //heights.add(surface[iX][iY]);
+
         collidingPoint = coordinates.copy();
+        //System.out.println("ME " + iX + " - " + iY);
 
         coordinates = currentCoord.copy();
         direction = currentDirection.copy();
+
+        //System.out.println(coordinates.getX() + " - " + coordinates.getY());
 
         double x = Math.sqrt(coordinates.getX() * coordinates.getX() + coordinates.getY() * coordinates.getX());
 

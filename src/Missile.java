@@ -1,8 +1,12 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
+import javax.imageio.ImageWriter;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 public class Missile implements IDrawable, IMappable {
 
     protected int updateNo;
+    protected double startZ;
 
     protected String collidingSpot = "---";
 
@@ -46,14 +51,13 @@ public class Missile implements IDrawable, IMappable {
 
     protected final double ACCELERATION;
 
-    //protected final boolean VISUALIZE;
-
     protected final Point TEMP1;
-    protected final Image IMG;
+    protected Image IMG;
+    protected ImageView imgV;
 
     //protected static final int VISUALIZED_MISSILES_COUNT = 8;
     /** vychozi okoli (v metrech), ktere muze byt srelou zasazeno */
-    protected static final double HITBOX_TOLERANCE = 3;
+    protected static final double HITBOX_TOLERANCE = 0;
     protected static final double DEFAULT_STRIKE_RADIUS = 60;
     protected static final double GRAVITY = 10;
     protected static final double DELTA_T = 0.01;
@@ -187,6 +191,7 @@ public class Missile implements IDrawable, IMappable {
 
         this.direction = new Point(speedX, speedY, speedZ);
         this.coordinates = coordinates.copy().add(this.direction.mul(2));
+        this.startZ = coordinates.getZ();
         this.direction.mul(ACCELERATION);
         this.newCoord = this.coordinates.copy();
         this.TEMP1 = MAGIC_POINT.copy().mul(DELTA_T * GRAVITY);
@@ -197,7 +202,37 @@ public class Missile implements IDrawable, IMappable {
 //        } else
 //            MAX_VISUAL_INDEX = 0;
 
-        IMG = new Image(IMG_PATH);
+        try {
+            imgV = new ImageView(new Image(IMG_PATH));
+            //IMG = imgV.getImage();
+        } catch (Exception e) {
+            WritableImage imgW = new WritableImage(7, 5);
+
+            PixelWriter pixelWriter = imgW.getPixelWriter();
+
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 2; j++)
+                    pixelWriter.setColor(i,j * 4, Color.RED);
+            
+            for (int i = 1; i < 5; i++)
+                for (int j = 0; j < 2; j++)
+                    pixelWriter.setColor(i, j * 2 + 1, Color.WHITE);
+
+            pixelWriter.setColor(5,1, Color.RED);
+            pixelWriter.setColor(6, 2, Color.RED);
+            pixelWriter.setColor(5,3, Color.RED);
+
+            for (int i = 0; i < 3; i++)
+                pixelWriter.setColor(i,2, Color.RED);
+
+            for (int i = 0; i < 3; i++)
+                pixelWriter.setColor(i + 3, 2, Color.WHITE);
+
+            imgV = new ImageView(imgW);
+            //IMG = imgV.getImage();
+        }
+
+        imgV.setPreserveRatio(true);
     }
 
     public Point getCollidingPoint() {
@@ -213,8 +248,12 @@ public class Missile implements IDrawable, IMappable {
      * @return zda-li strela neco zasahla
      */
     public boolean isColliding(double[][] surface, double scaleX, double scaleY) {
-        int iX;// = (int)(coordinates.getX() * scaleX);
-        int iY;// = (int)(coordinates.getY() * scaleY);
+        int iX = (int)(coordinates.getX() * scaleX);
+        int iY = (int)(coordinates.getY() * scaleY);
+
+        //System.out.println(surface[iX][iY]);
+
+        return coordinates.getZ() <= surface[iX][iY];
 
         //return coordinates.getZ() <= surface[iX][iY];
 
@@ -226,25 +265,26 @@ public class Missile implements IDrawable, IMappable {
 //            return false;
 //        }
 
-        for (int i =  -1; i < HITBOX_TOLERANCE; i++) {
-            for (int j = -1; j < HITBOX_TOLERANCE; j++) {
-                iX = (int)((coordinates.getX() + i) * scaleX);
-                iY = (int)((coordinates.getY() + j) * scaleY);
 
-                if (iX < 0 || iX >= surface.length || iY < 0 || iY >= surface[0].length)
-                    continue;
-
-                if (coordinates.getZ() <= surface[iX][iY]) {
-                    //System.out.println(surface[iX][iY] + " < " + coordinates.getZ());
-                    //System.out.println(iX + " - " + iY);
-                    return true;
-                }
-            }
-        }
+//        for (int i =  -1; i < HITBOX_TOLERANCE; i++) {
+//            for (int j = -1; j < HITBOX_TOLERANCE; j++) {
+//                iX = (int)((coordinates.getX() + i) * scaleX);
+//                iY = (int)((coordinates.getY() + j) * scaleY);
+//
+//                if (iX < 0 || iX >= surface.length || iY < 0 || iY >= surface[0].length)
+//                    continue;
+//
+//                if (coordinates.getZ() <= surface[iX][iY]) {
+//                    //System.out.println(surface[iX][iY] + " < " + coordinates.getZ());
+//                    //System.out.println("ME " + iX + " - " + iY);
+//                    return true;
+//                }
+//            }
+//        }
 
         //System.out.println("Povrch: " + surface[iX][iY]);
 
-        return false;
+        //return false;
     }
 
     /**
@@ -273,6 +313,11 @@ public class Missile implements IDrawable, IMappable {
         Affine t = g.getTransform();
         g.translate((coordinates.getX() - IMG.getWidth() / 2) * scaleX, (coordinates.getY() - IMG.getHeight() / 2) * scaleY);
         g.rotate(-azimuth);
+
+        // coordinates.getZ() / startZ;
+
+        IMG = imgV.getImage();
+
         g.drawImage(IMG, 0, 0);
         g.setTransform(t);
     }
@@ -429,7 +474,6 @@ public class Missile implements IDrawable, IMappable {
     public void setCoordinates(double x, double y, double z) {
         this.coordinates = new Point(x, y, z);
     }
-
 
     public void setCollidingPoint(World world) {
         Point currentCoord = coordinates.copy();

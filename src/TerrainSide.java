@@ -20,6 +20,8 @@ public class TerrainSide implements IDrawable {
     private double scaleY;
     private double delta;
 
+    ArrayList<Double> heights;
+
     private ImageView terrainImgView = new ImageView();
     private Image terrainImg;
     WritableImage wImage;
@@ -34,8 +36,6 @@ public class TerrainSide implements IDrawable {
      *
      *
      * @param surface mapa povrchu
-     * @param startCoordX x-ová souřadnice počátečního bodu v metrech
-     * @param startCoordY y-ová souřadnice počátečního bodu v metrech
      * @param visualMissile strela, ktera se bude vizualizovat
      * @param scaleX pomer na prepocet metru z x-ove souradnice na index
      * @param scaleY pomer na prepocet metru z y-ove souradnice na index
@@ -43,11 +43,18 @@ public class TerrainSide implements IDrawable {
      * @param posX x-ove souradnice, odkud se bude mapa vykreslovat
      * @param posY y-ove souradnice, odkud se bude mapa vykreslovat
      */
-    public TerrainSide(double surface[][], double startCoordX, double startCoordY, VisualMissile visualMissile,
+    public TerrainSide(double surface[][], VisualMissile visualMissile, ArrayList<Double> myHeights,
                        double scaleX, double scaleY, double mapScale, double posX, double posY) {
 
         this.posX = posX;
         this.posY = posY;
+
+        double startCoordX = visualMissile.getX();
+        double startCoordY = visualMissile.getY();
+
+//        System.out.println("Visual missile: " + startCoordX + " - " + startCoordY);
+//        System.out.println("Scale X - Y " + scaleX + " - " + scaleY);
+
 
         this.startX = Math.sqrt(startCoordX * startCoordX + startCoordY * startCoordY);
 
@@ -60,26 +67,30 @@ public class TerrainSide implements IDrawable {
         int endX = (int) (visualMissile.getCollidingPoint().getX() * scaleX);
         int endY = (int) (visualMissile.getCollidingPoint().getY() * scaleY);
 
-        System.out.println("Visual:");
-        System.out.println(startX);
-        System.out.println(startY);
+//        System.out.println("Visual:");
+        //System.out.println("GS: " + startX + " - " + startY);
         //System.out.println(visualMissile.getCollidingPoint().getX());
         //System.out.println(visualMissile.getCollidingPoint().getY());
 
-        if (endX >= surface[0].length)
+        if (endX >= surface[0].length) {
             endX = surface[0].length - 1;
+        }
 
-        if (endY >= surface[1].length)
+        if (endY >= surface[1].length) {
             endY = surface[1].length - 1;
+        }
+
+        //System.out.println("GE " + endX + " - " + endY);
 
         maxHeight = visualMissile.getMaxHeight();
 
-        ArrayList<Double> heights = countHeights(surface, (int) visualMissile.getAzimuth(), startX, startY, endX, endY);
+        //heights = countHeights(surface, (int) visualMissile.getAzimuth(), startX, startY, endX, endY);
+        heights = myHeights;
 
 //        double scale = distanceY / distanceX;
 //        double scale = countScale(distanceX, distanceY, visualMissile.getAzimuth());
 
-         System.out.println(heights.size());
+         //System.out.println(heights.size());
 //        System.out.println(Math.min(x, surface[0].length - 1) + " | " + Math.min(y, surface[1].length - 1));
 //        System.out.println(surface[Math.min(x, surface[0].length - 1)][Math.min(y, surface[1].length - 1)]);
 //        System.out.println(visualMissile.getCollidingPoint().getZ());
@@ -87,6 +98,7 @@ public class TerrainSide implements IDrawable {
         this.heights_size = heights.size();
         this.img_width = (int)(IMG_HEIGHT * mapScale);
 
+//        bufferImg(heights, Math.sqrt(endCoordX * endCoordX + endCoordY * endCoordY), maxHeight);
         bufferImg(heights, Math.sqrt(endCoordX * endCoordX + endCoordY * endCoordY), maxHeight);
     }
 
@@ -218,8 +230,8 @@ public class TerrainSide implements IDrawable {
 //        System.out.println(startX);
 //        System.out.println(startY);
 
-        if (degree == -90)
-            degree = 270;
+//        if (degree == -90)
+//            degree = 270;
 
         //System.out.println(x + " | " + y);
 
@@ -228,139 +240,248 @@ public class TerrainSide implements IDrawable {
             return heights;
         }
 
-        switch (degree) {
-            case 0:
+        double j = 0;
+
+        if (distanceY == 0) {
+            if (x < endX)
                 while (x < endX)
                     heights.add(surface[x++][y]);
-                break;
-
-            case 90:
-                System.out.println(y + " < " + endY);
-                while (y > endY)
-                    heights.add(surface[x][y--]);
-                break;
-
-            case 180:
+            else
                 while (x > endX)
-                    heights.add(surface[x--][y]);
-                break;
-
-            case 270:
-                while (y < endY)
-                    heights.add(surface[x][y++]);
-                break;
-
-            default:
-                double j = 0;
-
-                if (distanceY == 0) {
-                    while (x < endX)
-                        heights.add(surface[x++][y]);
-
-                    break;
-                }
-
-                if (distanceX == 0) {
-                    while (y < endY) {
-                        heights.add(surface[x][y++]);
-                    }
-
-                    break;
-                }
-
-                scale = Math.abs(distanceX / distanceY);
-
-                if (distanceX > 0 && distanceY > 0) {
-                    while (x < endX && y < endY) {
-                        while (j < scale) {
-                            heights.add(surface[x][y]);
-
-                            j++;
-
-                            if (scale > 1)
-                                x++;
-                            else
-                                y++;
-                        }
-                        j %= scale;
-
-                        if (scale > 1)
-                            y++;
-                        else
-                            x++;
-                    }
-                }
-
-                if (distanceX < 0 && distanceY > 0) {
-                    while (x > endX && y < endY) {
-                        while (j < scale) {
-                            heights.add(surface[x][y]);
-
-                            j++;
-
-                            if (scale > 1)
-                                x--;
-                            else
-                                y++;
-                        }
-
-                        j %= scale;
-
-                        if (scale > 1)
-                            y++;
-                        else
-                            x--;
-                    }
-                }
-
-                if (distanceX < 0 && distanceY < 0) {
-                    while (x > endX && y > endY) {
-                        while (j < scale) {
-                            heights.add(surface[x][y]);
-
-                            j++;
-
-                            if (scale > 1)
-                                x--;
-                            else
-                                y--;
-                        }
-
-                        j %= scale;
-
-                        if (scale > 1)
-                            y--;
-                        else
-                            x--;
-                    }
-                }
-
-                if (distanceX > 0 && distanceY < 0) {
-                    while (x < endX && y > endY) {
-                        while (j < scale) {
-                            heights.add(surface[x][y]);
-
-                            j++;
-
-                            if (scale > 1)
-                                x++;
-                            else
-                                y--;
-                        }
-
-                        j %= scale;
-
-                        if (scale > 1)
-                            y--;
-                        else
-                            x++;
-                    }
-                }
-
-                break;
+                    heights.add(surface[x--][y--]);
         }
 
-        System.out.println(x + " - " + y);
+        if (distanceX == 0) {
+            if (y < endY)
+                while (y < endY)
+                    heights.add(surface[x][y++]);
+            else
+                while (y > endY)
+                    heights.add(surface[x][y--]);
+        }
+
+        scale = Math.abs((double)distanceX / distanceY);
+
+        if (distanceX > 0 && distanceY > 0) {
+            while (x < endX && y < endY) {
+                while (j < scale) {
+                    heights.add(surface[x][y]);
+
+                    j++;
+
+                    if (scale > 1)
+                        x++;
+                    else
+                        y++;
+                }
+                j %= scale;
+
+                if (scale > 1)
+                    y++;
+                else
+                    x++;
+            }
+        }
+
+        if (distanceX < 0 && distanceY > 0) {
+            while (x > endX && y < endY) {
+                while (j < scale) {
+                    heights.add(surface[x][y]);
+
+                    j++;
+
+                    if (scale > 1)
+                        x--;
+                    else
+                        y++;
+                }
+
+                j %= scale;
+
+                if (scale > 1)
+                    y++;
+                else
+                    x--;
+            }
+        }
+
+        if (distanceX < 0 && distanceY < 0) {
+            while (x > endX && y > endY) {
+                while (j < scale) {
+                    heights.add(surface[x][y]);
+
+                    j++;
+
+                    if (scale > 1)
+                        x--;
+                    else
+                        y--;
+                }
+
+                j %= scale;
+
+                if (scale > 1)
+                    y--;
+                else
+                    x--;
+            }
+        }
+
+        if (distanceX > 0 && distanceY < 0) {
+            while (x < endX && y > endY) {
+                while (j < scale) {
+                    heights.add(surface[x][y]);
+
+                    j++;
+
+                    if (scale > 1)
+                        x++;
+                    else
+                        y--;
+                }
+
+                j %= scale;
+
+                if (scale > 1)
+                    y--;
+                else
+                    x++;
+            }
+        }
+
+//        switch (degree) {
+//            case 0:
+//                while (x < endX)
+//                    heights.add(surface[x++][y]);
+//                break;
+//
+//            case 90:
+//                System.out.println(y + " < " + endY);
+//                while (y > endY)
+//                    heights.add(surface[x][y--]);
+//                break;
+//
+//            case 180:
+//                while (x > endX)
+//                    heights.add(surface[x--][y]);
+//                break;
+//
+//            case 270:
+//                while (y < endY)
+//                    heights.add(surface[x][y++]);
+//                break;
+//
+//            default:
+//                double j = 0;
+//
+//                if (distanceY == 0) {
+//                    while (x < endX)
+//                        heights.add(surface[x++][y]);
+//
+//                    break;
+//                }
+//
+//                if (distanceX == 0) {
+//                    while (y < endY) {
+//                        heights.add(surface[x][y++]);
+//                    }
+//
+//                    break;
+//                }
+//
+//                scale = Math.abs((double)distanceX / distanceY);
+//
+//                if (distanceX > 0 && distanceY > 0) {
+//                    while (x < endX && y < endY) {
+//                        while (j < scale) {
+//                            heights.add(surface[x][y]);
+//
+//                            j++;
+//
+//                            if (scale > 1)
+//                                x++;
+//                            else
+//                                y++;
+//                        }
+//                        j %= scale;
+//
+//                        if (scale > 1)
+//                            y++;
+//                        else
+//                            x++;
+//                    }
+//                }
+//
+//                if (distanceX < 0 && distanceY > 0) {
+//                    while (x > endX && y < endY) {
+//                        while (j < scale) {
+//                            heights.add(surface[x][y]);
+//
+//                            j++;
+//
+//                            if (scale > 1)
+//                                x--;
+//                            else
+//                                y++;
+//                        }
+//
+//                        j %= scale;
+//
+//                        if (scale > 1)
+//                            y++;
+//                        else
+//                            x--;
+//                    }
+//                }
+//
+//                if (distanceX < 0 && distanceY < 0) {
+//                    while (x > endX && y > endY) {
+//                        while (j < scale) {
+//                            heights.add(surface[x][y]);
+//
+//                            j++;
+//
+//                            if (scale > 1)
+//                                x--;
+//                            else
+//                                y--;
+//                        }
+//
+//                        j %= scale;
+//
+//                        if (scale > 1)
+//                            y--;
+//                        else
+//                            x--;
+//                    }
+//                }
+//
+//                if (distanceX > 0 && distanceY < 0) {
+//                    while (x < endX && y > endY) {
+//                        while (j < scale) {
+//                            heights.add(surface[x][y]);
+//
+//                            j++;
+//
+//                            if (scale > 1)
+//                                x++;
+//                            else
+//                                y--;
+//                        }
+//
+//                        j %= scale;
+//
+//                        if (scale > 1)
+//                            y--;
+//                        else
+//                            x++;
+//                    }
+//                }
+//
+//                break;
+//        }
+
+        //System.out.println(x + " - " + y);
 
         return heights;
     }
@@ -386,5 +507,9 @@ public class TerrainSide implements IDrawable {
 
     public double getScaleY() {
         return scaleY;
+    }
+
+    public ArrayList<Double> getHeights() {
+        return heights;
     }
 }

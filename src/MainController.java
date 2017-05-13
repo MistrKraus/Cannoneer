@@ -21,6 +21,8 @@ import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
 import javax.xml.bind.Marshaller;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,6 +42,7 @@ public class MainController implements Initializable {
     public MenuBar menu;
     public VBox vBox2;
     public Button btnVisual;
+    public Button btnFire;
     @FXML
     private TextField azimuthTF;
     @FXML
@@ -48,7 +51,6 @@ public class MainController implements Initializable {
     private TextField speedTF;
     @FXML
     private Canvas canvas;
-
 
     private World world;
     private double defaultStageWidth;
@@ -61,6 +63,8 @@ public class MainController implements Initializable {
 
     //private static final double DEFAULT_CAVANS_HEIGHT = 257;
     private static final double DEFAULT_CAVANS_WIDTH = 270;
+
+    private static final String FIRE_BTN_TXT = "FIRE";
 
     /**
      * kontruktor
@@ -243,7 +247,7 @@ public class MainController implements Initializable {
      *
      * @param visual
      */
-    private void manageFireParam(boolean visual) {
+    private void manageFireParam(boolean visual) throws FileNotFoundException, UnsupportedEncodingException {
         if (!world.isRunning())
             return;
 
@@ -274,9 +278,14 @@ public class MainController implements Initializable {
      *
      * @param actionEvent data o stiku tlacitka
      */
-    public void handleBtnFire(ActionEvent actionEvent) {
-        if (!world.isVisuializing())
+    public void handleBtnFire(ActionEvent actionEvent) throws FileNotFoundException, UnsupportedEncodingException {
+        if (!world.isVisuializing()) {
             manageFireParam(false);
+            return;
+        }
+
+        world.stopVisualize();
+        btnFire.setText(FIRE_BTN_TXT);
     }
 
     /**
@@ -284,8 +293,10 @@ public class MainController implements Initializable {
      *
      * @param actionEvent data o stiku tlacitka
      */
-    public void handleBtnVizualzuj(ActionEvent actionEvent) {
+    public void handleBtnVizualzuj(ActionEvent actionEvent) throws FileNotFoundException, UnsupportedEncodingException {
         manageFireParam(true);
+
+        btnFire.setText("Navrat");
     }
 
     /**

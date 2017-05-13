@@ -40,7 +40,7 @@ public class Wind implements IDrawable {
         Affine affine = g.getTransform();
 
         double alpha = g.getGlobalAlpha();
-        g.setGlobalAlpha(0.3);
+        g.setGlobalAlpha(0.5);
         g.translate(50, 100);
         g.rotate(azimuth);
 

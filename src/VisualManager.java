@@ -7,6 +7,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.DoubleSummaryStatistics;
+import java.util.StringJoiner;
+
 /**
  * Created by kraus on 02.05.2017.
  */
@@ -22,13 +28,15 @@ public class VisualManager implements IDrawable {
     private double graph2Width;
     private double graph2Height;
 
-    public VisualManager (double azimuth, double elevation, double acceleration, /*boolean firstVisualMissile,*/ World world) {
+    private PrintWriter printWriter;
+
+    public VisualManager (double azimuth, double elevation, double acceleration, /*boolean firstVisualMissile,*/ World world) throws FileNotFoundException, UnsupportedEncodingException {
         this(azimuth, elevation, acceleration, 0, world.getGraphics().getCanvas().getHeight() / 2,
                 world.getGraphics().getCanvas().getHeight() / 2, /*firstVisualMissile,*/ world);
     }
 
     public VisualManager (double azimuth, double elevation, double acceleration, double splitX1, double splitY1,
-                          double splitCood2, /*boolean firstVisualMissile,*/ World world) {
+                          double splitCood2, /*boolean firstVisualMissile,*/ World world) throws FileNotFoundException, UnsupportedEncodingException {
         Canvas canvas = world.getGraphics().getCanvas();
         Point coordinates = world.getPlayer().getCoordinates().copy();
 
@@ -76,16 +84,36 @@ public class VisualManager implements IDrawable {
 
         //world.addVisualMissile(visualMissile);
 
-        this.terrSide = new TerrainSide(world.getMap().getSurface(), visualMissile.getX(), visualMissile.getY(), visualMissile,
+        this.terrSide = new TerrainSide(world.getMap().getSurface(), visualMissile, visualMissile.getHeights(),
                 world.getScaleX(), world.getScaleY(), world.getMap().getMapWidthM() / (world.getMap().getMapHeightM() / 2), 0, graph2Height);
 
         //world.removeVisualMissile(visualMissile);
 
         this.visualMissiles = world.getVisualMissiles();
+
+//        printWriter = new PrintWriter("TestVizualizace", "UTF-8");
+//
+//        terrSide.getHeights().forEach(height -> printWriter.print(height + " - "));
+//        printWriter.println();
+//        visualMissile.getHeights().forEach(height -> printWriter.print(height + " - "));
+//        printWriter.close();
     }
 
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
+        g.setFill(Color.rgb(150, 212, 255));
+        g.fillRect(0,0, g.getCanvas().getWidth(), g.getCanvas().getHeight() / 2);
+
+        double heigth = g.getCanvas().getHeight() / 2;
+        double scale = heigth / 255;
+        double redScale = 53 / 255;
+        double greenScale = 173 / 255;
+
+        for (int i = 0; i < 255; i++) {
+            g.setFill(Color.rgb((int)(150 -(i * redScale)), (int)(212 - (i * greenScale)), 255 - i));
+            g.fillRect(0, heigth + i * scale, g.getCanvas().getWidth(), heigth + i * scale);
+        }
+
         graph.draw(g, scaleMperPixelX, scaleMperPixelY);
 
         if (graph.getChyba()) {
@@ -100,9 +128,8 @@ public class VisualManager implements IDrawable {
             return;
         }
 
-        //TODO prohodit!
-        terrSide.draw(g, scaleMperPixelX, scaleMperPixelY);
         visualMissiles.forEach(missile -> missile.draw(g, scaleMperPixelX, scaleMperPixelY));
+        terrSide.draw(g, scaleMperPixelX, scaleMperPixelY);
     }
 
     @Override

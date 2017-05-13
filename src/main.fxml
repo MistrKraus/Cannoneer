@@ -117,7 +117,7 @@
                    </HBox.margin>
                 </Label>
                 <VBox spacing="3.0">
-                    <Button minHeight="25.0" minWidth="73.0" onAction="#handleBtnFire" text="FIRE" textAlignment="CENTER" />
+                    <Button minHeight="25.0" minWidth="73.0" onAction="#handleBtnFire" fx:id="btnFire" text="FIRE" textAlignment="CENTER" />
                     <Button minHeight="25.0" minWidth="73.0" onAction="#handleBtnVizualzuj" fx:id="btnVisual" text="Vizualizuj" textAlignment="CENTER" />
                     <padding>
                         <Insets bottom="10" left="10" />
