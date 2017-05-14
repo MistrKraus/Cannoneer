@@ -269,9 +269,6 @@ public class MainController implements Initializable {
 
             world.visualize(azimuth, evelation, speed);
 
-//            world.addVisualMissile(new VisualMissile(world.getPlayer().getCoordinates(), azimuth, evelation, speed,
-//                    true, world));
-
             return;
         }
         world.addMissile(world.getPlayer().fire(azimuth, evelation, speed));

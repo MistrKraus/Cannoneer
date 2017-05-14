@@ -18,10 +18,10 @@ import java.util.StringJoiner;
  */
 public class VisualManager implements IDrawable {
 
-    private final MyGraph graph;
-    private final TerrainSide terrSide;
-    private final VisualMissile visualMissile;
-    private final ObservableList<VisualMissile> visualMissiles;
+    private MyGraph graph;
+    private TerrainSide terrSide;
+    private VisualMissile visualMissile;
+    private ObservableList<VisualMissile> visualMissiles;
 
     private double graph1Width;
     private double graph1Height;
@@ -30,6 +30,8 @@ public class VisualManager implements IDrawable {
     private double colorScale;
     private double redScale = 53 / 255;
     private double greenScale = 173 / 255;
+    private double scaleX;
+    private double scaleY;
 
     private PrintWriter printWriter;
 
@@ -84,6 +86,13 @@ public class VisualManager implements IDrawable {
 //
         // vychozi rozdeleni
         this.graph = new MyGraph(elevation, acceleration, graph1Width, graph1Height, 0, 0);
+
+        if (graph.getChyba()) {
+            scaleX = 0;
+            scaleY = 0;
+            return;
+        }
+
         this.visualMissile = new VisualMissile(coordinates, azimuth, elevation, acceleration, graph2Width,
                 graph2Height, 0, graph.getHeight() / 2, true, world);
 
@@ -114,7 +123,6 @@ public class VisualManager implements IDrawable {
             g.fillRect(0, graph1Height + i * colorScale, g.getCanvas().getWidth(), graph1Height + i * colorScale);
         }
 
-        graph.draw(g, scaleMperPixelX, scaleMperPixelY);
 
         if (graph.getChyba()) {
             g.setFill(Color.RED);
@@ -127,6 +135,7 @@ public class VisualManager implements IDrawable {
 
             return;
         }
+        graph.draw(g, scaleMperPixelX, scaleMperPixelY);
 
         visualMissiles.forEach(missile -> missile.draw(g, scaleMperPixelX, scaleMperPixelY));
         terrSide.draw(g, scaleMperPixelX, scaleMperPixelY);
@@ -134,6 +143,9 @@ public class VisualManager implements IDrawable {
 
     @Override
     public void update(World world) {
+        if (graph.getChyba())
+            return;
+
         graph1Width = world.getGraphics().getCanvas().getWidth();
         graph1Height = world.getGraphics().getCanvas().getHeight() / 2;
         graph2Width = world.getGraphics().getCanvas().getWidth();
@@ -147,6 +159,9 @@ public class VisualManager implements IDrawable {
             visualMissiles.forEach(missile -> missile.update(world));
 
         terrSide.update(world);
+
+        scaleX = terrSide.getScaleX();
+        scaleY = terrSide.getScaleY();
     }
 
     public MyGraph getGraph() {
@@ -174,5 +189,13 @@ public class VisualManager implements IDrawable {
     @Override
     public double getWidthY() {
         return 0;
+    }
+
+    public double getScaleX() {
+        return scaleX;
+    }
+
+    public double getScaleY() {
+        return scaleY;
     }
 }

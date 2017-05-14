@@ -18,7 +18,7 @@ public class Banner implements IDrawable {
     private double textHeight;
     private Text txt;
 
-    private Font font = Font.font("INPACT", FontWeight.BOLD,  10);
+    private Font font = Font.font("INPACT", FontWeight.BOLD, 10);
     private IHittable hittableThing;
 
     private static final int BORDER = 5;
@@ -66,8 +66,8 @@ public class Banner implements IDrawable {
         if ((x + 4 * BORDER + textWidth) > c.getWidth())
             x = mapX - 4 * BORDER - textWidth;
 
-        if ((y - 4 * BORDER + textHeight) < 0)
-            y = mapY + 2 * BORDER;
+        if ((y - 3 * BORDER + textHeight) < 0)
+            y = mapY + hittableThing.getWidthY() + BORDER;
 
         txt.setText(Integer.toString(hittableThing.getHp()));
     }

@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.*;
+import javafx.scene.transform.Affine;
 
 import java.util.Random;
 
@@ -11,11 +12,18 @@ import java.util.Random;
  */
 public class Explosion implements IDrawable, IMappable {
 
+    private int lifetime;
+
+    private double posX;
+    private double posY;
+
     private Missile missile;
 
     private Point coordinates;
     private final int dmg;
     private final double radius;
+
+    private final static int DEF_LIFETIME = 35;
 
     /**
      * kontruktor exploze
@@ -29,6 +37,8 @@ public class Explosion implements IDrawable, IMappable {
         this.radius = missile.getStrikeRadius();
 
         this.dmg = missile.getDmg();
+
+        this.lifetime = 0;
     }
 
     /**
@@ -37,17 +47,19 @@ public class Explosion implements IDrawable, IMappable {
      * @param world ridici trida
      */
     public void explode(World world) {
+        int currDmg = new Random().nextInt(dmg);
+
         world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
             .forEach(target -> {
-                    target.dealtDamage((new Random().nextInt(dmg)));
-
+                    target.dealtDamage(currDmg);
                     missile.setCollidingSpot(target.toString());
             });
 
-
-
-        //world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
-        //    .forEach(player -> player.dealtDamage(100));
+        world.getPlayers().stream().filter(player -> player.isInRadius(coordinates, radius, player.getCoordinates()))
+            .forEach(player -> {
+                player.dealtDamage(currDmg);
+                missile.setCollidingSpot(player.toString());
+            });
     }
 
     /**
@@ -59,13 +71,33 @@ public class Explosion implements IDrawable, IMappable {
      */
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
-        g.setFill(Color.ORANGE);
-        g.fillOval((coordinates.getX() - radius / 2) * scaleMperPixelX, (coordinates.getY() - radius / 2) * scaleMperPixelY,
-                radius * scaleMperPixelX, radius * scaleMperPixelY);
+        Affine t = g.getTransform();
+
+        //g.setGlobalAlpha((DEF_LIFETIME - lifetime)/((1.5) *DEF_LIFETIME));
+
+        //System.out.println((double)(DEF_LIFETIME - lifetime)/DEF_LIFETIME);
+
+        double width = lifetime * ((radius * scaleMperPixelX) / DEF_LIFETIME);
+        double height = lifetime * ((radius * scaleMperPixelY) / DEF_LIFETIME);
+
+        g.translate(coordinates.getX() * scaleMperPixelX - width / 2, coordinates.getY() * scaleMperPixelY - height / 2);
+
+        g.setFill(Color.rgb(255, ((130 / DEF_LIFETIME) * lifetime), 0));
+
+
+        g.fillOval(0, 0, width + 3, height + 3);
+
+        g.setTransform(t);
+        //g.setGlobalAlpha(1);
     }
 
     @Override
     public void update(World world) {
+        if (lifetime++ == DEF_LIFETIME) {
+            world.removeExplosion(this);
+            return;
+        }
+
 
     }
 

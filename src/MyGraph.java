@@ -53,7 +53,7 @@ public class MyGraph implements IDrawable {
 
         setDistances(elevation, (int) Math.ceil(acceleration));
 
-        chyba = distances.length == 0;
+        chyba = distances.length < 5;
 
         if (chyba)
             return;

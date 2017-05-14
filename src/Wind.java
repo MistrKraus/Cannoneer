@@ -41,7 +41,7 @@ public class Wind implements IDrawable {
 
         double alpha = g.getGlobalAlpha();
         g.setGlobalAlpha(0.5);
-        g.translate(50, 100);
+        g.translate(g.getCanvas().getWidth() - 50, g.getCanvas().getHeight() - 50);
         g.rotate(azimuth);
 
         double[] stumpPointsX = new double[] {

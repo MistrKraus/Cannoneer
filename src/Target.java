@@ -146,7 +146,7 @@ public class Target implements IHittable {
 
     @Override
     public double getHeight() {
-        return IMG.getHeight();
+        return 1;
     }
 
     @Override
@@ -156,7 +156,7 @@ public class Target implements IHittable {
 
     @Override
     public double getWidthY() {
-        return 1;
+        return IMG.getHeight();
     }
 
     public double getMapX() {

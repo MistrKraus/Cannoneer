@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
@@ -26,8 +27,13 @@ public class World {
     private final Data data;
     private final Map map;
     private final Wind wind;
-    private final ObservableList<Player> players = FXCollections.observableArrayList();
 
+    private final Text txtWin1;
+    private final Text txtWin2;
+    private final Text txtFail1;
+    private final Text txtFail2;
+
+    private final ObservableList<Player> players = FXCollections.observableArrayList();
     private final ObservableList<Target> targets = FXCollections.observableArrayList();
     private final ObservableList<Missile> missiles = FXCollections.observableArrayList();
     private final ObservableList<Explosion> explosions = FXCollections.observableArrayList();
@@ -54,10 +60,11 @@ public class World {
 
     private double visualTime;
 
-    private boolean isRunning = false;
     // TODO budouci moznost iterace
     private int playerIndex = 0;
+    private boolean isRunning = false;
     private boolean isVisuializing = false;
+    private boolean win = false;
 
     private Point vMissileFirstCoord;
     private VisualManager visualManager;
@@ -79,6 +86,22 @@ public class World {
 
         timeline = new Timeline(oneFrame);
         timeline.setCycleCount(Animation.INDEFINITE);
+
+        graphics.setFont(Font.font("INPACT", FontWeight.BOLD, 30));
+        graphics.setTextAlign(TextAlignment.CENTER);
+
+        Font font1 = Font.font("INPACT", FontWeight.BOLD, 30);
+        Font font2 = Font.font("INPACT", FontWeight.NORMAL, 25);
+
+        txtWin1 = new Text("MISE SPLNENA!");
+        txtWin1.setFont(font1);
+        txtWin2 = new Text("Vsechny cile zneskodneny.");
+        txtWin2.setFont(font2);
+
+        txtFail1 = new Text("SELHAL JSTE!");
+        txtFail1.setFont(font1);
+        txtFail2 = new Text("Vas tank byl znicen.");
+        txtFail2.setFont(font2);
     }
 
     /**
@@ -140,7 +163,14 @@ public class World {
     public void removeTarget(Target target) {
         map.removeFromMap(target);
 
+        System.out.println("Cil znicen!");
+
         targetsToRemove.add(target);
+    }
+
+    public void removePlayer(Player player) {
+        System.out.println("Hrac znicen!");
+        playersToRemove.add(player);
     }
 
     /**
@@ -196,11 +226,16 @@ public class World {
      * aktualizuje vsechny objekty
      */
     public void update() {
-        //if (visualMissilesToAdd.size() > 0) {
-//            System.out.println("REM " + visualMissilesToRemove.size());
-//            System.out.println("ADD " + visualMissilesToAdd.size());
-        //}
+        if (!isRunning) {
+            players.forEach((player) -> player.update(this));
+            targets.forEach((target) -> target.update(this));
+            for (int i = 0; i < 8; i++)
+                missiles.forEach((missile) -> missile.update(this));
+            explosions.forEach((explosion) -> explosion.update(this));
+        }
 
+        players.removeAll(playersToRemove);
+        playersToRemove.clear();
         targets.removeAll(targetsToRemove);
         targetsToRemove.clear();
         missiles.removeAll(missilesToRemove);
@@ -213,7 +248,14 @@ public class World {
         visualMissiles.addAll(visualMissilesToAdd);
         visualMissilesToAdd.clear();
 
+        if (players.size() <= 0) {
+            win = false;
+            stop();
+            return;
+        }
+
         if (targets.size() <= 0) {
+            win = true;
             stop();
             return;
         }
@@ -231,9 +273,6 @@ public class World {
             wind.update(this);
         } else {
             visualManager.update(this);
-//            for (int i = 0; i < 4; i++)
-//                visualMissiles.forEach((visualMissile -> visualMissile.update(this)));
-//            terrSide.update(this);
         }
 
         draw();
@@ -244,9 +283,7 @@ public class World {
      */
     public void draw() {
         if (isVisuializing) {
-            visualManager.draw(graphics, visualManager.getTerrSide().getScaleX(), visualManager.getTerrSide().getScaleY());
-//            terrSide.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY());
-//            visualMissiles.forEach(missile -> missile.draw(graphics, terrSide.getScaleX(), terrSide.getScaleY()));
+            visualManager.draw(graphics, visualManager.getScaleX(), visualManager.getScaleY());
             return;
         }
         scalePixelperMX = graphics.getCanvas().getWidth() / data.getMap().getMapWidthM();
@@ -261,6 +298,38 @@ public class World {
         players.forEach(player -> player.draw(graphics, scalePixelperMX, scalePixelperMY));
         missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
         wind.draw(graphics, scalePixelperMX, scalePixelperMY);
+
+        if (!isRunning) {
+            graphics.setFill(Color.WHITE);
+            graphics.setGlobalAlpha(0.3);
+
+            if (win) {
+                graphics.fillRect(0, graphics.getCanvas().getHeight() / 2 - txtWin1.getLayoutBounds().getHeight() - 20,
+                        graphics.getCanvas().getWidth(), txtWin1.getLayoutBounds().getHeight() + txtWin2.getLayoutBounds().getHeight() + 20);
+                graphics.setGlobalAlpha(1);
+
+                graphics.setFill(Color.RED);
+                graphics.setFont(txtWin1.getFont());
+                graphics.fillText(txtWin1.getText(), graphics.getCanvas().getWidth() / 2,
+                        graphics.getCanvas().getHeight() / 2 - txtWin1.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+                graphics.setFont(txtWin2.getFont());
+                graphics.fillText(txtWin2.getText(), graphics.getCanvas().getWidth() / 2,
+                        graphics.getCanvas().getHeight() / 2 + txtWin2.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+            }
+            else {
+                graphics.fillRect(0, graphics.getCanvas().getHeight() / 2 - txtFail1.getLayoutBounds().getHeight() - 20,
+                        graphics.getCanvas().getWidth(), txtFail1.getLayoutBounds().getHeight() + txtFail2.getLayoutBounds().getHeight() + 20);
+                graphics.setGlobalAlpha(1);
+
+                graphics.setFill(Color.RED);
+                graphics.setFont(txtFail1.getFont());
+                graphics.fillText(txtFail1.getText(), graphics.getCanvas().getWidth() / 2,
+                        graphics.getCanvas().getHeight() / 2 - txtFail1.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+                graphics.setFont(txtFail2.getFont());
+                graphics.fillText(txtFail2.getText(), graphics.getCanvas().getWidth() / 2,
+                        graphics.getCanvas().getHeight() / 2 + txtFail2.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+            }
+        }
     }
 
     /**
@@ -279,12 +348,6 @@ public class World {
         timeline.stop();
 
         draw();
-
-        graphics.setFill(Color.RED);
-        graphics.setFont(Font.font("INPACT", FontWeight.BOLD, 30));
-        graphics.setTextAlign(TextAlignment.CENTER);
-        graphics.fillText("KONEC HRY!", graphics.getCanvas().getWidth() / 2,
-                graphics.getCanvas().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
     }
 
     public void pause() {
@@ -300,8 +363,8 @@ public class World {
 //        addVisualMissile(new VisualMissile(getPlayer().getCoordinates(), azimuth, elevation, speed,
 //                true, this));
 
-        if (visualMissiles.size() == 0)
-            return;
+//        if (visualMissiles.size() == 0)
+//            return;
 
         isVisuializing = true;
 
@@ -327,6 +390,7 @@ public class World {
         isVisuializing = false;
 
         removeAllVisualMissiles();
+        removeAllMissiles();
     }
 
     public Data getData() {
