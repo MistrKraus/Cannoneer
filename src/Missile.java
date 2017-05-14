@@ -189,6 +189,9 @@ public class Missile implements IDrawable, IMappable {
 
         winds = new ArrayList<>();
 
+        if (azimuth == 270.0)
+            azimuth = -90.0;
+
         this.azimuth = azimuth;
         this.elevation = elevation;
 

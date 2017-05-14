@@ -1,4 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
 /**
@@ -10,6 +11,8 @@ public class Player extends Target implements IShooting {
 
     private double azimuth = 0;
 
+    private static int pocet = 0;
+    private final int PORADI = ++pocet;
     private static final int IMG_CANNON_WIDTH = 4;
     private static final String IMG_PATH = "images/player1.png";
 
@@ -92,10 +95,24 @@ public class Player extends Target implements IShooting {
         mapY = (getY() * scaleY - IMG.getHeight() / 2);
 
         Affine t = g.getTransform();
+
+        if (lifetime < ANIMATION_LIFETIME) {
+            g.translate((int) (getX() * scaleX), (int) (getY() * scaleY));
+            g.translate(-(IMG.getWidth() - IMG_CANNON_WIDTH) / 2, IMG.getHeight() / 2);
+            for (int i = 0; i < 4; i++) {
+                g.rotate(lifetime * 10);
+                g.setFill(Color.rgb(0, 50 * i, 0));
+                g.fillRect(-5, -ANIMATION_LIFETIME / 4, 10, ANIMATION_LIFETIME / 2);
+            }
+            g.setTransform(t);
+            g.setGlobalAlpha((double)lifetime / ANIMATION_LIFETIME);
+        }
+
         g.translate((int)(getX() * scaleX), (int)(getY() * scaleY));
         g.rotate(-azimuth);
         g.drawImage(IMG, - (IMG.getWidth() - IMG_CANNON_WIDTH) / 2, -IMG.getHeight() / 2);
         g.setTransform(t);
+        g.setGlobalAlpha(1);
 
         banner.draw(g, scaleX, scaleY);
 
@@ -125,6 +142,8 @@ public class Player extends Target implements IShooting {
             System.out.println("Hrac znicen");
             world.removePlayer(this);
         }
+        if (lifetime < ANIMATION_LIFETIME)
+            lifetime++;
 
         banner.update(world);
     }

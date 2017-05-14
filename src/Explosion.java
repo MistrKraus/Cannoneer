@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class Explosion implements IDrawable, IMappable {
 
-    private int lifetime;
+    private int deathCountdown;
 
     private double posX;
     private double posY;
@@ -38,7 +38,7 @@ public class Explosion implements IDrawable, IMappable {
 
         this.dmg = missile.getDmg();
 
-        this.lifetime = 0;
+        this.deathCountdown = 0;
     }
 
     /**
@@ -73,16 +73,16 @@ public class Explosion implements IDrawable, IMappable {
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
         Affine t = g.getTransform();
 
-        //g.setGlobalAlpha((DEF_LIFETIME - lifetime)/((1.5) *DEF_LIFETIME));
+        //g.setGlobalAlpha((DEF_LIFETIME - deathCountdown)/((1.5) *DEF_LIFETIME));
 
-        //System.out.println((double)(DEF_LIFETIME - lifetime)/DEF_LIFETIME);
+        //System.out.println((double)(DEF_LIFETIME - deathCountdown)/DEF_LIFETIME);
 
-        double width = lifetime * ((radius * scaleMperPixelX) / DEF_LIFETIME);
-        double height = lifetime * ((radius * scaleMperPixelY) / DEF_LIFETIME);
+        double width = deathCountdown * ((radius * scaleMperPixelX) / DEF_LIFETIME);
+        double height = deathCountdown * ((radius * scaleMperPixelY) / DEF_LIFETIME);
 
         g.translate(coordinates.getX() * scaleMperPixelX - width / 2, coordinates.getY() * scaleMperPixelY - height / 2);
 
-        g.setFill(Color.rgb(255, ((130 / DEF_LIFETIME) * lifetime), 0));
+        g.setFill(Color.rgb(255, ((130 / DEF_LIFETIME) * deathCountdown), 0));
 
 
         g.fillOval(0, 0, width + 3, height + 3);
@@ -93,7 +93,7 @@ public class Explosion implements IDrawable, IMappable {
 
     @Override
     public void update(World world) {
-        if (lifetime++ == DEF_LIFETIME) {
+        if (deathCountdown++ == DEF_LIFETIME) {
             world.removeExplosion(this);
             return;
         }

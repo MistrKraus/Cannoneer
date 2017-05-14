@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -83,13 +84,17 @@ public class EditorController implements Initializable {
             editorFXMLController.setMapImg(iv);
             mapEditor.setHeights(iv);
             editorFXMLController.drawMap();
+
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public void saveFile(ActionEvent actionEvent) {
-
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText("Tato funkce neni naimplementovana!");
+        alert.show();
     }
 
     public void close(ActionEvent actionEvent) {
@@ -274,13 +279,9 @@ public class EditorController implements Initializable {
 
         //stage = (Stage) editorFXML.getScene().getWindow();
 
-        editorFXML.widthProperty().addListener((observable, oldValue, newValue) -> {
-            resizeCanvas();
-        });
+        editorFXML.widthProperty().addListener((observable, oldValue, newValue) -> resizeCanvas());
 
-        editorFXML.heightProperty().addListener((observable, oldValue, newValue) -> {
-            resizeCanvas();
-        });
+        editorFXML.heightProperty().addListener((observable, oldValue, newValue) -> resizeCanvas());
 
         resizeCanvas();
     }
@@ -299,7 +300,7 @@ public class EditorController implements Initializable {
 
 
         if (maxHeight >= maxHeight * mapEditor.getScale() && maxHeight * mapEditor.getScale() <= maxWidth) {
-            System.out.println(maxWidth + " " + maxHeight);
+            //System.out.println(maxWidth + " " + maxHeight);
             editorFXMLController.setCanvasSize(maxHeight, maxHeight * mapEditor.getScale());
             return;
         }
@@ -310,12 +311,7 @@ public class EditorController implements Initializable {
             return;
         }
 
-        System.out.println("Fail");
-
-//        if (maxWidth > maxHeight * mapEditor.getScale())
-//            editorFXMLController.setCanvasSize(maxWidth, maxHeight * mapEditor.getScale());
-//        else
-//            editorFXMLController.setCanvasSize(maxWidth / mapEditor.getScale(), maxHeight);
+        //System.out.println("Fail");
     }
 
     public void setOnAction(ActionEvent actionEvent) {
@@ -332,5 +328,21 @@ public class EditorController implements Initializable {
         mapEditor.setTargetY(Integer.parseInt(targetY.getText()));
 
         resizeCanvas();
+    }
+
+    public void showHelp(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Napoveda k editru");
+        alert.setContentText("Toto je prostredi pro editaci a vytvareni map, samotna funkcnost neni z vetsi casti naimplementovana!\n" +
+                "Implementovane funkce:\n" +
+                " - Nacteni obrazku mapy.\n" +
+                " - Zmena velikosti mapy.");
+        alert.show();
+    }
+
+    public void contextReq(ContextMenuEvent contextMenuEvent) {
+        Alert aler = new Alert(Alert.AlertType.WARNING);
+        aler.setHeaderText("Tato funkce neni naimplementovana!");
+        aler.show();
     }
 }

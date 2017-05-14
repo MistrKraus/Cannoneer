@@ -53,7 +53,7 @@ public class MyGraph implements IDrawable {
 
         setDistances(elevation, (int) Math.ceil(acceleration));
 
-        chyba = distances.length < 5;
+        chyba = distances.length < 2;
 
         if (chyba)
             return;
@@ -65,6 +65,10 @@ public class MyGraph implements IDrawable {
         int temp = 0;
         while (maxAcceleration > (temp * 100))
             temp++;
+
+        chyba = temp < 1;
+        if (chyba)
+            return;
 
         axisVerticalCount = maxAcceleration / (temp * 10);
         axisXstep = temp * 10;
@@ -84,6 +88,10 @@ public class MyGraph implements IDrawable {
 
         while (maxDistance > (temp * 200))
             temp++;
+
+        chyba = temp < 1;
+        if (chyba)
+            return;
 
         axisHorizontalCount = maxDistance / (temp * 20);
         axisYstep = temp * 20;
@@ -209,19 +217,18 @@ public class MyGraph implements IDrawable {
 
         for (int i = 0; i < acceleration; i++) {
             coords = new Point(0,0,0);
-            direction = (new Point(Math.cos(Math.PI * elevation / 180), Math.sin(Math.PI * elevation / 180), 0)).mul(i);
-            while (coords.getY() >= 0) {
+            //direction = (new Point(Math.cos(Math.PI * elevation / 180), Math.sin(Math.PI * elevation / 180), 0)).mul(i);
+            direction = (new Point(1, 0, Math.sin((Math.PI * elevation) / 180))).mul(i);
+            while (coords.getZ() >= 0) {
                 coords = coords.copy().add((direction.copy()).mul(0.01));
 
                 Point temp = new Point(direction.copy().mul(-1));
 
-                direction = direction.copy().addY(/*-1 * 0.01 * 10*/-0.1).add(temp.mul(0.05 * 0.01));
-
-                //System.out.println();
+                direction = direction.copy().addZ(-0.005).add(temp.mul(0.0005));
             }
 
-            distances[i] = coords.getX();
-            //System.out.println(coords.getX());
+            distances[i] = Math.sqrt(coords.getX() * coords.getX() + coords.getY() * coords.getY());
+            //System.out.println(coords.getX() + " - " + coords.getY());
         }
     }
 

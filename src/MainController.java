@@ -23,9 +23,11 @@ import javafx.util.converter.DoubleStringConverter;
 
 import javax.xml.bind.Marshaller;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -75,6 +77,7 @@ public class MainController implements Initializable {
      * @param stage
      */
     public MainController(Data data, Stage stage) {
+        Locale d = new Locale("cs", "CZ");
         this.data = data;
         this.stage = stage;
     }
@@ -105,7 +108,7 @@ public class MainController implements Initializable {
         defaultStageWidth = stage.getWidth();
         defaultStageHeight = stage.getHeight();
 
-        stage.setOnCloseRequest(event -> Platform.exit());
+        //stage.setOnCloseRequest(event -> stage.close());
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             double width = defaultStageWidth - newValue.doubleValue();
@@ -135,7 +138,7 @@ public class MainController implements Initializable {
         });
 
         stage.setOnShown(event -> {
-            //System.out.println("showing");
+            azimuthTF.requestFocus();
             world.initialGraphis();
         });
 
@@ -240,7 +243,7 @@ public class MainController implements Initializable {
         shooterZLbl.setText(String.format("%.2f m n. m.",world.getPlayer().getZ()));
         targetZLbl.setText(String.format("%.2f m n. m.",world.getTarget().getZ()));
 
-        //world.visualize();
+
 
         world.start();
     }
@@ -326,6 +329,12 @@ public class MainController implements Initializable {
 
             stage.setMinWidth(stage.getWidth() + 10);
             stage.setMinHeight(stage.getHeight());
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Implementace editoru neni dokoncena!");
+            alert.setContentText("Funguje pouze nacteni obrazku mapy a znema jeji velikosti.");
+            alert.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -358,7 +367,31 @@ public class MainController implements Initializable {
     }
 
     public void openNew(ActionEvent actionEvent) {
+        Stage primaryStage = new Stage();
+        stage.setTitle("Petr Kraus / A16B0065P");
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
+
+        // dependence injection
+        loader.setControllerFactory(param -> {
+            try {
+                return param.getConstructor(Data.class, Stage.class).newInstance(data, primaryStage);
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                e.printStackTrace();
+                return null;
+            }
+        });
+        Parent parent = null;
+        try {
+            parent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scene scene = new Scene(parent, primaryStage.getWidth(), primaryStage.getHeight());
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     public void close(ActionEvent actionEvent) {
@@ -366,11 +399,47 @@ public class MainController implements Initializable {
     }
 
     public void addNewTarget(ActionEvent actionEvent) {
+        if(!world.isRunning()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Novy cil nezle pridat!");
+            alert.setContentText("Abyste mohli pridat novy cil, musi hra bezet.");
+            alert.show();
+            return;
+        }
+
         Random r = new Random();
         double x = r.nextInt((int) data.getMap().getMapWidthM());
         double y = r.nextInt((int) data.getMap().getMapHeightM());
         double z = data.getMap().getTerrain()[(int)(x * world.getScaleX())][(int)(y * world.getScaleY())];
 
         world.addTarget(new Target(x, y, z));
+    }
+
+    public void openHelp(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Jak hrat?");
+        alert.setContentText("Cilem hry je znicit vsechny cile (modre piktogramy) na mape, " +
+                "toho docilite strelbou z tanku (zeleny piktogram tanku).\n\n" +
+                "Strelbu spravujete nastavenim nasledujich parametru:\n" +
+                " - Azumut (natoceni tanku):\n" +
+                "     - Hodnoty: -90\u00B0 az 270\u00B0.\n" +
+                "     - -90\u00B0 Jih; 0\u00B0 Vychod; 90\u00B0 Sever; 180\u00B0 Zapad; 270\u00B0 Jih.\n" +
+                " - Elevace (zdvih hlavne):\n" +
+                "     - Hodnoty: -90\u00B0 az 90\u00B0\n" +
+                "     - -90\u00B0 Svisle dolu; 0\u00B0 Rovne; 90\u00B0 Svisle nahoru.\n" +
+                " - Rychlost strely:\n" +
+                "     - Hodnoty: 0.0 m/s az 500 m/s.\n" +
+                " - Tlacitko 'FIRE':\n" +
+                "     - Vystrely se zadanymi parametry.\n" +
+                " - Tlacitko 'Vizualizuj':\n" +
+                "     - Vykresli 2 grafy - zavislost dostrelu na pocatecni rychlosti strely pri zadane elevaci;" +
+                "profil terenu pod trajektorii strely se zadanymi parametry a samotna strela.\n" +
+                "     - Tlacitko 'FIRE' zmeni text (novy text: 'Navrat') a funkci (nova funkce: zobrazeni prostredi pro strelbu).\n\n" +
+                "Nabidka v menu:\n" +
+                " - Soubor: Otevreni nove hry, ukonceni aplikace\n" +
+                " - Zobrazeni: Otevreni okna s tabulkou historie strelby.\n" +
+                " - Moznosti: Otevreni editoru map, vygenerovani noveho cile.\n" +
+                "\nPro vice informaci si muzete precist dokumentaci.");
+        alert.show();
     }
 }

@@ -1,6 +1,7 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Affine;
 
 /**
  * Created by kraus on 11.03.2017.
@@ -11,6 +12,7 @@ public class Target implements IHittable {
 
     /** zivoty ~ hp cile*/
     protected int hp;
+    protected int lifetime = 0;
 
     protected double mapX;
     protected double mapY;
@@ -19,12 +21,13 @@ public class Target implements IHittable {
     private static final String IMG_PATH = "images/target1.png";
     /** defaultni pocet hp*/
     protected static final int DEFAULT_HP = 100;
+    protected static final int ANIMATION_LIFETIME = 60;
     /** vychozi vyska v metrech*/
     protected static final double DEFAULT_HEIGHT = 1;
     /** souracnice cile v metrech */
     protected Point coordinates;
-    protected static int pocet = 0;
-    protected final int PORADI = ++pocet;
+    private static int pocet = 0;
+    private final int PORADI = ++pocet - 1;
     protected Banner banner;
 
     /**
@@ -118,7 +121,26 @@ public class Target implements IHittable {
         mapX = (getX() * scaleX - IMG.getWidth() / 2);
         mapY = (getY() * scaleY - IMG.getHeight() / 2);
 
-        g.drawImage(IMG, mapX, mapY);
+        Affine t = g.getTransform();
+        g.translate(mapX, mapY);
+        g.setFill(Color.RED);
+
+        if (lifetime < ANIMATION_LIFETIME) {
+            Affine t1 = g.getTransform();
+
+            for (int i = 0; i < 4; i++) {
+                g.translate(2.5, ANIMATION_LIFETIME / 10);
+                g.rotate(45 + 90 * i);
+                g.translate(0, -ANIMATION_LIFETIME / 2 - lifetime / 4);
+                g.fillRect(0, 0, 5, ANIMATION_LIFETIME / 5);
+                g.setTransform(t1);
+            }
+            g.setGlobalAlpha((double)lifetime / ANIMATION_LIFETIME);
+        }
+
+        g.drawImage(IMG, 0, 0);
+        g.setTransform(t);
+        g.setGlobalAlpha(1);
 
         banner.draw(g, scaleX, scaleY);
 
@@ -141,6 +163,8 @@ public class Target implements IHittable {
             world.removeTarget(this);
         }
 
+        if (lifetime < ANIMATION_LIFETIME)
+            lifetime++;
         banner.update(world);
     }
 

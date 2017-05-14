@@ -8,6 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -87,6 +88,13 @@ public class GraficEditorController implements Initializable {
 
         if (mapImg != null) {
             g.drawImage(mapImg.getImage(), 0, 0);
+            g.setGlobalAlpha(0.5);
+            g.setFill(Color.WHITE);
+            g.fillRect(0,0,g.getCanvas().getWidth(), g.getCanvas().getHeight());
+            g.setGlobalAlpha(1);
+            g.setFill(Color.BLACK);
+            g.setFont(Font.font("INPACT", FontWeight.BOLD, 20));
+            g.fillText("Dalsi funkce\nnejsou naimplementovane", g.getCanvas().getWidth() / 2, g.getCanvas().getHeight() / 2);
             return;
         }
 
@@ -105,7 +113,7 @@ public class GraficEditorController implements Initializable {
         canvas.setWidth(width);
         canvas.setHeight(height);
 
-        System.out.println(width + " " + height);
+        //System.out.println(width + " " + height);
 
         drawMap();
     }

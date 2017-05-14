@@ -131,7 +131,7 @@ public class VisualManager implements IDrawable {
 //            g.fillText("CHYBA!", g.getCanvas().getWidth() / 2, g.getCanvas().getHeight() - 30);
 //            g.setFont(Font.font("INPACT", FontWeight.NORMAL, 15));
             g.fillText("Tyto paramatry nelze\nvizualizovat", g.getCanvas().getWidth() / 2,
-                    3 * g.getCanvas().getHeight() / 4);
+                    g.getCanvas().getHeight() / 2);
 
             return;
         }
