@@ -454,17 +454,15 @@ public class MainController implements Initializable {
                 "     - Hodnoty: -90\u00B0 az 90\u00B0\n" +
                 "     - -90\u00B0 Svisle dolu; 0\u00B0 Rovne; 90\u00B0 Svisle nahoru.\n" +
                 " - Rychlost strely:\n" +
-                "     - Hodnoty: 0.0 m/s az 500 m/s.\n" +
-                " - Tlacitko 'FIRE':\n" +
+                "     - Hodnoty: 0.0 m/s az 500 m/s.\n\n" +
+                "Tlacitko 'FIRE':\n" +
                 "     - Vystrely se zadanymi parametry.\n" +
-                " - Tlacitko 'Vizualizuj':\n" +
+                "Tlacitko 'Vizualizuj':\n" +
                 "     - Vykresli 2 grafy - zavislost dostrelu na pocatecni rychlosti strely pri zadane elevaci;" +
                 "profil terenu pod trajektorii strely se zadanymi parametry a samotna strela.\n" +
-                "     - Tlacitko 'FIRE' zmeni text (novy text: 'Navrat') a funkci (nova funkce: zobrazeni prostredi pro strelbu).\n\n" +
-                "Nabidka v menu:\n" +
-                " - Soubor: Otevreni nove hry, ukonceni aplikace\n" +
-                " - Zobrazeni: Otevreni okna s tabulkou historie strelby.\n" +
-                " - Moznosti: Otevreni editoru map, vygenerovani noveho cile.\n" +
+                "     - Tlacitko 'FIRE' zmeni text (novy text: 'Navrat') a funkci (nova funkce: zobrazeni prostredi pro strelbu).\n" +
+                "Tlacitko 'Pridat Cil':\n" +
+                " - Prida novy cil na nahodne misto na mape.\n" +
                 "\nPro vice informaci si muzete precist dokumentaci.");
         alert.show();
     }
