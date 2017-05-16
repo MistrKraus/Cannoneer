@@ -98,7 +98,6 @@ public class Player extends Target implements IShooting {
 
         if (lifetime < ANIMATION_LIFETIME) {
             g.translate((int) (getX() * scaleX), (int) (getY() * scaleY));
-            g.translate(-(IMG.getWidth() - IMG_CANNON_WIDTH) / 2, IMG.getHeight() / 2);
             for (int i = 0; i < 4; i++) {
                 g.rotate(lifetime * 10);
                 g.setFill(Color.rgb(0, 50 * i, 0));
@@ -144,7 +143,6 @@ public class Player extends Target implements IShooting {
         }
         if (lifetime < ANIMATION_LIFETIME)
             lifetime++;
-
         banner.update(world);
     }
 

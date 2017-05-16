@@ -47,7 +47,7 @@ public class Explosion implements IDrawable, IMappable {
      * @param world ridici trida
      */
     public void explode(World world) {
-        int currDmg = new Random().nextInt(dmg);
+        int currDmg = new Random().nextInt(dmg - 4) + 5;
 
         world.getTargets().stream().filter(target -> target.isInRadius(coordinates, radius, target.getCoordinates()))
             .forEach(target -> {

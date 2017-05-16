@@ -362,8 +362,10 @@ public class Missile implements IDrawable, IMappable {
             return;
 
         // zapsani hodnot vetru do "Historie strelby"
-        if (updateNo % 10 == 0)
-            winds.add(new Wind(world.getWind().getAzimuth(), world.getWind().getSpeed()));
+        if (updateNo % 10 == 0) {
+            Wind wind = new Wind(world.getWind().getAzimuth(), world.getWind().getSpeed(), world.getWind().getWindGraphics());
+            winds.add(wind);
+        }
 
         updateNo++;
 

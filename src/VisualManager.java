@@ -123,13 +123,10 @@ public class VisualManager implements IDrawable {
             g.fillRect(0, graph1Height + i * colorScale, g.getCanvas().getWidth(), graph1Height + i * colorScale);
         }
 
-
         if (graph.getChyba()) {
             g.setFill(Color.RED);
             g.setTextAlign(TextAlignment.CENTER);
             g.setFont(Font.font("INPACT", FontWeight.BOLD, 20));
-//            g.fillText("CHYBA!", g.getCanvas().getWidth() / 2, g.getCanvas().getHeight() - 30);
-//            g.setFont(Font.font("INPACT", FontWeight.NORMAL, 15));
             g.fillText("Tyto paramatry nelze\nvizualizovat", g.getCanvas().getWidth() / 2,
                     g.getCanvas().getHeight() / 2);
 

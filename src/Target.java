@@ -129,7 +129,7 @@ public class Target implements IHittable {
             Affine t1 = g.getTransform();
 
             for (int i = 0; i < 4; i++) {
-                g.translate(2.5, ANIMATION_LIFETIME / 10);
+                g.translate(4, ANIMATION_LIFETIME / 10);
                 g.rotate(45 + 90 * i);
                 g.translate(0, -ANIMATION_LIFETIME / 2 - lifetime / 4);
                 g.fillRect(0, 0, 5, ANIMATION_LIFETIME / 5);

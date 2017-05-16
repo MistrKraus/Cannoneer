@@ -19,11 +19,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#close" text="Konec" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Nápověda">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
     </top>

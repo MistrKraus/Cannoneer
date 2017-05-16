@@ -7,21 +7,30 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
+import javax.swing.*;
 import javax.xml.bind.Marshaller;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -43,10 +52,13 @@ public class MainController implements Initializable {
     public Label distanceLbl;
     public Label shooterZLbl;
     public Label targetZLbl;
+    //public Label paddingLbl;
     public MenuBar menu;
+    public VBox hBox1;
     public VBox vBox2;
     public Button btnVisual;
     public Button btnFire;
+    //public Button btnAddTarget;
     @FXML
     private TextField azimuthTF;
     @FXML
@@ -77,7 +89,7 @@ public class MainController implements Initializable {
      * @param stage
      */
     public MainController(Data data, Stage stage) {
-        Locale d = new Locale("cs", "CZ");
+        //Locale d = new Locale("cs", "CZ");
         this.data = data;
         this.stage = stage;
     }
@@ -229,11 +241,27 @@ public class MainController implements Initializable {
 
         GraphicsContext context = canvas.getGraphicsContext2D();
 
+        WindGraphics wg = new WindGraphics();
+        double size = 83;
+        wg.setWidth(size);
+        wg.setHeight(size);
+
+        Button addTargetBtn = new Button("Pridat Cil");
+        addTargetBtn.setMinHeight(25);
+        addTargetBtn.setMaxWidth(83);
+        addTargetBtn.setTextAlignment(TextAlignment.CENTER);
+        addTargetBtn.setOnAction(event -> addNewTarget(event));
+
+        Label lbl = new Label();
+        lbl.setMinHeight(10);
+
+        hBox1.getChildren().addAll(wg, lbl, addTargetBtn);
+
         context.setFill(Color.LIGHTGREY);
         context.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
         context.translate(canvas.getLayoutX(), canvas.getLayoutY());
 
-        world = new World(context, data);
+        world = new World(context, data, wg);
         world.addPlayer(new Player(data.getShooterXm(), data.getShooterYm(), data.getMap().getTerrain()[data.getShooterX()][data.getShooterY()]));
         world.addTarget(new Target(data.getTargetXm(), data.getTargetYm(), data.getMap().getTerrain()[data.getTargetX()][data.getTargetY()]));
 
@@ -242,8 +270,6 @@ public class MainController implements Initializable {
         distanceLbl.setText(String.format("%.2f m",world.getPlayer().getCoordinates().getPointsDistance(world.getTarget().getCoordinates())));
         shooterZLbl.setText(String.format("%.2f m n. m.",world.getPlayer().getZ()));
         targetZLbl.setText(String.format("%.2f m n. m.",world.getTarget().getZ()));
-
-
 
         world.start();
     }

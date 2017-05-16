@@ -44,7 +44,7 @@
             <Insets bottom="10" left="10" right="10" />
         </padding>
         <Canvas fx:id="canvas" HBox.hgrow="ALWAYS" />
-        <VBox prefHeight="145.0" prefWidth="100.0">
+        <VBox fx:id="hBox1" prefHeight="145.0" prefWidth="100.0">
             <children>
                 <Label prefHeight="17.0" prefWidth="62.0" text="Střelec - cíl:" />
                 <Label fx:id="distanceLbl" layoutX="15.0" layoutY="17.0" prefHeight="17.0" prefWidth="102.0">
@@ -70,10 +70,15 @@
                 </Label>
                 <Label fx:id="targetZLbl" layoutX="93.0" layoutY="81.0" prefHeight="17.0" prefWidth="90.0" textAlignment="RIGHT">
                     <padding>
-                        <Insets left="10.0" bottom="10" />
+                        <Insets bottom="10" left="10.0" />
                     </padding>
                 </Label>
-            <Button mnemonicParsing="false" minHeight="25.0" minWidth="73.0" onAction="#addNewTarget" text="Pridat Cil" textAlignment="CENTER" />
+            <!--<Button fx:id="btnAddTarget" minHeight="25.0" minWidth="83.0" mnemonicParsing="false" onAction="#addNewTarget" text="Pridat Cil" textAlignment="CENTER" />-->
+            <Label text = "Vítr:">
+                <padding>
+                    <Insets bottom="2" />
+                </padding>
+            </Label>
             </children>
         </VBox>
     </HBox>

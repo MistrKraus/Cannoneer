@@ -78,11 +78,11 @@ public class World {
      * @param graphics graficky kontext
      * @param data     nactena data
      */
-    public World(GraphicsContext graphics, Data data) {
+    public World(GraphicsContext graphics, Data data, WindGraphics wg) {
         this.graphics = graphics;
         this.data = data;
         this.map = data.getMap();
-        this.wind = new Wind();
+        this.wind = new Wind(wg);
 
         timeline = new Timeline(oneFrame);
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -299,36 +299,39 @@ public class World {
         missiles.forEach(missile -> missile.draw(graphics, scalePixelperMX, scalePixelperMY));
         wind.draw(graphics, scalePixelperMX, scalePixelperMY);
 
-        if (!isRunning) {
-            graphics.setFill(Color.WHITE);
-            graphics.setGlobalAlpha(0.3);
+        if (!isRunning)
+            drawEndCard();
+    }
 
-            if (win) {
-                graphics.fillRect(0, graphics.getCanvas().getHeight() / 2 - txtWin1.getLayoutBounds().getHeight() - 20,
-                        graphics.getCanvas().getWidth(), txtWin1.getLayoutBounds().getHeight() + txtWin2.getLayoutBounds().getHeight() + 20);
-                graphics.setGlobalAlpha(1);
+    public void drawEndCard() {
+        graphics.setFill(Color.WHITE);
+        graphics.setGlobalAlpha(0.3);
 
-                graphics.setFill(Color.RED);
-                graphics.setFont(txtWin1.getFont());
-                graphics.fillText(txtWin1.getText(), graphics.getCanvas().getWidth() / 2,
-                        graphics.getCanvas().getHeight() / 2 - txtWin1.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
-                graphics.setFont(txtWin2.getFont());
-                graphics.fillText(txtWin2.getText(), graphics.getCanvas().getWidth() / 2,
-                        graphics.getCanvas().getHeight() / 2 + txtWin2.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
-            }
-            else {
-                graphics.fillRect(0, graphics.getCanvas().getHeight() / 2 - txtFail1.getLayoutBounds().getHeight() - 20,
-                        graphics.getCanvas().getWidth(), txtFail1.getLayoutBounds().getHeight() + txtFail2.getLayoutBounds().getHeight() + 20);
-                graphics.setGlobalAlpha(1);
+        if (win) {
+            graphics.fillRect(0, graphics.getCanvas().getHeight() / 2 - txtWin1.getLayoutBounds().getHeight() - 20,
+                    graphics.getCanvas().getWidth(), txtWin1.getLayoutBounds().getHeight() + txtWin2.getLayoutBounds().getHeight() + 20);
+            graphics.setGlobalAlpha(1);
 
-                graphics.setFill(Color.RED);
-                graphics.setFont(txtFail1.getFont());
-                graphics.fillText(txtFail1.getText(), graphics.getCanvas().getWidth() / 2,
-                        graphics.getCanvas().getHeight() / 2 - txtFail1.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
-                graphics.setFont(txtFail2.getFont());
-                graphics.fillText(txtFail2.getText(), graphics.getCanvas().getWidth() / 2,
-                        graphics.getCanvas().getHeight() / 2 + txtFail2.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
-            }
+            graphics.setFill(Color.RED);
+            graphics.setFont(txtWin1.getFont());
+            graphics.fillText(txtWin1.getText(), graphics.getCanvas().getWidth() / 2,
+                    graphics.getCanvas().getHeight() / 2 - txtWin1.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+            graphics.setFont(txtWin2.getFont());
+            graphics.fillText(txtWin2.getText(), graphics.getCanvas().getWidth() / 2,
+                    graphics.getCanvas().getHeight() / 2 + txtWin2.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+        }
+        else {
+            graphics.fillRect(0, graphics.getCanvas().getHeight() / 2 - txtFail1.getLayoutBounds().getHeight() - 20,
+                    graphics.getCanvas().getWidth(), txtFail1.getLayoutBounds().getHeight() + txtFail2.getLayoutBounds().getHeight() + 20);
+            graphics.setGlobalAlpha(1);
+
+            graphics.setFill(Color.RED);
+            graphics.setFont(txtFail1.getFont());
+            graphics.fillText(txtFail1.getText(), graphics.getCanvas().getWidth() / 2,
+                    graphics.getCanvas().getHeight() / 2 - txtFail1.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
+            graphics.setFont(txtFail2.getFont());
+            graphics.fillText(txtFail2.getText(), graphics.getCanvas().getWidth() / 2,
+                    graphics.getCanvas().getHeight() / 2 + txtFail2.getLayoutBounds().getHeight() / 2, graphics.getCanvas().getWidth() / 2);
         }
     }
 

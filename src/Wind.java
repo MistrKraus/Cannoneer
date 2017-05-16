@@ -13,6 +13,8 @@ public class Wind implements IDrawable {
     private Point coordinates;
     private Point azimuthP;
 
+    private WindGraphics windGraphics;
+
     private double azimuth;
     private double speed;
 
@@ -23,53 +25,29 @@ public class Wind implements IDrawable {
 
     private final static int MAX_SPEED = 25;
 
-    public Wind() {
-        this(random.nextInt(360), random.nextInt(MAX_SPEED));
+    public Wind(WindGraphics wg) {
+        this(random.nextInt(360), random.nextInt(MAX_SPEED), wg);
     }
 
-    public Wind(double azimuth, double speed) {
+    public Wind(double azimuth, double speed, WindGraphics wg) {
         coordinates = new Point(0,0,0);
         azimuthP = new Point(0,0,0);
 
         this.azimuth = azimuth;
         this.speed = speed;
+
+        windGraphics = wg;
     }
 
     @Override
     public void draw(GraphicsContext g, double scaleMperPixelX, double scaleMperPixelY) {
-        Affine affine = g.getTransform();
-
-        double alpha = g.getGlobalAlpha();
-        g.setGlobalAlpha(0.5);
-        g.translate(g.getCanvas().getWidth() - 50, g.getCanvas().getHeight() - 50);
-        g.rotate(azimuth);
-
-        double[] stumpPointsX = new double[] {
-                -speed / 2, speed / 2 - speed / 5, speed / 10, speed / 2, speed / 10, speed / 2 - speed / 5
-        };
-
-        double[] stumpPointsY = new double[] {
-                0, -speed / 13, -speed / 3, 0, speed / 3, speed / 13
-        };
-
-        for (int i = 0; i < stumpPointsX.length; i++)
-            stumpPointsX[i] *= 5;//scaleMperPixelX;
-
-        for (int i = 0; i < stumpPointsY.length; i++)
-            stumpPointsY[i] *= 5;//scaleMperPixelY;
-
-
-        g.setFill(Color.LIGHTBLUE);
-        g.fillPolygon(stumpPointsX, stumpPointsY, stumpPointsX.length);
-
-        g.setTransform(affine);
-        g.setGlobalAlpha(alpha);
+        windGraphics.update(azimuth, speed);
     }
 
     @Override
     public void update(World world) {
         if (speedDuration-- < 1) {
-            speed += (random.nextInt(MAX_SPEED / 2) - MAX_SPEED / 4);
+            speed += (random.nextInt(MAX_SPEED / 2) - MAX_SPEED / 4) + 0.5;
             //speed = MAX_SPEED;
 
             if (speed < 0)
@@ -116,6 +94,10 @@ public class Wind implements IDrawable {
 
     public double getSpeed() {
         return speed;
+    }
+
+    public WindGraphics getWindGraphics() {
+        return windGraphics;
     }
 
     @Override
